@@ -21,7 +21,7 @@ The extension gives Hot Deals listings more consistent rows and discussion threa
 | Hide signatures | On for new installs | Hide signatures present in discussion posts. Existing version 1 choices are preserved. |
 | Compact author details | On for new installs | Hide join date, post count, upvotes and location; names and ranks remain. Existing version 1 choices are preserved. |
 
-Discussion text defaults to 18 px. Use your browser’s zoom controls to adjust the page size.
+Discussion text defaults to 17 px. Use your browser’s zoom controls to adjust the page size.
 
 Appearance settings persist across supported tabs. **Reset appearance** restores these defaults. Turning Modern layout off leaves cleanup and link cleaning active, except that an existing version 1 user who had disabled the layout starts with Remove clutter off as well. Turning Remove clutter off reveals promotions, sidebars, signatures and secondary author details while preserving each individual preference. RFD may omit signature markup for some posts or page states; the extension can only show signatures present in the page.
 

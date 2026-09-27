@@ -1,5 +1,5 @@
 @media screen {
-  html[data-rfdm-enabled="true"] { --rfdm-post-font-size: 18px; }
+  html[data-rfdm-enabled="true"] { --rfdm-post-font-size: 17px; }
   html[data-rfdm-hide-promotions="true"] :is([data-rfdm-role="promotion"], [data-rfdm-sponsored="true"], #header_leaderboard_member_wrapper, [class^="pencil_ad"], [class*=" pencil_ad"]) { display: none !important; }
 }
 @media screen {
@@ -129,7 +129,7 @@
     margin-inline: auto;
   }
   html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread .thread_title {
-    font-size: 30px;
+    font-size: 28px;
     line-height: 1.25;
     font-weight: 700;
     overflow-wrap: anywhere;
