@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.1.1 - 2026-09-27
 
 - Collapse reserved bottom ad slots together with the hidden footer, leaving 24px of bottom breathing room.
 - Apply Hide sidebar to search results and reclaim the available width.
