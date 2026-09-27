@@ -17,9 +17,12 @@
     if (classic?.querySelector('li.row.topic[data-thread-id] a[href]')) return { kind: 'classic-list', variant: 'classic-sidebar-v1', root: classic };
     return null;
   }
-  function enhanceShell(document, match, journal) {
+  function enhanceShell(document, match, journal, root = document) {
     if (!match || !document.querySelector('#site_content')?.contains(match.root)) return;
-    for (const ad of document.querySelectorAll('#site_content .ad_box, #site_content .ad_sponsored_deal, #header_leaderboard, #footer_leaderboard')) {
+    const selector = '#site_content .ad_box, #site_content .ad_sponsored_deal, #header_leaderboard, #footer_leaderboard';
+    const ads = root === document ? document.querySelectorAll(selector) :
+      [root, ...root.querySelectorAll(selector)].filter(node => node.matches(selector));
+    for (const ad of ads) {
       if (!ad.contains(match.root) && !ad.closest('li.topic-card.topic, article.thread_post')) journal.setAttribute(ad, 'data-rfdm-role', 'promotion');
     }
   }

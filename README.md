@@ -4,7 +4,7 @@ Give [RedFlagDeals forums](https://forums.redflagdeals.com/) a simpler interface
 
 [Firefox store listing](https://addons.mozilla.org/en-US/firefox/addon/rfd-redirect-stripper/) · [Chrome store listing](https://chromewebstore.google.com/detail/rfd-affiliate-stripper/nhjomcijhonhoggkckbjjfnjdcefbblo)
 
-Version 1.0.0 is available from source. Store listings may take time to update after submission and review.
+Version 1.0.1 is available from source. Store listings may take time to update after submission and review.
 
 ## Appearance
 
@@ -42,13 +42,13 @@ Only matching links are changed. The extension checks links in forum posts and d
 
 ## Using the popup
 
-- **Cleaned links:** Shows how many distinct links were cleaned on the current forum page. Expand **Recent cleaned links** to see up to 50 recent original and cleaned URL pairs. This history lives in the page's memory and clears when link cleaning is turned off or the page reloads.
+- **Cleaned links:** Shows how many distinct links were cleaned on the current forum page. Expand **Recent cleaned links** to see up to 50 recent original and cleaned URL pairs. This history lives in the page's memory and clears when link cleaning is turned off, rules change, or the page reloads.
 - **Clean links on forum pages:** Controls automatic rewrites independently of appearance settings. It is on by default.
 - **Test a link:** Paste an HTTP or HTTPS URL to preview the result and each rule applied. The tester does not open the destination. It reports invalid URLs and warns if cleaning stops at a cycle or the 20-step limit.
 - **Rules status:** Shows the last successful rules update or an update error. Bundled rules are available before the first successful download and when there is no usable cached configuration.
-- **Config URL:** Enter the URL of a trusted JSON rules file and select **Save** to validate and use it. **Reset** restores the default URL. Reload open forum pages after changing rules; the popup tester uses the current rules immediately.
+- **Config URL:** Enter the URL of a trusted JSON rules file and select **Save** to validate and use it. **Reset** restores the default URL. Open forum pages receive changed rules automatically; the popup tester uses them immediately.
 
-The extension checks for updated rules hourly. If a download or validation fails, it keeps the last valid rules and shows the error in the popup.
+The extension checks for updated rules hourly and refreshes open forum pages when the rules change. If a download or validation fails, it keeps the last valid rules and shows the error in the popup.
 
 ## Running from source
 
@@ -93,7 +93,7 @@ The project began as a [Tampermonkey](https://www.tampermonkey.net/) userscript.
 
 ## Store publishing
 
-The [publish workflow](.github/workflows/publish.yaml) runs for `v*` tags and can be started manually with an existing tag. The tag must match the version in [manifest.json](manifest.json). It runs tests and linting, builds the package, and submits to stores whose credentials are configured. Store review may still be required before a version becomes public.
+The [publish workflow](.github/workflows/publish.yaml) runs for `v*` tags and can be started manually with an existing tag. The tag must match the version in [manifest.json](manifest.json). It runs tests and linting, builds the package, and submits to stores whose credentials are configured. The Chrome job reports upload and submission states and API errors; a successful submission can still require store review before the version becomes public.
 
 For future releases, complete the [live browser release checks](docs/testing/modern-rfd-manual.md), update the manifest version and changelog, then tag the release.
 

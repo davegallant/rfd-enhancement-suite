@@ -1,6 +1,6 @@
 # Consolidating rfd-fyi into RFD Enhancement Suite
 
-> **Superseded:** The user decided to keep rfd-fyi as a separate product. This document is historical research, not an active migration or deprecation proposal. Follow the [RES-inspired enhancement plan](../superpowers/plans/2026-09-26-res-inspired-enhancements.md) for future extension work.
+> **Superseded:** The user decided to keep rfd-fyi as a separate product. This document is historical research, not an active migration or deprecation proposal.
 
 Research date: 2026-09-26. This is a migration assessment, not an approved implementation plan.
 

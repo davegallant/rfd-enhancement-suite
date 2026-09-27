@@ -10,9 +10,17 @@
   let loading = false;
   let observer = null;
   let settingRevision = 0;
+  let rulesRevision = 0;
 
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message?.type === 'getActivity') sendResponse({ ...activity, enabled });
+    if (message?.type === 'redirectRulesUpdated' && Array.isArray(message.redirects)) {
+      rulesRevision++;
+      if (JSON.stringify(redirects) === JSON.stringify(message.redirects)) return;
+      if (observer) stop();
+      redirects = message.redirects;
+      if (enabled) start();
+    }
   });
 
   function clean(link) {
@@ -50,7 +58,10 @@
     observer = new MutationObserver((records) => {
       for (const record of records) {
         if (record.type === 'attributes') {
-          if (record.attributeName === 'class') cleanTree(record.target);
+          if (record.attributeName === 'class') {
+            if (record.target.matches('a')) clean(record.target);
+            else if (record.target.matches('.post_content')) cleanTree(record.target);
+          }
           else clean(record.target);
         }
         else record.addedNodes.forEach(cleanTree);
@@ -83,8 +94,10 @@
   function loadRedirects() {
     if (loading) return;
     loading = true;
+    const requestedRevision = rulesRevision;
     chrome.runtime.sendMessage({ type: 'getRedirects' }, (response) => {
       loading = false;
+      if (requestedRevision !== rulesRevision) return;
       if (chrome.runtime.lastError) {
         console.log('rfd-enhancement-suite:', chrome.runtime.lastError.message);
         return;

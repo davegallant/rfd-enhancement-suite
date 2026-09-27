@@ -19,6 +19,7 @@ function start(links, redirects = rules) {
     MutationObserver: class {
       constructor(callback) { observer = callback; }
       observe() {}
+      disconnect() {}
     },
     chrome: { runtime: {
       sendMessage(message, callback) { requests++; callback({ redirects }); },
@@ -26,6 +27,7 @@ function start(links, redirects = rules) {
     } }, stripRedirect, console,
   });
   return { mutate(records) { observer?.(records); },
+    message(value) { listener?.(value, {}, () => {}); },
     get requests() { return requests; },
     activity() { let response; listener?.({ type: 'getActivity' }, {}, value => { response = value; }); return response; } };
 }
@@ -42,6 +44,17 @@ test('cleans links inserted after startup, including nested anchors', () => {
   assert.equal(added.href, 'https://www.amazon.ca/dp/NEW');
   assert.equal(nested.href, 'https://www.amazon.ca/dp/NESTED');
   assert.equal(page.requests, 1);
+});
+
+test('changed rules update open links and restore previous rewrites', () => {
+  const original = 'https://www.amazon.ca/dp/TEST?tag=rfd';
+  const link = anchor(original);
+  const page = start([link]);
+  assert.equal(link.href, 'https://www.amazon.ca/dp/TEST');
+  page.message({ type: 'redirectRulesUpdated', redirects: [] });
+  assert.equal(link.href, original);
+  page.message({ type: 'redirectRulesUpdated', redirects: rules });
+  assert.equal(link.href, 'https://www.amazon.ca/dp/TEST');
 });
 
 test('cleans changed hrefs and newly eligible links without repeated writes', () => {

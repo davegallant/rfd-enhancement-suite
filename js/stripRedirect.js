@@ -34,18 +34,28 @@ function applyRedirectRule(input, rule, groups) {
   return decodeURIComponent(destination);
 }
 
-function inspectRedirect(URL, redirectRegex) {
-  if (!isHttpUrl(URL)) throw new Error('Enter a valid HTTP or HTTPS URL');
-  const steps = [];
-  const seen = new Set([URL]);
+const compiledRuleSets = new WeakMap();
+
+function compileRules(redirectRegex) {
+  if (!Array.isArray(redirectRegex)) return [];
+  if (compiledRuleSets.has(redirectRegex)) return compiledRuleSets.get(redirectRegex);
   const rules = [];
-  for (const rule of Array.isArray(redirectRegex) ? redirectRegex : []) {
+  for (const rule of redirectRegex) {
     try {
       if (typeof rule?.pattern === 'string') rules.push({
         regex: new RegExp(rule.pattern), name: rule.name || 'Unnamed rule', rule,
       });
     } catch { /* Ignore invalid legacy cached rules. */ }
   }
+  compiledRuleSets.set(redirectRegex, rules);
+  return rules;
+}
+
+function inspectRedirect(URL, redirectRegex) {
+  if (!isHttpUrl(URL)) throw new Error('Enter a valid HTTP or HTTPS URL');
+  const steps = [];
+  const seen = new Set([URL]);
+  const rules = compileRules(redirectRegex);
   for (let step = 0; step < 20; step++) {
     const previousURL = URL;
     for (const { regex, name, rule } of rules) {

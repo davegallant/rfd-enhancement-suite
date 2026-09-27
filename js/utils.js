@@ -82,8 +82,19 @@ export async function updateRedirects(configUrl) {
     const res = await fetch(configUrl);
     if (!res.ok) throw new Error(`Fetch failed with status ${res.status}`);
     const redirects = validateRedirects(await res.json());
+    let previousRedirects;
+    try { previousRedirects = await dbGet('redirects'); } catch { /* Refresh can still proceed. */ }
     await dbSetMany({ config: configUrl, redirects,
       updateStatus: { lastSuccess: new Date().toISOString(), error: null } });
+    if (JSON.stringify(previousRedirects) !== JSON.stringify(redirects) && chrome.tabs?.query && chrome.tabs?.sendMessage) {
+      try {
+        const tabs = await chrome.tabs.query({});
+        await Promise.allSettled(tabs.filter(tab => Number.isInteger(tab.id)).map(tab =>
+          chrome.tabs.sendMessage(tab.id, { type: 'redirectRulesUpdated', redirects })));
+      } catch (error) {
+        console.warn('Could not notify open forum tabs of updated rules:', error);
+      }
+    }
     return redirects;
   } catch (error) {
     try {

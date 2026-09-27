@@ -94,6 +94,25 @@ test('successful update fetches once and saves config, rules, and success status
   assert.equal(data.get('updateStatus').error, null);
 });
 
+test('changed remote rules are delivered to open tabs once', async () => {
+  const oldRules = [{ name: 'Old', pattern: '(?<baseUrl>https://old.com)' }];
+  const nextRules = [{ name: 'New', pattern: '(?<baseUrl>https://new.com)' }];
+  const { context } = setup({ redirects: oldRules });
+  const deliveries = [];
+  context.chrome.tabs = {
+    query: async () => [{ id: 12 }, { id: 13 }],
+    sendMessage: async (id, message) => { deliveries.push({ id, message }); },
+  };
+  context.fetch = async () => ({ ok: true, json: async () => nextRules });
+  await context.updateRedirects('https://new.com/rules');
+  assert.deepEqual(deliveries.map(({ id, message }) => [id, message.type, message.redirects[0].name]), [
+    [12, 'redirectRulesUpdated', 'New'], [13, 'redirectRulesUpdated', 'New'],
+  ]);
+  deliveries.length = 0;
+  await context.updateRedirects('https://new.com/rules');
+  assert.equal(deliveries.length, 0);
+});
+
 test('HTTP and network errors are reported without replacing cached rules', async () => {
   for (const fetch of [async () => ({ ok: false, status: 503 }), async () => { throw new Error('offline'); }]) {
     const { context, data, bundled } = setup({ config: 'https://example.com/rules' });

@@ -13,6 +13,15 @@ test('added deal rows are marked and disabling removes all appearance markers', 
   assert.equal(h.document.querySelectorAll('[data-rfdm-owned]').length,0);
   stop(); h.dispose();
 });
+test('new promotions outside the deal list receive the hide marker', async () => {
+  const h = loadThemeFixture('list-card', { scripts });
+  const stop = h.api.controller.start(h.document,h.window); await h.flush();
+  const ad = h.document.createElement('aside');
+  ad.className = 'ad_box';
+  h.document.querySelector('#site_content').append(ad); await h.flush();
+  assert.equal(ad.getAttribute('data-rfdm-role'), 'promotion');
+  stop(); h.dispose();
+});
 test('unsupported replacement restores native appearance', async () => {
   const h = loadThemeFixture('list-card', { scripts });
   const stop = h.api.controller.start(h.document,h.window); await h.flush();

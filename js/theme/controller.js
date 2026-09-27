@@ -5,24 +5,36 @@
   function getStatus() { return { ...status }; }
   function start(document, window) {
     let active = true, generation = 0, current = null, match = null;
+    let appliedHref = null;
     let journal = api.dom.createJournal();
     function clear() { journal.restore(); journal = api.dom.createJournal(); }
+    function setAttributes(settings) {
+      const html = document.documentElement;
+      if (document.querySelector('#thread .thread_posts article.thread_post')) journal.setAttribute(html, 'data-rfdm-hide-signatures', String(settings.hideSignatures));
+      if (!settings.enabled || !match) return;
+      const values = { enabled: 'true', page: match.kind,
+        'font-size': String(settings.fontSize),
+        'hide-promotions': String(settings.hidePromotions), 'hide-sidebar': String(settings.hideSidebar), 'compact-profiles': String(settings.compactProfiles) };
+      for (const name of attributes) journal.setAttribute(html, 'data-rfdm-' + name, values[name]);
+    }
     function apply(settings) {
       if (!active) return;
+      if (status.applied && current?.enabled && settings.enabled && match?.root?.isConnected && appliedHref === window.location.href) {
+        current = settings;
+        setAttributes(settings);
+        return;
+      }
       clear();
       current = settings;
       match = api.adapters.detect(document, new URL(window.location.href));
+      appliedHref = window.location.href;
       if (document.querySelector('#thread .thread_posts article.thread_post')) journal.setAttribute(document.documentElement, 'data-rfdm-hide-signatures', String(settings.hideSignatures));
       if (!settings.enabled || !match) {
         status = { enabled: settings.enabled, applied: false, page: match?.kind || 'unsupported', reason: settings.enabled ? 'unsupported' : 'disabled' };
         return;
       }
       try {
-        const html = document.documentElement;
-        const values = { enabled: 'true', page: match.kind,
-          'font-size': String(settings.fontSize),
-          'hide-promotions': String(settings.hidePromotions), 'hide-sidebar': String(settings.hideSidebar), 'compact-profiles': String(settings.compactProfiles) };
-        for (const name of attributes) journal.setAttribute(html, 'data-rfdm-' + name, values[name]);
+        setAttributes(settings);
         api.adapters.enhanceShell(document, match, journal);
         if (match.kind === 'list' || match.kind === 'classic-list') api.list?.enhance(match.root, settings, journal);
         if (match.kind === 'thread') api.thread?.enhance(match.root, settings, journal);
@@ -54,8 +66,10 @@
         if (!match.root.isConnected) { added.clear(); apply(current); return; }
         const roots = [...added]; added.clear();
         for (const node of roots) {
-          if (!node.isConnected || !match.root.contains(node)) continue;
+          if (!node.isConnected) continue;
           try {
+            api.adapters.enhanceShell(document, match, journal, node);
+            if (!match.root.contains(node)) continue;
             if (match.kind === 'list' || match.kind === 'classic-list') api.list?.enhance(node, current, journal);
             if (match.kind === 'thread') api.thread?.enhance(node, current, journal);
           } catch (error) { console.warn('RFD appearance:', error); }

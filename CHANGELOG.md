@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.0.1 - 2026-09-27
+
+### Fixed
+
+- Refresh changed link-cleaning rules in already-open forum tabs, including links cleaned under the previous rules.
+- Hide sponsored placements added dynamically outside the deal list or discussion thread.
+- Report Chrome Web Store upload, submission and validation states in the publishing workflow.
+- Remove a documentation link to an ignored local plan.
+
+### Changed
+
+- Cache compiled redirect rules and limit link rescans after unrelated class changes.
+- Apply appearance setting changes without rebuilding existing page annotations.
+
 ## 1.0.0 - 2026-09-26
 
 ### Added

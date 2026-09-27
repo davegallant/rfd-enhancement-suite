@@ -100,13 +100,39 @@ jobs:
             https://oauth2.googleapis.com/token | jq -er '.access_token')
           echo "::add-mask::$ACCESS_TOKEN"
           ITEM="publishers/$CWS_PUBLISHER_ID/items/$CWS_EXTENSION_ID"
-          curl --fail-with-body --silent --show-error --output /dev/null \
+          RESPONSE=$(mktemp)
+          trap 'rm -f "$RESPONSE"' EXIT
+          report_failure() {
+            echo "::error title=Chrome Web Store $1 failed::HTTP $2"
+            jq -r '.error.message // .message // "No error details returned"' "$RESPONSE"
+            jq -r '.error.details[]? | if type == "object" then (.reason // .message // .description // empty) else empty end' "$RESPONSE"
+            exit 1
+          }
+          UPLOAD_STATUS=$(curl --silent --show-error --output "$RESPONSE" --write-out '%{http_code}' \
             --request POST --upload-file "$PACKAGE" \
             --header "Authorization: Bearer $ACCESS_TOKEN" \
-            "https://chromewebstore.googleapis.com/upload/v2/$ITEM:upload"
-          curl --fail-with-body --silent --show-error --output /dev/null \
+            "https://chromewebstore.googleapis.com/upload/v2/$ITEM:upload")
+          [[ "$UPLOAD_STATUS" == 2* ]] || report_failure upload "$UPLOAD_STATUS"
+          UPLOAD_STATE=$(jq -r '.uploadState // "UNKNOWN"' "$RESPONSE")
+          echo "Chrome Web Store upload: $UPLOAD_STATE"
+          if [[ "$UPLOAD_STATE" == "IN_PROGRESS" || "$UPLOAD_STATE" == "UPLOAD_IN_PROGRESS" ]]; then
+            for attempt in {1..20}; do
+              sleep 6
+              STATUS_CODE=$(curl --silent --show-error --output "$RESPONSE" --write-out '%{http_code}' \
+                --header "Authorization: Bearer $ACCESS_TOKEN" \
+                "https://chromewebstore.googleapis.com/v2/$ITEM:fetchStatus")
+              [[ "$STATUS_CODE" == 2* ]] || report_failure fetchStatus "$STATUS_CODE"
+              UPLOAD_STATE=$(jq -r '.lastAsyncUploadState // "UNKNOWN"' "$RESPONSE")
+              [[ "$UPLOAD_STATE" == "IN_PROGRESS" ]] || break
+            done
+          fi
+          [[ "$UPLOAD_STATE" == "SUCCEEDED" ]] || { echo "::error::Chrome Web Store upload ended in state $UPLOAD_STATE"; exit 1; }
+          PUBLISH_STATUS=$(curl --silent --show-error --output "$RESPONSE" --write-out '%{http_code}' \
             --request POST --header "Authorization: Bearer $ACCESS_TOKEN" \
-            "https://chromewebstore.googleapis.com/v2/$ITEM:publish"
+            "https://chromewebstore.googleapis.com/v2/$ITEM:publish")
+          [[ "$PUBLISH_STATUS" == 2* ]] || report_failure publish "$PUBLISH_STATUS"
+          jq -r '"Chrome Web Store submission state: \(.state // "UNKNOWN")"' "$RESPONSE"
+          jq -r '.warningInfo.warnings[]? | "Chrome Web Store warning: \(.reason): \(.description)"' "$RESPONSE"
 
   publish-firefox:
     needs: [credentials, package]
