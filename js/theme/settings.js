@@ -1,13 +1,12 @@
 (() => {
   const api = globalThis.RFDModern ||= {};
-  const DEFAULTS = Object.freeze({ enabled: true, clutterEnabled: true, fontSize: 18, hidePromotions: true, hideSidebar: true, hideSignatures: true, compactProfiles: true });
+  const DEFAULTS = Object.freeze({ enabled: true, clutterEnabled: true, hidePromotions: true, hideSidebar: true, hideSignatures: true, compactProfiles: true });
   const PREFIX = 'rfdm.';
   const names = Object.keys(DEFAULTS);
   const allKeys = names.map(name => PREFIX + name);
   const validators = {
     enabled: value => typeof value === 'boolean',
     clutterEnabled: value => typeof value === 'boolean',
-    fontSize: value => Number.isInteger(value) && value >= 16 && value <= 24,
     hidePromotions: value => typeof value === 'boolean',
     hideSidebar: value => typeof value === 'boolean',
     hideSignatures: value => typeof value === 'boolean',
@@ -39,7 +38,7 @@
     const version = raw[PREFIX + 'schemaVersion'] === 1 ? 1 : 2;
     await chrome.storage.local.set(Object.fromEntries([...Object.entries(patch).map(([name, value]) => [PREFIX + name, value]), [PREFIX + 'schemaVersion', version]]));
   }
-  async function reset() { await chrome.storage.local.remove([...allKeys, PREFIX + 'theme', PREFIX + 'density', PREFIX + 'contentWidth', PREFIX + 'schemaVersion']); }
+  async function reset() { await chrome.storage.local.remove([...allKeys, PREFIX + 'fontSize', PREFIX + 'theme', PREFIX + 'density', PREFIX + 'contentWidth', PREFIX + 'schemaVersion']); }
   function subscribe(fn) {
     let current = null;
     let pending = {};

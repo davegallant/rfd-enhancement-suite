@@ -1,6 +1,6 @@
 (() => {
   const api = globalThis.RFDModern ||= {};
-  const attributes = ['enabled', 'page', 'font-size', 'hide-promotions', 'hide-sidebar', 'compact-profiles'];
+  const attributes = ['enabled', 'page', 'hide-promotions', 'hide-sidebar', 'compact-profiles'];
   let status = { enabled: false, applied: false, page: 'unsupported', reason: 'disabled' };
   function getStatus() { return { ...status }; }
   function start(document, window) {
@@ -13,7 +13,6 @@
       if (match?.kind === 'thread') journal.setAttribute(html, 'data-rfdm-hide-signatures', String(settings.clutterEnabled && settings.hideSignatures));
       if (!match) return;
       const values = { enabled: 'true', page: match.kind,
-        'font-size': String(settings.fontSize),
         'hide-promotions': String(match.kind !== 'home' && settings.clutterEnabled && settings.hidePromotions), 'hide-sidebar': String(settings.clutterEnabled && settings.hideSidebar), 'compact-profiles': String(settings.clutterEnabled && settings.compactProfiles) };
       for (const name of attributes) if (name !== 'enabled' || settings.enabled) journal.setAttribute(html, 'data-rfdm-' + name, values[name]);
     }

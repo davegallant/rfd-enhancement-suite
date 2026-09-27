@@ -6,7 +6,7 @@
 
 - Separate Clean links, Remove clutter, and Modern layout controls in a smaller popup.
 - Let discussion threads use the available page width, with a bounded deal list width, clearer spacing and more readable metadata.
-- Apply Hide sidebar on the forum home page and scale thread deal headers with the Text size control.
+- Apply Hide sidebar on the forum home page.
 - Use the same small side gutters on forum lists and thread lists as on threads.
 - Connect discussion replies with thin borders on both sides, consistent dividers and tighter spacing.
 - Use RFD's divider color on deal rows as well as discussion posts.
@@ -19,9 +19,9 @@
 ### Changed
 
 - Move reply authors and timestamps into a compact header, removing the grey author column and giving reply text the full width.
-- Polish replies with rounded avatars, consistent author typography, softly rounded blue quote panels with a thin accent, and compact action links.
+- Polish replies with rounded avatars, consistent author typography, softly rounded blue quote panels without a border, and compact action links.
 - Replace solid red reply headers with plain, muted timestamps and post links.
-- Make original post text follow the Text size slider, including deal descriptions.
+- Use a readable 18 px default for original posts, replies, and quotes; remove the text-size slider in favor of browser zoom.
 - Consolidate repeated thread layout rules so spacing and text sizing each have one source.
 - Hide signatures and secondary author details on new installations; preserve version 1 settings on upgrade.
 - Allow clutter removal while Modern layout is off.

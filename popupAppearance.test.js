@@ -21,7 +21,7 @@ test('popup displays default-on layout improvements and saves off without touchi
   assert.equal(p.document.querySelector('#modern-theme'), null);
   assert.equal(p.document.querySelector('#modern-density'), null);
   assert.equal(p.document.querySelector('#modern-content-width'), null);
-  assert.equal(p.document.querySelector('#modern-font-size').value, '18');
+  assert.equal(p.document.querySelector('#modern-font-size'), null);
   assert.equal(p.document.querySelector('#appearance-page-status').textContent, '');
   const input = p.document.querySelector('#modern-enabled'); input.checked = false; input.dispatchEvent(new p.document.defaultView.Event('change', {bubbles:true}));
   await p.flush(); assert.equal(p.data['rfdm.enabled'], false); assert.equal(p.data.config, 'keep'); p.dispose();
@@ -35,7 +35,6 @@ test('layout and clutter controls can be changed independently', async () => {
   await p.flush();
   assert.equal(clutter.disabled, false);
   assert.equal(p.document.querySelector('#modern-hide-promotions').disabled, false);
-  assert.equal(p.document.querySelector('#modern-font-size').disabled, true);
   clutter.checked = false; clutter.dispatchEvent(new p.document.defaultView.Event('change'));
   await p.flush();
   assert.equal(p.data['rfdm.clutterEnabled'], false);

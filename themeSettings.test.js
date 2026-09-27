@@ -11,19 +11,19 @@ test('new users get clutter removed while version 1 choices remain unchanged', a
   const saved = await existing.api.settings.load();
   assert.equal(saved.hideSignatures, false);
   assert.equal(saved.compactProfiles, false);
-  assert.equal(saved.fontSize, 20);
+  assert.equal('fontSize' in saved, false);
   existing.dispose();
 });
 test('concurrent changes on version 1 keep earlier choices and saved values', async () => {
   const h = start({ initial: { 'rfdm.schemaVersion': 1 } });
   await Promise.all([
     h.api.settings.save({ hideSignatures: true }),
-    h.api.settings.save({ fontSize: 20 }),
+    h.api.settings.save({ hideSidebar: false }),
   ]);
   const value = await h.api.settings.load();
   assert.equal(value.hideSignatures, true);
   assert.equal(value.compactProfiles, false);
-  assert.equal(value.fontSize, 20);
+  assert.equal(value.hideSidebar, false);
   h.dispose();
 });
 test('missing and corrupt settings use safe defaults', async () => {
@@ -31,7 +31,7 @@ test('missing and corrupt settings use safe defaults', async () => {
   const settings = await h.api.settings.load();
   assert.equal(settings.enabled, true);
   assert.equal('theme' in settings, false);
-  assert.equal(settings.fontSize, 18);
+  assert.equal('fontSize' in settings, false);
   assert.equal(settings.hidePromotions, false);
   assert.equal('density' in settings, false);
   assert.equal('contentWidth' in settings, false);
@@ -40,15 +40,15 @@ test('missing and corrupt settings use safe defaults', async () => {
 });
 test('saves independent preferences and rejects invalid patches', async () => {
   const h = start({ initial: { config: 'old' } });
-  await Promise.all([h.api.settings.save({ fontSize: 22 }), h.api.settings.save({ hideSidebar: false })]);
-  assert.equal(h.storage['rfdm.fontSize'], 22);
+  await Promise.all([h.api.settings.save({ compactProfiles: false }), h.api.settings.save({ hideSidebar: false })]);
+  assert.equal(h.storage['rfdm.compactProfiles'], false);
   assert.equal(h.storage['rfdm.hideSidebar'], false);
   assert.equal(h.storage.config, 'old');
   await assert.rejects(h.api.settings.save({ theme: 'dark' }), /Invalid/);
   await assert.rejects(h.api.settings.save({ density: 'compact' }), /Invalid/);
   await assert.rejects(h.api.settings.save({ contentWidth: 'wide' }), /Invalid/);
   await assert.rejects(h.api.settings.save({ fontSize: 25 }), /Invalid/);
-  assert.equal(h.storage['rfdm.fontSize'], 22);
+  assert.equal(h.storage['rfdm.compactProfiles'], false);
   h.dispose();
 });
 test('reset affects appearance only and subscription ignores unrelated changes', async () => {
@@ -57,9 +57,9 @@ test('reset affects appearance only and subscription ignores unrelated changes',
   const stop = h.api.settings.subscribe(value => events.push(value));
   await h.window.chrome.storage.local.set({ config: 'new' });
   assert.equal(events.length, 0);
-  await h.window.chrome.storage.local.set({ 'rfdm.fontSize': 20 });
+  await h.window.chrome.storage.local.set({ 'rfdm.compactProfiles': false });
   await h.flush();
-  assert.equal(events.at(-1).fontSize, 20);
+  assert.equal(events.at(-1).compactProfiles, false);
   await h.window.chrome.storage.local.set({ 'rfdm.theme': 'light', 'rfdm.density': 'compact', 'rfdm.contentWidth': 'wide' });
   await h.api.settings.reset();
   assert.equal(h.storage.config, 'new');
@@ -82,10 +82,10 @@ test('a partial storage change retains all previously saved preferences', async 
   const events = [];
   const stop = h.api.settings.subscribe(value => events.push(value));
   await h.flush();
-  await h.api.settings.save({ fontSize: 22 });
+  await h.api.settings.save({ compactProfiles: false });
   assert.equal(events.at(-1).enabled, false);
   assert.equal(events.at(-1).hideSidebar, false);
   assert.equal(events.at(-1).hidePromotions, false);
-  assert.equal(events.at(-1).fontSize, 22);
+  assert.equal(events.at(-1).compactProfiles, false);
   stop(); h.dispose();
 });

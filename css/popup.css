@@ -50,11 +50,6 @@ h2 { margin: 18px 0 8px; color: var(--muted); font-size: 11px; font-weight: 700;
 .switch-row input::before { content: ''; position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; border-radius: 50%; background: var(--surface); box-shadow: 0 1px 3px #0003; transition: transform .15s ease; }
 .switch-row input:checked { background: var(--accent); }
 .switch-row input:checked::before { transform: translateX(14px); }
-.range-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 13px 0 8px; }
-.range-row > label { white-space: nowrap; font-weight: 600; }
-.range-control { display: flex; align-items: center; gap: 8px; width: 190px; }
-.range-control input { flex: 1; min-width: 0; accent-color: var(--accent); }
-.range-control output { min-width: 38px; color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
 details { margin: 12px 0; }
 summary { cursor: pointer; color: var(--muted); font-weight: 600; }
 summary:hover { color: var(--text); }
