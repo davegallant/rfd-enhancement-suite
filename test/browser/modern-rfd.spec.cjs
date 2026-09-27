@@ -41,12 +41,16 @@ for (const pageType of ['list-card', 'thread-rich', 'search']) for (const width 
       await expect(page.locator('input[name="keywords"]')).toBeVisible();
       await expect(page.locator('.sidebar_content')).toBeHidden();
       await expect(page.locator('#site_footer')).toBeHidden();
+      await expect(page.locator('#header_billboard_bottom')).toBeHidden();
+      await expect(page.locator('#footer_leaderboard')).toBeHidden();
       await page.evaluate(() => window.RFDModern.settings.save({ enabled: false, hideFooter: false }));
       await expect(page.locator('#site_footer')).toBeVisible();
+      await expect(page.locator('#header_billboard_bottom')).toBeVisible();
       await expect(page.locator('.sidebar_content')).toBeHidden();
       await page.evaluate(() => window.RFDModern.settings.save({ hideFooter: true, clutterEnabled: false }));
       await expect(page.locator('#site_footer')).toBeVisible();
       await expect(page.locator('.sidebar_content')).toBeVisible();
+      await expect(page.locator('#footer_leaderboard')).toBeVisible();
       await page.evaluate(() => window.RFDModern.settings.save({ clutterEnabled: true }));
       await expect(page.locator('#site_footer')).toBeHidden();
     }

@@ -18,7 +18,7 @@ The extension gives Hot Deals listings more consistent rows and discussion threa
 | Remove clutter | On | Master switch for the cleanup options below. Works independently of Modern layout. |
 | Hide promotions and sponsored threads | On | Hide recognized ads, sponsored placements and labeled sponsored threads in both Hot Deals list layouts, including pencil ads and the member header leaderboard. This changes display; it does not block requests. |
 | Hide sidebar | On | Hide sidebars on the forum home page, search results, card lists, classic Hot Deals lists and threads, using the freed space. On card lists, RFD's filters remain available through More Filters. Turn it off to restore RFD's sidebar spacing. |
-| Hide footer | On | Hide the site footer across forum pages. Turn it off to restore footer links. |
+| Hide footer | On | Hide the site footer and reserved bottom ad spaces across forum pages. Turn it off to restore footer links. |
 | Hide signatures | On for new installs | Hide signatures present in discussion posts. Existing version 1 choices are preserved. |
 | Compact author details | On for new installs | Hide join date, post count, upvotes and location; names and ranks remain. Existing version 1 choices are preserved. |
 
