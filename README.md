@@ -1,5 +1,7 @@
 # RFD Enhancement Suite
 
+<img src="docs/images/popup.png" alt="RFD Enhancement Suite popup with cleanup options expanded" width="360">
+
 Give [RedFlagDeals forums](https://forums.redflagdeals.com/) a simpler interface for Hot Deals lists and discussion threads, and clean supported affiliate redirects and tracking parameters from forum links. Layout improvements and link cleaning are independent and both on by default.
 
 [Firefox store listing](https://addons.mozilla.org/en-US/firefox/addon/rfd-redirect-stripper/) · [Chrome store listing](https://chromewebstore.google.com/detail/rfd-affiliate-stripper/nhjomcijhonhoggkckbjjfnjdcefbblo)
@@ -18,8 +20,6 @@ The extension gives Hot Deals listings more consistent rows and discussion threa
 | Hide sidebar | On | Hide sidebars on the forum home page, card lists, classic Hot Deals lists and threads, using the freed space. On card lists, RFD's filters remain available through More Filters. Turn it off to restore RFD's sidebar spacing. |
 | Hide signatures | On for new installs | Hide signatures present in discussion posts. Existing version 1 choices are preserved. |
 | Compact author details | On for new installs | Hide join date, post count, upvotes and location; names and ranks remain. Existing version 1 choices are preserved. |
-
-<img src="docs/images/popup.png" alt="RFD Enhancement Suite popup with independent browsing controls" width="360">
 
 Discussion text defaults to 18 px. Use your browser’s zoom controls to adjust the page size.
 
