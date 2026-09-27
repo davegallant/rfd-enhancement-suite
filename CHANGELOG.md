@@ -18,6 +18,7 @@
 
 ### Changed
 
+- Replace solid red reply headers with plain, muted timestamps and post links.
 - Make original post text follow the Text size slider, including deal descriptions.
 - Consolidate repeated thread layout rules so spacing and text sizing each have one source.
 - Hide signatures and secondary author details on new installations; preserve version 1 settings on upgrade.
