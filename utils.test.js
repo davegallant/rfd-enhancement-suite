@@ -45,6 +45,12 @@ function setup(values = {}, failDB = false, legacyValues = {}) {
   return { context, data, legacy, bundled };
 }
 
+test('initialization moves the old default rules URL to the renamed repository', async () => {
+  const { context, data } = setup({ config: 'https://raw.githubusercontent.com/davegallant/rfd-affiliate-stripper/main/redirects.json' });
+  await context.setDefaultConfig(false);
+  assert.equal(data.get('config'), 'https://raw.githubusercontent.com/davegallant/rfd-enhancement-suite/main/redirects.json');
+});
+
 test('existing IndexedDB rules migrate into extension storage without replacing newer values', async () => {
   const old = [{ pattern: '(?<baseUrl>https://old.example)' }];
   const newer = [{ pattern: '(?<baseUrl>https://new.example)' }];

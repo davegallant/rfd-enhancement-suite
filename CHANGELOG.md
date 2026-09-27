@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Soften quote attribution and dim disabled cleanup controls.
+- Consolidate reply styles and add browser coverage for realistic replies, long usernames, voting, and menus.
+- Point default rules and userscript updates to the renamed repository.
+
 ## 1.1.1 - 2026-09-27
 
 - Collapse reserved bottom ad slots together with the hidden footer, leaving 24px of bottom breathing room.

@@ -6,3 +6,5 @@ node_modules
 docs/superpowers/
 test-results/
 playwright-report/
+
+.DS_Store

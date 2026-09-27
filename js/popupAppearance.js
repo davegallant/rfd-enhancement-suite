@@ -9,6 +9,11 @@
   };
   if (Object.values(fields).some(field => !field)) return;
   const cleanupFields = ['hidePromotions', 'hideSidebar', 'hideFooter', 'hideSignatures', 'compactProfiles'];
+  const cleanupForm = document.getElementById('appearance-form');
+  function setCleanupEnabled(enabled) {
+    cleanupForm.setAttribute('aria-disabled', String(!enabled));
+    for (const name of cleanupFields) fields[name].disabled = !enabled;
+  }
   const settings = globalThis.RFDModern.settings;
   const status = document.getElementById('appearance-status');
   const pageStatus = document.getElementById('appearance-page-status');
@@ -17,8 +22,8 @@
     rendering = true;
     for (const [name, field] of Object.entries(fields)) {
       field.checked = value[name];
-      if (cleanupFields.includes(name)) field.disabled = !value.clutterEnabled;
     }
+    setCleanupEnabled(value.clutterEnabled);
     rendering = false;
   }
   render(saved);
@@ -33,7 +38,7 @@
   for (const [name, field] of Object.entries(fields)) field.addEventListener('change', () => {
     if (rendering) return;
     const value = field.checked;
-    if (name === 'clutterEnabled') for (const key of cleanupFields) fields[key].disabled = !value;
+    if (name === 'clutterEnabled') setCleanupEnabled(value);
     save(name, value);
   });
   document.getElementById('appearance-reset').addEventListener('click', () => {

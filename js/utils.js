@@ -2,7 +2,7 @@
 const DB_NAME = 'rfdAffiliateStripperDB';
 const STORE_NAME = 'config';
 const DB_VERSION = 1;
-export const DEFAULT_CONFIG_URL = 'https://raw.githubusercontent.com/davegallant/rfd-affiliate-stripper/main/redirects.json';
+export const DEFAULT_CONFIG_URL = 'https://raw.githubusercontent.com/davegallant/rfd-enhancement-suite/main/redirects.json';
 
 function openDB() {
   return new Promise((resolve, reject) => {
@@ -152,7 +152,9 @@ export async function getRedirects() {
 }
 
 export async function setDefaultConfig(reset = true) {
-  if (!reset && await dbGet('config')) return;
+  const existing = reset ? null : await dbGet('config');
+  const oldDefault = 'https://raw.githubusercontent.com/davegallant/rfd-affiliate-stripper/main/redirects.json';
+  if (existing && existing !== oldDefault) return;
   await dbSet(
     "config",
     DEFAULT_CONFIG_URL

@@ -77,7 +77,7 @@ npm run build
 Rules live in [redirects.json](redirects.json). Open a pull request to add or update a rule. To try rules from your branch, set **Rules URL** in Advanced to its raw JSON file, for example:
 
 ```text
-https://raw.githubusercontent.com/davegallant/rfd-affiliate-stripper/my-new-branch/redirects.json
+https://raw.githubusercontent.com/davegallant/rfd-enhancement-suite/my-new-branch/redirects.json
 ```
 
 The file must contain a JSON array. Rules may use a regex `pattern` with a named `baseUrl` capture group, or match an exact `host`, a list of exact `hosts`, `hostSuffixes` (a domain and its subdomains), or a regex `hostPattern` applied only to the hostname. Structured rules need at least one operation. An optional `name` labels a rule in the link tester. Supported operations are:

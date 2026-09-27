@@ -56,6 +56,8 @@ summary:hover { color: var(--text); }
 #customize-cleanup { margin: 8px 0 0; }
 #appearance-form { display: grid; gap: 10px; padding: 14px 0 4px 8px; }
 .check { display: flex; align-items: flex-start; gap: 8px; cursor: pointer; }
+#appearance-form[aria-disabled="true"] { opacity: .5; }
+#appearance-form[aria-disabled="true"] .check { cursor: default; }
 .check input { margin: 2px 0 0; accent-color: var(--accent); }
 #link-tools { margin: 18px 0 0; padding-top: 14px; border-top: 1px solid var(--border); }
 #link-tools > summary { font-weight: 600; }

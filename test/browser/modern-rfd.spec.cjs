@@ -19,6 +19,16 @@ for (const pageType of ['list-card', 'thread-rich', 'search']) for (const width 
       else route.abort();
     });
     await page.goto(pageType === 'search' ? 'https://forums.redflagdeals.com/search.php?keywords=anker&sr=threads' : pageType === 'list-card' ? 'https://forums.redflagdeals.com/hot-deals-f9/' : 'https://forums.redflagdeals.com/example-1/');
+    // Install representative site handlers before the extension enhances replies.
+    if (pageType === 'thread-rich') await page.evaluate(() => {
+      document.querySelectorAll('.ellipses_menu_button').forEach(button => button.addEventListener('click', () => {
+        const open = button.classList.toggle('active');
+        button.setAttribute('aria-expanded', String(open));
+      }));
+      document.querySelectorAll('.upvote_button').forEach(button => button.addEventListener('click', () => {
+        button.nextElementSibling.textContent = Number(button.nextElementSibling.textContent) + 1;
+      }));
+    });
     for (const source of sources) await page.addScriptTag({ path:resolve(source) });
     await page.addStyleTag({ content:'#site_content .forums_layout > .primary_content { width: calc(100% - 320px); float: left; } .with_sidebar .primary_content { padding-right: 21.875rem; width: 100%; } #site_content .forums_layout > .sidebar_content { width: 300px; float: right; }' });
     await page.addStyleTag({ path:resolve('css/forum-theme.css') });
@@ -67,6 +77,48 @@ for (const pageType of ['list-card', 'thread-rich', 'search']) for (const width 
       const tableScroll = await page.locator('.post_content table').evaluate(el => el.scrollWidth - el.clientWidth);
       expect(tableScroll).toBeGreaterThan(0);
     }
+    if (pageType === 'thread-rich') {
+      const replies = page.locator('article.thread_post:not(.thread_original_post)');
+      await expect(replies).toHaveCount(2);
+      for (const reply of await replies.all()) {
+        const geometry = await reply.evaluate(el => {
+          const rect = selector => el.querySelector(selector).getBoundingClientRect();
+          const author = rect('.post_profilearea'), date = rect('.post_dateline'), body = rect('.post_body'), actions = rect('.actionbar_wrapper');
+          return { overlap: author.left < date.right && author.right > date.left && author.top < date.bottom && author.bottom > date.top,
+            bodyBelow: body.top >= Math.max(author.bottom, date.bottom), actionGap: actions.top - body.bottom,
+            inset: body.left - el.getBoundingClientRect().left, bodyWidth: body.width, postWidth: el.clientWidth,
+            background: getComputedStyle(el.querySelector('.post_body')).backgroundImage };
+        });
+        expect(geometry.overlap).toBe(false);
+        expect(geometry.bodyBelow).toBe(true);
+        expect(geometry.actionGap).toBeGreaterThanOrEqual(-0.01); // Firefox rounds adjacent edges separately.
+        expect(geometry.inset).toBeGreaterThanOrEqual(15);
+        expect(geometry.postWidth - geometry.bodyWidth).toBeLessThanOrEqual(42);
+        expect(geometry.background).toBe('none');
+        await expect(reply.locator('.profile_numposts')).toBeHidden();
+        await expect(reply.locator('blockquote blockquote')).toBeHidden();
+      }
+      const first = replies.first();
+      await first.getByRole('button', { name: 'Upvote', exact: true }).click();
+      await expect(first.locator('.total_count')).toHaveText('9');
+      await first.getByRole('button', { name: 'More', exact: true }).click();
+      await expect(first.getByRole('link', { name: 'Report', exact: true })).toBeVisible();
+      const menu = await first.locator('.ellipses_menu_content').boundingBox();
+      expect(menu.x).toBeGreaterThanOrEqual(0);
+      expect(menu.x + menu.width).toBeLessThanOrEqual(width);
+      await first.getByRole('button', { name: 'More', exact: true }).click();
+      await page.evaluate(() => window.RFDModern.settings.save({ compactProfiles: false }));
+      await expect(first.locator('.profile_numposts')).toBeVisible();
+      await page.evaluate(() => window.RFDModern.settings.save({ compactProfiles: true }));
+      const cite = first.locator('cite');
+      await expect(cite).toHaveCSS('font-size', '13px');
+      await expect(cite).toHaveCSS('font-style', 'normal');
+      const quote = first.locator('blockquote').first();
+      const lightBackground = await quote.evaluate(el => getComputedStyle(el).backgroundColor);
+      await page.evaluate(() => document.documentElement.setAttribute('data-theme', 'dark'));
+      expect(await quote.evaluate(el => getComputedStyle(el).backgroundColor)).not.toBe(lightBackground);
+      await page.evaluate(() => document.documentElement.removeAttribute('data-theme'));
+    }
     const scroll = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     expect(scroll).toBeLessThanOrEqual(1);
     await page.screenshot({path:`test-results/${pageType}-${width}.png`,fullPage:true});
@@ -80,6 +132,8 @@ for (const pageType of ['list-card', 'thread-rich', 'search']) for (const width 
     }
     if (pageType === 'thread-rich' && width === 1440) {
       await page.evaluate(() => window.RFDModern.settings.save({enabled:false}));
+      await expect(page.locator('#p4 .post_body')).toHaveCSS('padding-left', '212px');
+      await expect(page.locator('#p4 .post_dateline')).toHaveCSS('background-color', 'rgb(204, 0, 0)');
       await expect(page.locator('.signature')).toBeHidden();
       await page.evaluate(() => window.RFDModern.settings.save({clutterEnabled:false}));
       await expect(page.locator('.signature')).toBeVisible();
