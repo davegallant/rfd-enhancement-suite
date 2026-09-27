@@ -75,7 +75,7 @@ jobs:
 
   publish-chrome:
     needs: [credentials, package]
-    if: needs.credentials.outputs.chrome == 'true'
+    if: needs.credentials.outputs.chrome == 'true' && vars.CHROME_PUBLISH_PAUSED != 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v8

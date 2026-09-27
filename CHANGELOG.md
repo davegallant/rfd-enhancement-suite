@@ -1,10 +1,11 @@
 # Changelog
 
-## Unreleased
+## 1.1.2 - 2026-09-27
 
 - Soften quote attribution and dim disabled cleanup controls.
 - Consolidate reply styles and add browser coverage for realistic replies, long usernames, voting, and menus.
 - Point default rules and userscript updates to the renamed repository.
+- Allow Chrome publishing to be paused while an earlier submission is under review.
 
 ## 1.1.1 - 2026-09-27
 

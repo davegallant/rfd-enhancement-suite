@@ -6,7 +6,7 @@ Give [RedFlagDeals forums](https://forums.redflagdeals.com/) a simpler interface
 
 [Firefox store listing](https://addons.mozilla.org/en-US/firefox/addon/rfd-redirect-stripper/) · [Chrome store listing](https://chromewebstore.google.com/detail/rfd-affiliate-stripper/nhjomcijhonhoggkckbjjfnjdcefbblo)
 
-Version 1.1.1 is available from source. Store listings may take time to update after submission and review.
+Version 1.1.2 is available from source. Store listings may take time to update after submission and review.
 
 ## Appearance
 
@@ -26,7 +26,7 @@ Discussion text defaults to 17 px. Use your browser’s zoom controls to adjust 
 
 Appearance settings persist across supported tabs. **Reset appearance** restores these defaults. Turning Modern layout off leaves cleanup and link cleaning active, except that an existing version 1 user who had disabled the layout starts with Remove clutter off as well. Turning Remove clutter off reveals promotions, sidebars, the footer, signatures and secondary author details while preserving each individual preference. RFD may omit signature markup for some posts or page states; the extension can only show signatures present in the page.
 
-The popup links to the latest update page. Version 1.1.1 updates quietly without opening a new tab.
+The popup links to the latest update page. Version 1.1.2 updates quietly without opening a new tab.
 
 ### Quick test in Brave
 
@@ -100,6 +100,8 @@ The project began as a [Tampermonkey](https://www.tampermonkey.net/) userscript.
 The [publish workflow](.github/workflows/publish.yaml) runs for `v*` tags and can be started manually with an existing tag. The tag must match the version in [manifest.json](manifest.json). It runs tests and linting, builds the package, and submits to stores whose credentials are configured. The Chrome job reports upload and submission states and API errors; a successful submission can still require store review before the version becomes public.
 
 For future releases, complete the [live browser release checks](docs/testing/modern-rfd-manual.md), update the manifest version and changelog, then tag the release.
+
+Set the repository Actions variable `CHROME_PUBLISH_PAUSED` to `true` to skip Chrome submissions while a previous version is under review. GitHub releases and Firefox submissions can continue. Remove the variable or set it to `false` before manually publishing the latest tag to Chrome.
 
 Complete the store listings in their dashboards, then add these GitHub Actions secrets:
 
