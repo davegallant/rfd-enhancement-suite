@@ -8,7 +8,7 @@ Version 1.1.0 is prepared from source. Store listings may take time to update af
 
 ## Appearance
 
-The extension gives Hot Deals listings more consistent rows and discussion threads room to use the available page width, with small side gutters on both. A subtle line connects discussion replies. Classic Hot Deals lists keep their native rows and controls. RFD controls page colours and light/dark mode. The extension keeps RFD's links, filters, pagination, posting controls, thread order, timestamps and emoji sizing. The forum home page keeps its native content and controls, with the sidebar setting available there too. Search, account, profile and unknown page layouts retain RFD's native appearance.
+The extension gives Hot Deals listings more consistent rows and discussion threads room to use the available page width, with small side gutters on both. Thin borders connect discussion replies. Classic Hot Deals lists keep their native rows and controls. RFD controls page colours and light/dark mode. The extension keeps RFD's links, filters, pagination, posting controls, thread order, timestamps and emoji sizing. The forum home page keeps its native content and controls, with the sidebar setting available there too. Search, account, profile and unknown page layouts retain RFD's native appearance.
 
 | Popup control | Default | Effect |
 | --- | --- | --- |

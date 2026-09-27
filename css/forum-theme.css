@@ -124,8 +124,13 @@
     border-bottom: 1px solid var(--forum-item-border, #e2e2e2);
   }
   html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread > .thread_posts > article.thread_post:not(.thread_original_post)[data-rfdm-role="post"] {
-    border-left: 2px solid var(--colour-text-light, #999);
-    padding-left: 14px;
+    border-inline: 1px solid var(--forum-item-border, #e2e2e2);
+    padding: 0 15px 8px;
+  }
+  @media (min-width: 50.063em) {
+    html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread > .thread_posts > article.thread_post:not(.thread_original_post) :is(.post_content, .ignore) {
+      margin-bottom: 2rem;
+    }
   }
   html[data-rfdm-enabled="true"][data-rfdm-page="thread"] [data-rfdm-role="post-body"] {
     line-height: 1.6;
