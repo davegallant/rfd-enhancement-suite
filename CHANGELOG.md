@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Apply Hide sidebar to search results and reclaim the available width.
+- Add more padding inside replies and between the author header and body.
+- Add a default-on Hide footer option under Customize cleanup, independent of Modern layout.
+
 ## 1.1.0 - 2026-09-27
 
 ### Added

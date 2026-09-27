@@ -31,6 +31,7 @@ test('layout and clutter controls can be changed independently', async () => {
   const layout = p.document.querySelector('#modern-enabled');
   const clutter = p.document.querySelector('#modern-clutter-enabled');
   assert.equal(clutter.checked, true);
+  assert.equal(p.document.querySelector('#modern-hide-footer').checked, true);
   layout.checked = false; layout.dispatchEvent(new p.document.defaultView.Event('change'));
   await p.flush();
   assert.equal(clutter.disabled, false);
@@ -39,6 +40,7 @@ test('layout and clutter controls can be changed independently', async () => {
   await p.flush();
   assert.equal(p.data['rfdm.clutterEnabled'], false);
   assert.equal(p.document.querySelector('#modern-hide-promotions').disabled, true);
+  assert.equal(p.document.querySelector('#modern-hide-footer').disabled, true);
   p.dispose();
 });
 test('popup reports unsupported page and failed saves', async () => {

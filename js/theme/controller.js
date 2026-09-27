@@ -10,6 +10,8 @@
     function clear() { journal.restore(); journal = api.dom.createJournal(); }
     function setAttributes(settings) {
       const html = document.documentElement;
+      const url = new URL(window.location.href);
+      if (url.hostname === 'forums.redflagdeals.com' && url.searchParams.get('view') !== 'print') journal.setAttribute(html, 'data-rfdm-hide-footer', String(settings.clutterEnabled && settings.hideFooter));
       if (match?.kind === 'thread') journal.setAttribute(html, 'data-rfdm-hide-signatures', String(settings.clutterEnabled && settings.hideSignatures));
       if (!match) return;
       const values = { enabled: 'true', page: match.kind,
@@ -28,6 +30,7 @@
       match = api.adapters.detect(document, new URL(window.location.href));
       appliedHref = window.location.href;
       if (!match) {
+        setAttributes(settings);
         status = { enabled: settings.enabled, applied: false, page: 'unsupported', reason: settings.enabled ? 'unsupported' : 'disabled' };
         return;
       }

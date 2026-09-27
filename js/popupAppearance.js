@@ -4,9 +4,11 @@
     clutterEnabled: document.getElementById('modern-clutter-enabled'),
     hidePromotions: document.getElementById('modern-hide-promotions'),
     hideSidebar: document.getElementById('modern-hide-sidebar'),
+    hideFooter: document.getElementById('modern-hide-footer'),
     hideSignatures: document.getElementById('modern-hide-signatures'), compactProfiles: document.getElementById('modern-compact-profiles'),
   };
   if (Object.values(fields).some(field => !field)) return;
+  const cleanupFields = ['hidePromotions', 'hideSidebar', 'hideFooter', 'hideSignatures', 'compactProfiles'];
   const settings = globalThis.RFDModern.settings;
   const status = document.getElementById('appearance-status');
   const pageStatus = document.getElementById('appearance-page-status');
@@ -15,7 +17,7 @@
     rendering = true;
     for (const [name, field] of Object.entries(fields)) {
       field.checked = value[name];
-      if (['hidePromotions', 'hideSidebar', 'hideSignatures', 'compactProfiles'].includes(name)) field.disabled = !value.clutterEnabled;
+      if (cleanupFields.includes(name)) field.disabled = !value.clutterEnabled;
     }
     rendering = false;
   }
@@ -31,7 +33,7 @@
   for (const [name, field] of Object.entries(fields)) field.addEventListener('change', () => {
     if (rendering) return;
     const value = field.checked;
-    if (name === 'clutterEnabled') for (const key of ['hidePromotions', 'hideSidebar', 'hideSignatures', 'compactProfiles']) fields[key].disabled = !value;
+    if (name === 'clutterEnabled') for (const key of cleanupFields) fields[key].disabled = !value;
     save(name, value);
   });
   document.getElementById('appearance-reset').addEventListener('click', () => {
@@ -42,6 +44,6 @@
   });
   chrome.tabs.query({ active: true, currentWindow: true }).then(async ([tab]) => {
     const state = await chrome.tabs.sendMessage(tab.id, { type: 'getThemeStatus' });
-    pageStatus.textContent = state.applied || state.reason === 'disabled' ? '' : 'Appearance options are unavailable on this page.';
+    pageStatus.textContent = state.applied || state.reason === 'disabled' ? '' : 'Modern layout is unavailable on this page.';
   }).catch(() => { pageStatus.textContent = 'Open or reload an RFD forum tab to apply the extension.'; });
 })();

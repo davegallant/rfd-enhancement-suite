@@ -8,7 +8,11 @@
   function detect(document, url) {
     if (url.protocol !== 'https:' && url.protocol !== 'http:') return null;
     if (url.hostname !== 'forums.redflagdeals.com') return null;
-    if (/^(?:\/(?:search|posting|login|memberlist|ucp|mcp)\.php|\/user\/)/.test(url.pathname) || url.searchParams.get('view') === 'print') return null;
+    if (/^(?:\/(?:posting|login|memberlist|ucp|mcp)\.php|\/user\/)/.test(url.pathname) || url.searchParams.get('view') === 'print') return null;
+    if (url.pathname === '/search.php') {
+      const search = document.querySelector('#site_content #partition_forums .forums_layout > .primary_content > #search_results');
+      return search ? { kind: 'search', variant: 'search-sidebar-v1', root: search } : null;
+    }
     const thread = document.querySelector(SELECTORS.thread);
     if (thread && thread.querySelector('.thread_posts > ' + SELECTORS.post)) return { kind: 'thread', variant: 'thread-v1', root: thread };
     const list = document.querySelector(SELECTORS.list);

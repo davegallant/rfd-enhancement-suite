@@ -10,20 +10,21 @@ Version 1.1.0 is prepared from source. Store listings may take time to update af
 
 ## Appearance
 
-The extension gives Hot Deals listings more consistent rows and discussion threads room to use the available page width, with small side gutters on both. Thin borders connect discussion replies. Classic Hot Deals lists keep their native rows and controls. RFD controls page colours and light/dark mode. The extension keeps RFD's links, filters, pagination, posting controls, thread order, timestamps and emoji sizing. The forum home page keeps its native content and controls, with the sidebar setting available there too. Search, account, profile and unknown page layouts retain RFD's native appearance.
+The extension gives Hot Deals listings more consistent rows and discussion threads room to use the available page width, with small side gutters on both. Thin borders connect discussion replies. Classic Hot Deals lists keep their native rows and controls. RFD controls page colours and light/dark mode. The extension keeps RFD's links, filters, pagination, posting controls, thread order, timestamps and emoji sizing. The forum home page keeps its native content and controls, with the sidebar setting available there too. Search results support sidebar cleanup. Account, profile and unknown page layouts retain RFD's native appearance.
 
 | Popup control | Default | Effect |
 | --- | --- | --- |
 | Modern layout | On | Use clearer deal rows and a spacious discussion layout. |
 | Remove clutter | On | Master switch for the cleanup options below. Works independently of Modern layout. |
 | Hide promotions and sponsored threads | On | Hide recognized ads, sponsored placements and labeled sponsored threads in both Hot Deals list layouts, including pencil ads and the member header leaderboard. This changes display; it does not block requests. |
-| Hide sidebar | On | Hide sidebars on the forum home page, card lists, classic Hot Deals lists and threads, using the freed space. On card lists, RFD's filters remain available through More Filters. Turn it off to restore RFD's sidebar spacing. |
+| Hide sidebar | On | Hide sidebars on the forum home page, search results, card lists, classic Hot Deals lists and threads, using the freed space. On card lists, RFD's filters remain available through More Filters. Turn it off to restore RFD's sidebar spacing. |
+| Hide footer | On | Hide the site footer across forum pages. Turn it off to restore footer links. |
 | Hide signatures | On for new installs | Hide signatures present in discussion posts. Existing version 1 choices are preserved. |
 | Compact author details | On for new installs | Hide join date, post count, upvotes and location; names and ranks remain. Existing version 1 choices are preserved. |
 
 Discussion text defaults to 17 px. Use your browser’s zoom controls to adjust the page size.
 
-Appearance settings persist across supported tabs. **Reset appearance** restores these defaults. Turning Modern layout off leaves cleanup and link cleaning active, except that an existing version 1 user who had disabled the layout starts with Remove clutter off as well. Turning Remove clutter off reveals promotions, sidebars, signatures and secondary author details while preserving each individual preference. RFD may omit signature markup for some posts or page states; the extension can only show signatures present in the page.
+Appearance settings persist across supported tabs. **Reset appearance** restores these defaults. Turning Modern layout off leaves cleanup and link cleaning active, except that an existing version 1 user who had disabled the layout starts with Remove clutter off as well. Turning Remove clutter off reveals promotions, sidebars, the footer, signatures and secondary author details while preserving each individual preference. RFD may omit signature markup for some posts or page states; the extension can only show signatures present in the page.
 
 The popup links to the 1.1.0 update page. When an installed extension updates to version 1.1.0, that page opens once in a new tab. Reloading an unpacked extension without changing its version does not reopen it.
 

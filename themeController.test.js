@@ -2,6 +2,25 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const { loadThemeFixture } = require('./test/helpers/themeHarness.cjs');
 const scripts = ['js/theme/dom.js', 'js/theme/adapters.js', 'js/theme/thread.js', 'js/theme/controller.js'];
+test('search cleanup persists footer choices and restores both controls with clutter off', async () => {
+  const h = loadThemeFixture('search', { url: 'https://forums.redflagdeals.com/search.php?keywords=anker', initial: { 'rfdm.enabled': false }, scripts });
+  const stop = h.api.controller.start(h.document, h.window); await h.flush();
+  const html = h.document.documentElement;
+  assert.equal(html.getAttribute('data-rfdm-page'), 'search');
+  assert.equal(html.getAttribute('data-rfdm-hide-sidebar'), 'true');
+  assert.equal(html.getAttribute('data-rfdm-hide-footer'), 'true');
+  await h.api.settings.save({ hideFooter: false }); await h.flush();
+  assert.equal(html.getAttribute('data-rfdm-hide-footer'), 'false');
+  assert.equal((await h.api.settings.load()).hideFooter, false);
+  await h.api.settings.save({ hideFooter: true, clutterEnabled: false }); await h.flush();
+  assert.notEqual(html.getAttribute('data-rfdm-hide-footer'), 'true');
+  assert.notEqual(html.getAttribute('data-rfdm-hide-sidebar'), 'true');
+  await h.api.settings.save({ clutterEnabled: true }); await h.flush();
+  assert.equal(html.getAttribute('data-rfdm-hide-footer'), 'true');
+  stop();
+  assert.equal(html.hasAttribute('data-rfdm-hide-footer'), false);
+  h.dispose();
+});
 function page(name, initial = {}, options = {}) { return loadThemeFixture(name, { url: name === 'thread' ? 'https://forums.redflagdeals.com/example-1/' : 'https://forums.redflagdeals.com/hot-deals-f9/', initial, scripts, ...options }); }
 test('layout improvements can be disabled while preserving native theme', async () => {
   const h = page('list-card', { 'rfdm.enabled': false });

@@ -1,6 +1,6 @@
 (() => {
   const api = globalThis.RFDModern ||= {};
-  const DEFAULTS = Object.freeze({ enabled: true, clutterEnabled: true, hidePromotions: true, hideSidebar: true, hideSignatures: true, compactProfiles: true });
+  const DEFAULTS = Object.freeze({ enabled: true, clutterEnabled: true, hidePromotions: true, hideSidebar: true, hideFooter: true, hideSignatures: true, compactProfiles: true });
   const PREFIX = 'rfdm.';
   const names = Object.keys(DEFAULTS);
   const allKeys = names.map(name => PREFIX + name);
@@ -9,6 +9,7 @@
     clutterEnabled: value => typeof value === 'boolean',
     hidePromotions: value => typeof value === 'boolean',
     hideSidebar: value => typeof value === 'boolean',
+    hideFooter: value => typeof value === 'boolean',
     hideSignatures: value => typeof value === 'boolean',
     compactProfiles: value => typeof value === 'boolean',
   };

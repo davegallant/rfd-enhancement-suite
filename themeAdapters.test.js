@@ -22,3 +22,7 @@ test('rejects unsupported host and routes', () => {
   assert.equal(detect('thread', '/posting.php'), null);
   assert.equal(detect('thread', '/example-1/?view=print'), null);
 });
+test('recognizes the search result shell without treating it as a deal list', () => {
+  assert.equal(detect('search', '/search.php?keywords=anker&sr=threads')?.kind, 'search');
+  assert.equal(detect('search', '/search.php?keywords=anker&sr=posts')?.root.id, 'search_results');
+});
