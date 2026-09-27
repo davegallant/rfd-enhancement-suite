@@ -29,11 +29,11 @@ jobs:
         with:
           cmd: build
           source: .
-          filename: "rfd-affiliate-stripper-${{steps.vars.outputs.version}}-${{steps.vars.outputs.sha_short}}.xpi"
-          ignoreFiles: '[ "package.json", "package-lock.json", "yarn.lock", "*.test.js", "docs/**", "web-ext-artifacts/**", "extensions/**" ]'
+          filename: "rfd-enhancement-suite-${{steps.vars.outputs.version}}-${{steps.vars.outputs.sha_short}}.xpi"
+          ignoreFiles: '[ "package.json", "package-lock.json", "yarn.lock", "*.test.js", "docs/**", "web-ext-artifacts/**", "extensions/**", "test/**", "test-results/**", "playwright-report/**", "playwright.config.cjs" ]'
 
       - name: "Upload Artifact"
         uses: actions/upload-artifact@v7
         with:
-          name: "rfd-affiliate-stripper-${{steps.vars.outputs.version}}-${{steps.vars.outputs.sha_short}}.xpi"
+          name: "rfd-enhancement-suite-${{steps.vars.outputs.version}}-${{steps.vars.outputs.sha_short}}.xpi"
           path: ${{ steps.web-ext-build.outputs.target }}

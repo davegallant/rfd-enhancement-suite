@@ -1,0 +1,7 @@
+:root { color-scheme: light dark; font-family: system-ui, sans-serif; }
+body { margin: 0; padding: 32px 20px; line-height: 1.55; }
+main { max-width: 680px; margin-inline: auto; }
+.eyebrow { font-size: 0.875rem; font-weight: 700; }
+h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); line-height: 1.15; }
+li { margin-bottom: 8px; }
+a { color: inherit; text-underline-offset: 3px; }

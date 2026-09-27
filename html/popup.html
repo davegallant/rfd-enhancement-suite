@@ -2,11 +2,29 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>rfd-affiliate-stripper</title>
+    <title>rfd-enhancement-suite</title>
     <link rel="stylesheet" href="../css/popup.css" />
   </head>
   <body>
-    <h1>RFD Affiliate Stripper</h1>
+    <h1>RFD Enhancement Suite</h1>
+    <p class="hint"><a href="whats-new.html" target="_blank">What's new in 1.0.0</a></p>
+    <section id="appearance-section" aria-labelledby="appearance-heading">
+      <h2 id="appearance-heading">Appearance</h2>
+      <label class="check"><input id="modern-enabled" type="checkbox" /> Simplify layout</label>
+      <p id="appearance-page-status" role="status"></p>
+      <form id="appearance-form">
+        <label for="modern-font-size">Text size</label><div class="range-control"><input id="modern-font-size" type="range" min="16" max="24" step="1" value="18" /><output id="modern-font-size-value" for="modern-font-size">18 px</output></div>
+        <label class="check"><input id="modern-hide-promotions" type="checkbox" /> Hide promotions and sponsored threads</label>
+        <label class="check"><input id="modern-hide-sidebar" type="checkbox" /> Hide sidebar</label>
+        <label class="check"><input id="modern-hide-signatures" type="checkbox" /> Hide signatures</label>
+        <label class="check"><input id="modern-compact-profiles" type="checkbox" /> Hide join date, posts, upvotes and location</label>
+      </form>
+      <button id="appearance-reset" type="button">Reset appearance</button>
+      <p id="appearance-status" role="status" aria-live="polite"></p>
+    </section>
+    <h2>Link cleaning</h2>
+    <label class="check"><input id="link-cleaning-enabled" type="checkbox" /> Clean links on forum pages</label>
+    <p id="link-cleaning-status" role="status" aria-live="polite"></p>
     <p id="activity-count" role="status">Loading page activity…</p>
     <details>
       <summary>Recent cleaned links</summary>
@@ -15,6 +33,7 @@
     </details>
     <p id="last-update"></p>
     <p id="update-error" role="status"></p>
+    <details id="link-tools"><summary>Link tools and advanced settings</summary>
     <form id="test-form">
       <label for="test-url">Test a link</label>
       <input type="text" id="test-url" placeholder="https://…" required />
@@ -28,7 +47,10 @@
     <button id="save-button">Save</button>
     <button id="reset-button">Reset</button>
     <div id="status-message" role="status"></div>
+    </details>
     <script src="../js/stripRedirect.js"></script>
+    <script src="../js/theme/settings.js"></script>
+    <script src="../js/popupAppearance.js"></script>
     <script type="module" src="../js/popup.js"></script>
   </body>
 </html>

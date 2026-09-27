@@ -1,12 +1,15 @@
 {
   "devDependencies": {
+    "jsdom": "^26.1.0",
+    "playwright": "^1.63.0",
     "web-ext": "^10.2.0"
   },
   "scripts": {
     "test": "node --test *.test.js",
     "start:firefox": "web-ext run --source-dir .",
-    "build": "web-ext build --overwrite-dest --source-dir . --ignore-files extensions/ 'docs/**' '*.test.js' 'web-ext-artifacts/**'",
+    "build": "web-ext build --overwrite-dest --source-dir . --ignore-files extensions/ package.json package-lock.json 'flake.*' renovate.json script.js.tmpl test/ 'docs/**' '*.test.js' 'test/**' 'test-results/**' 'playwright-report/**' 'playwright.config.cjs' 'web-ext-artifacts/**'",
     "lint": "web-ext lint --source-dir .",
-    "sign": "web-ext sign --source-dir ."
+    "sign": "web-ext sign --source-dir .",
+    "test:browser": "playwright test"
   }
 }

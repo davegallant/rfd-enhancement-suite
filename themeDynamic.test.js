@@ -1,0 +1,40 @@
+const { test } = require('node:test');
+const assert = require('node:assert/strict');
+const { loadThemeFixture } = require('./test/helpers/themeHarness.cjs');
+const scripts = ['js/theme/dom.js','js/theme/adapters.js','js/theme/list.js','js/theme/thread.js','js/theme/controller.js'];
+test('added deal rows are marked and disabling removes all appearance markers', async () => {
+  const h = loadThemeFixture('list-card', { scripts });
+  const stop = h.api.controller.start(h.document,h.window); await h.flush();
+  const row = h.document.querySelector('li.topic-card').cloneNode(true); row.dataset.threadId='3'; for (const el of [row, ...row.querySelectorAll('[data-rfdm-role]')]) el.removeAttribute('data-rfdm-role');
+  h.document.querySelector('#forum-topics ul').append(row); await h.flush();
+  assert.equal(row.getAttribute('data-rfdm-role'),'deal-row');
+  await h.api.settings.save({enabled:false}); await h.flush();
+  assert.equal(row.hasAttribute('data-rfdm-role'),false);
+  assert.equal(h.document.querySelectorAll('[data-rfdm-owned]').length,0);
+  stop(); h.dispose();
+});
+test('unsupported replacement restores native appearance', async () => {
+  const h = loadThemeFixture('list-card', { scripts });
+  const stop = h.api.controller.start(h.document,h.window); await h.flush();
+  h.document.querySelector('#forum-topics').remove(); await h.flush();
+  assert.equal(h.document.documentElement.hasAttribute('data-rfdm-enabled'),false);
+  assert.equal(h.api.controller.getStatus().reason,'unsupported');
+  stop(); h.dispose();
+});
+test('root replacement during a queued insertion restores native view', async () => {
+  const h = loadThemeFixture('list-card', { scripts });
+  const frames = [];
+  h.window.requestAnimationFrame = callback => { frames.push(callback); return frames.length; };
+  const stop = h.api.controller.start(h.document,h.window); await h.flush();
+  const root = h.document.querySelector('#forum-topics');
+  const row = root.querySelector('li.topic-card').cloneNode(true);
+  root.querySelector('ul').append(row);
+  await new Promise(resolve => h.window.setTimeout(resolve, 0));
+  assert.ok(frames.length > 0);
+  root.remove();
+  await new Promise(resolve => h.window.setTimeout(resolve, 0));
+  while (frames.length) frames.shift()();
+  assert.equal(h.document.documentElement.hasAttribute('data-rfdm-enabled'), false);
+  assert.equal(h.api.controller.getStatus().reason, 'unsupported');
+  stop(); h.dispose();
+});

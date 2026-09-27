@@ -1,5 +1,34 @@
 # Changelog
 
+## 1.0.0 - 2026-09-26
+
+### Added
+
+- Rename the extension to RFD Enhancement Suite.
+- Add default-on layout improvements for Hot Deals card listings and discussion threads, with a switch for users who want link cleaning alone.
+- Add a text size slider and switches for promotions, sidebars, signatures and author statistics.
+- Add an update page that opens once when an existing installation upgrades to 1.0.0, with a preview link in the popup.
+- Add an independent, default-on **Clean links on forum pages** switch. Turning it off stops rewrites and restores links the extension changed when the site has not changed them since.
+- Add Chromium and Firefox rendering fixtures and instructions for loading the source extension in Brave.
+
+### Changed
+
+- Use the full available page width on supported lists and threads, with sidebars hidden by default and restorable from the popup. Classic Hot Deals lists retain their native rows and controls while gaining the sidebar switch.
+- Remove gaps between deal rows and discussion posts, default post text to 18 px, and scale quotes, reply details and Hot Deals list text with the text-size slider.
+- Keep join date, post count, upvotes and location visible by default, with an option to hide them together. Preserve RFD's own timestamp and emoji sizing.
+- Show signatures present in the page by default and let the signature switch hide them independently of other appearance settings.
+- Rename the Modern view switch to Simplify layout and keep it independent of the signature and link-cleaning switches.
+- Leave page colours and light/dark mode under RFD's own controls.
+- Hide recognized sponsored placements, labeled sponsored threads, pencil ads and the member header leaderboard when **Hide promotions and sponsored threads** is on.
+- Leave search, account, profile, forum directory and unknown layouts in their native view.
+
+### Fixed
+
+- Reapply layout improvements when supported forum content is replaced dynamically, while preserving the user's appearance settings.
+- Restore the main column's width after hiding RFD's sidebar, including the sidebar nested inside Hot Deals filters.
+- Convert desktop deal cards into contiguous full-width rows and move the filter sidebar into RFD's existing More Filters drawer when hidden.
+- Clean matching links in forum post content and deal buttons even when RFD omits its usual link classes, and update full-URL link text when the destination changes.
+
 ## 0.8.1 - 2026-09-22
 
 ### Changed

@@ -23,9 +23,13 @@ async function showActivity() {
   try {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     const activity = await chrome.tabs.sendMessage(tab.id, { type: 'getActivity' });
-    count.textContent = `${activity.count} ${activity.count === 1 ? 'link' : 'links'} cleaned on this page`;
     const list = document.getElementById('activity-links');
     list.replaceChildren();
+    if (activity.enabled === false || !document.getElementById('link-cleaning-enabled').checked) {
+      count.textContent = 'Link cleaning is off on this page';
+      return;
+    }
+    count.textContent = `${activity.count} ${activity.count === 1 ? 'link' : 'links'} cleaned on this page`;
     for (const { original, cleaned } of activity.links) {
       const item = document.createElement('li');
       item.textContent = `${original}\n→ ${cleaned}`;
@@ -38,6 +42,43 @@ async function showActivity() {
 
 showActivity();
 showUpdateStatus();
+
+const cleaningKey = 'linkCleaningEnabled';
+const cleaningToggle = document.getElementById('link-cleaning-enabled');
+const cleaningStatus = document.getElementById('link-cleaning-status');
+let savedCleaningEnabled = true;
+let cleaningChanged = false;
+cleaningToggle.checked = true;
+if (chrome.storage?.local?.get) {
+  cleaningToggle.disabled = true;
+  chrome.storage.local.get(cleaningKey).then(value => {
+    if (cleaningChanged) return;
+    savedCleaningEnabled = value[cleaningKey] !== false;
+    cleaningToggle.checked = savedCleaningEnabled;
+    showActivity();
+  }).catch(error => { cleaningStatus.textContent = `Could not read link setting: ${error.message}`; })
+    .finally(() => { cleaningToggle.disabled = false; });
+}
+cleaningToggle.addEventListener('change', async () => {
+  cleaningChanged = true;
+  const wanted = cleaningToggle.checked;
+  cleaningToggle.disabled = true;
+  try {
+    await chrome.storage.local.set({ [cleaningKey]: wanted });
+    savedCleaningEnabled = wanted;
+    cleaningStatus.textContent = wanted ? 'Link cleaning is on.' : 'Link cleaning is off.';
+    if (wanted) showActivity();
+    else {
+      document.getElementById('activity-count').textContent = 'Link cleaning is off on this page';
+      document.getElementById('activity-links').replaceChildren();
+    }
+  } catch (error) {
+    cleaningToggle.checked = savedCleaningEnabled;
+    cleaningStatus.textContent = `Could not save link setting: ${error.message}`;
+  } finally {
+    cleaningToggle.disabled = false;
+  }
+});
 
 const testUrl = document.getElementById('test-url');
 document.getElementById('test-form').addEventListener('submit', async event => {

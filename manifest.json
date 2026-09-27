@@ -1,9 +1,27 @@
 {
   "manifest_version": 3,
-  "name": "rfd-affiliate-stripper",
-  "description": "Strip tracking redirects on rfd",
-  "version": "0.8.1",
+  "name": "rfd-enhancement-suite",
+  "description": "A calmer RedFlagDeals forum with direct, tracking-free deal links",
+  "version": "1.0.0",
   "content_scripts": [
+    {
+      "matches": [
+        "*://forums.redflagdeals.com/*"
+      ],
+      "js": [
+        "js/theme/settings.js",
+        "js/theme/dom.js",
+        "js/theme/adapters.js",
+        "js/theme/list.js",
+        "js/theme/thread.js",
+        "js/theme/controller.js",
+        "js/theme/bootstrap.js"
+      ],
+      "css": [
+        "css/forum-theme.css"
+      ],
+      "run_at": "document_start"
+    },
     {
       "matches": [
         "*://forums.redflagdeals.com/*"
@@ -34,7 +52,8 @@
     "type": "module"
   },
   "permissions": [
-    "alarms"
+    "alarms",
+    "storage"
   ],
   "browser_specific_settings": {
     "gecko": {
