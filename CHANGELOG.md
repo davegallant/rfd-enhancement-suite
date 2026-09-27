@@ -19,6 +19,8 @@
 
 ### Fixed
 
+- Preserve a version 1 user's disabled layout choice when initializing the new clutter control.
+- Apply signature cleanup only to recognized discussion threads.
 - Recognize supported content added after the page initially loads, and details inserted inside existing posts.
 - Match bundled affiliate wrappers by hostname, avoiding lookalike URLs.
 - Let RFD determine signature display when the extension does not hide it.

@@ -22,7 +22,7 @@ The extension gives Hot Deals listings more consistent rows and discussion threa
 
 <img src="docs/images/popup.png" alt="RFD Enhancement Suite popup with independent browsing controls" width="360">
 
-Appearance settings persist across supported tabs. **Reset appearance** restores these defaults. Turning Modern layout off leaves cleanup and link cleaning active. Turning Remove clutter off reveals promotions, sidebars, signatures and secondary author details while preserving each individual preference. RFD may omit signature markup for some posts or page states; the extension can only show signatures present in the page.
+Appearance settings persist across supported tabs. **Reset appearance** restores these defaults. Turning Modern layout off leaves cleanup and link cleaning active, except that an existing version 1 user who had disabled the layout starts with Remove clutter off as well. Turning Remove clutter off reveals promotions, sidebars, signatures and secondary author details while preserving each individual preference. RFD may omit signature markup for some posts or page states; the extension can only show signatures present in the page.
 
 The popup links to the 1.1.0 update page. When an installed extension updates to version 1.1.0, that page opens once in a new tab. Reloading an unpacked extension without changing its version does not reopen it.
 

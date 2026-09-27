@@ -27,6 +27,10 @@
       if (values.hideSignatures === undefined) values.hideSignatures = false;
       if (values.compactProfiles === undefined) values.compactProfiles = false;
     }
+    if (raw[PREFIX + 'schemaVersion'] === 1 && values.clutterEnabled === undefined) {
+      values.clutterEnabled = values.enabled !== false;
+      await chrome.storage.local.set({ [PREFIX + 'clutterEnabled']: values.clutterEnabled });
+    }
     return normalize(values);
   }
   async function save(patch) {

@@ -10,7 +10,7 @@
     function clear() { journal.restore(); journal = api.dom.createJournal(); }
     function setAttributes(settings) {
       const html = document.documentElement;
-      if (document.querySelector('#thread .thread_posts article.thread_post')) journal.setAttribute(html, 'data-rfdm-hide-signatures', String(settings.clutterEnabled && settings.hideSignatures));
+      if (match?.kind === 'thread') journal.setAttribute(html, 'data-rfdm-hide-signatures', String(settings.clutterEnabled && settings.hideSignatures));
       if (!match) return;
       const values = { enabled: 'true', page: match.kind,
         'font-size': String(settings.fontSize),
@@ -28,7 +28,6 @@
       current = settings;
       match = api.adapters.detect(document, new URL(window.location.href));
       appliedHref = window.location.href;
-      if (document.querySelector('#thread .thread_posts article.thread_post')) journal.setAttribute(document.documentElement, 'data-rfdm-hide-signatures', String(settings.clutterEnabled && settings.hideSignatures));
       if (!match) {
         status = { enabled: settings.enabled, applied: false, page: 'unsupported', reason: settings.enabled ? 'unsupported' : 'disabled' };
         return;
