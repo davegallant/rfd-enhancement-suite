@@ -10,6 +10,7 @@
 - Use the same small side gutters on forum lists and thread lists as on threads.
 - Connect discussion replies with thin borders on both sides, consistent dividers and tighter spacing.
 - Use RFD's divider color on deal rows as well as discussion posts.
+- Match reply avatar frames to their compact images so short posts do not reserve empty space.
 - Match the popup accent to RFD red.
 - Support hostname and query based redirect rules alongside existing regex rules.
 - Migrate existing rule configuration from IndexedDB to extension storage.

@@ -54,7 +54,10 @@
   html[data-rfdm-enabled="true"][data-rfdm-page="thread"] [data-rfdm-role="post-body"] pre { max-width: 100%; overflow-x: auto; }
   html[data-rfdm-enabled="true"][data-rfdm-page="thread"] [data-rfdm-role="post-body"] table { display: block; width: max-content; max-width: 100%; overflow-x: auto; }
   html[data-rfdm-enabled="true"][data-rfdm-page="thread"] [data-rfdm-role="post-body"] .content blockquote { font-size: var(--rfdm-post-font-size); line-height: 1.65; padding-left: 12px; }
-  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] .post_profilearea .avatar img { max-width: 32px; max-height: 32px; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] .post_profilearea img.avatar { max-width: 32px; max-height: 32px; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread .thread_posts > article.thread_post:not(.thread_original_post) .profile_avatar_link {
+    width: 32px; height: 32px; padding-bottom: 0;
+  }
   html[data-rfdm-page="thread"][data-rfdm-compact-profiles="true"] [data-rfdm-role="profile-stats"] { display: none !important; }
   html[data-rfdm-hide-signatures="true"] #thread .thread_posts article.thread_post .signature { display: none !important; }
 }
