@@ -54,7 +54,7 @@
   html[data-rfdm-enabled="true"][data-rfdm-page="thread"] [data-rfdm-role="post-body"] pre { max-width: 100%; overflow-x: auto; }
   html[data-rfdm-enabled="true"][data-rfdm-page="thread"] [data-rfdm-role="post-body"] table { display: block; width: max-content; max-width: 100%; overflow-x: auto; }
   html[data-rfdm-enabled="true"][data-rfdm-page="thread"] [data-rfdm-role="post-body"] .content blockquote {
-    font-size: var(--rfdm-post-font-size); line-height: 1.6;
+    font-size: 15px; line-height: 1.5;
     margin: 10px 0; padding: 10px 14px;
     background: var(--post-quote-bg, #f0f4fa);
     border: 0; border-radius: 12px;
