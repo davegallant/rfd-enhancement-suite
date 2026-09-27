@@ -1,11 +1,11 @@
 # Modern RFD browser validation
 
-Version 1.1.0 implementation branch: `feat/rfd-1.1`. Automated runs use sanitized, offline fixtures. They do not prove that the loaded extension works on the current live forum or with a signed-in account.
+Version 1.1.0 implementation checkout: `main`. Automated runs use sanitized, offline fixtures. They do not prove that the loaded extension works on the current live forum or with a signed-in account.
 
 ## Completed locally
 
 - Node regression suite: 133 tests, verified 2026-09-27.
-- Playwright fixture rendering: Chromium and Firefox at 390, 768 and 1440 px for list/thread. Checked bounded reading width, no page overflow, native theme restoration and independent clutter controls.
+- Earlier Playwright fixture rendering: Chromium and Firefox at 390, 768 and 1440 px for list/thread. Repeat after the thread width change to check for overflow, native theme restoration and independent clutter controls.
 - Saved public forum HTML from 2026-09-26 had 43 deal rows recognized when rendered offline with the site's public CSS. Its scripts were removed, so interactive controls were not validated.
 - Headless live RFD navigation did not reach DOM ready or a visible `#forum-topics` within 20/12 seconds respectively. Do not treat this as a site defect or an extension pass/fail.
 
@@ -15,7 +15,7 @@ On a current RFD forum list and thread in Brave/Chromium and Firefox:
 
 - Confirm layout improvements are initially on and there is no major layout breakage. Check menus, filters, sort, pagination, search, post anchors and recovery through the popup switch.
 - Toggle RFD's own light/dark mode, then move the Text size slider through 16, 18 and 24 px. Check post text, reply dates, author details, action labels, quotes, card titles, classic list titles and list metadata in both modes. Test at narrow width, 200% zoom and keyboard focus.
-- On a desktop Hot Deals card list with Hide sidebar on, confirm rows form a centered list no wider than 1280 px. Open and close More Filters; its controls must remain usable. Threads should use a centered reading column no wider than 860 px.
+- On a desktop Hot Deals card list with Hide sidebar on, confirm rows form a centered list no wider than 1280 px. Open and close More Filters; its controls must remain usable. Threads should use the available width with 16 px side gutters.
 - Confirm the 1.1.0 update page opens only when upgrading from an earlier version, and that its popup link works. Reloading the same unpacked version must not reopen the page.
 - Confirm page-local cleaned links still rewrite while Modern layout is off. Toggle Remove clutter independently and check promotions, sidebar, signatures and author details.
 - Upgrade an existing installation with a custom rules URL and appearance choices. Check that the rules, update status and explicit choices survive the migration to extension storage.

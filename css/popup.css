@@ -5,7 +5,8 @@
   --text: #20242a;
   --muted: #626b75;
   --border: #e3e6e9;
-  --accent: #ed6b28;
+  --accent: #c00;
+  --on-accent: #fff;
   --danger: #ba2530;
 }
 @media (prefers-color-scheme: dark) {
@@ -16,7 +17,8 @@
     --text: #f0f1f2;
     --muted: #a8afb8;
     --border: #363a40;
-    --accent: #ff945c;
+    --accent: #ff6b6b;
+    --on-accent: #17191d;
     --danger: #ff777e;
   }
 }
@@ -32,7 +34,7 @@ body {
 .popup-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
 .brand-mark {
   display: grid; place-items: center; width: 34px; height: 34px;
-  border-radius: 8px; background: var(--accent); color: #fff;
+  border-radius: 8px; background: var(--accent); color: var(--on-accent);
   font-weight: 800; font-size: 21px;
 }
 h1 { margin: 0; font-size: 18px; line-height: 1.1; }
@@ -70,7 +72,7 @@ button:hover { border-color: var(--accent); }
 button:disabled { opacity: .6; cursor: wait; }
 button:focus-visible, summary:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .actions { display: flex; gap: 8px; }
-#save-button, #test-button { background: var(--accent); border-color: var(--accent); color: #fff; }
+#save-button, #test-button { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 #test-button { justify-self: start; }
 #activity-links, #test-steps { padding-left: 20px; max-height: 180px; overflow: auto; }
 #activity-links li, #test-steps li, #test-result { overflow-wrap: anywhere; white-space: pre-wrap; font-size: 12px; }

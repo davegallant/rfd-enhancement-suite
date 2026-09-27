@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "RFD Enhancement Suite",
-  "description": "A calmer RedFlagDeals forum with direct, tracking-free deal links",
+  "description": "Clean up RedFlagDeals forums and open direct, tracking-free deal links",
   "version": "1.1.0",
   "content_scripts": [
     {

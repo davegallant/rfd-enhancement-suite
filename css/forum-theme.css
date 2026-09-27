@@ -100,8 +100,8 @@
 }
 @media screen {
   html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread {
-    width: min(calc(100% - 32px), 860px) !important;
-    max-width: 860px;
+    width: calc(100% - 32px) !important;
+    max-width: none;
     margin-inline: auto;
   }
   html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread .thread_title {

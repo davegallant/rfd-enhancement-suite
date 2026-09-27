@@ -5,7 +5,8 @@
 ### Added
 
 - Separate Clean links, Remove clutter, and Modern layout controls in a smaller popup.
-- Use a comfortable discussion reading width, bounded deal list width, clearer spacing and more readable metadata.
+- Let discussion threads use the available page width, with a bounded deal list width, clearer spacing and more readable metadata.
+- Match the popup accent to RFD red.
 - Support hostname and query based redirect rules alongside existing regex rules.
 - Migrate existing rule configuration from IndexedDB to extension storage.
 

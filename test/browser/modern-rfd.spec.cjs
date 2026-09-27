@@ -31,8 +31,8 @@ for (const pageType of ['list-card', 'thread-rich']) for (const width of [390, 7
         expect(content.width).toBeGreaterThanOrEqual(1100);
         expect(content.width).toBeLessThanOrEqual(1280);
       } else {
-        expect(content.width).toBeLessThanOrEqual(860);
-        expect(content.x).toBeGreaterThan(250);
+        expect(content.width).toBeGreaterThanOrEqual(1390);
+        expect(content.x).toBeLessThanOrEqual(25);
       }
       await expect(page.locator('#trending_hotdeals_threads')).toBeHidden();
     }

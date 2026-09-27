@@ -8,11 +8,11 @@ Version 1.1.0 is prepared from source. Store listings may take time to update af
 
 ## Appearance
 
-The extension gives Hot Deals listings more consistent rows and discussion threads a centered reading column. Classic Hot Deals lists keep their native rows and controls. RFD controls page colours and light/dark mode. The extension keeps RFD's links, filters, pagination, posting controls, thread order, timestamps and emoji sizing. Search, account, profile, forum directory and unknown page layouts retain RFD's native appearance.
+The extension gives Hot Deals listings more consistent rows and discussion threads room to use the available page width. Classic Hot Deals lists keep their native rows and controls. RFD controls page colours and light/dark mode. The extension keeps RFD's links, filters, pagination, posting controls, thread order, timestamps and emoji sizing. Search, account, profile, forum directory and unknown page layouts retain RFD's native appearance.
 
 | Popup control | Default | Effect |
 | --- | --- | --- |
-| Modern layout | On | Use clearer deal rows and a narrower discussion reading column. |
+| Modern layout | On | Use clearer deal rows and a spacious discussion layout. |
 | Remove clutter | On | Master switch for the cleanup options below. Works independently of Modern layout. |
 | Text size | 18 px | Adjust discussion and quoted text from 16 to 24 px with a slider. Reply details and Hot Deals list titles and metadata scale with it. |
 | Hide promotions and sponsored threads | On | Hide recognized ads, sponsored placements and labeled sponsored threads in both Hot Deals list layouts, including pencil ads and the member header leaderboard. This changes display; it does not block requests. |
