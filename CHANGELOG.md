@@ -18,6 +18,8 @@
 
 ### Changed
 
+- Make original post text follow the Text size slider, including deal descriptions.
+- Consolidate repeated thread layout rules so spacing and text sizing each have one source.
 - Hide signatures and secondary author details on new installations; preserve version 1 settings on upgrade.
 - Allow clutter removal while Modern layout is off.
 - Group the link tester, recent activity, rule source, and update status under Advanced.

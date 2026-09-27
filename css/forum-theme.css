@@ -34,9 +34,9 @@
 }
 @media screen {
   html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #partition_forums { min-width: 0; width: 100%; }
-  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread { min-width: 0; }
-  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread > .thread_posts > [data-rfdm-role="post"] { margin: 0; padding: 0; border-radius: 0; }
-  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread .thread_title { line-height: 1.35; overflow-wrap: anywhere; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread > .thread_posts > [data-rfdm-role="post"] {
+    margin: 0; padding: 0; border-radius: 0; border-bottom: 1px solid var(--forum-item-border, #e2e2e2);
+  }
   html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread .thread_topmatter > .thread_header {
     font-size: max(13px, calc(var(--rfdm-post-font-size) * .83));
   }
@@ -46,7 +46,8 @@
   html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread .thread_topmatter > .thread_header .compact_vote_score {
     font-size: var(--rfdm-post-font-size);
   }
-  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] [data-rfdm-role="post-body"] { max-width: 100%; font-size: var(--rfdm-post-font-size); line-height: 1.65; overflow-wrap: anywhere; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] [data-rfdm-role="post-body"] { max-width: 100%; font-size: var(--rfdm-post-font-size); line-height: 1.6; overflow-wrap: anywhere; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread .thread_posts > article.thread_original_post [data-rfdm-role="post-body"] > .content { font-size: var(--rfdm-post-font-size); }
   html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread .thread_posts > article.thread_post:not(.thread_original_post) :is(.post_dateline, .post_profilearea .profile_username, .post_profilearea .postprofile > dd:not(.profile_avatar), .post_profilearea .profile_post_timestamp, .post_actions_primary .post_action_text, .post_voting .total_count) { font-size: calc(var(--rfdm-post-font-size) * .8); }
   html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread .thread_posts > article.thread_post:not(.thread_original_post) .post_profilearea .postprofile > dd:not(.profile_avatar) > i.fa { font-size: .75rem; }
   html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread .thread_posts > article.thread_post:not(.thread_original_post) .post_dateline { height: auto; min-height: 23px; }
@@ -106,13 +107,10 @@
   html[data-rfdm-hide-sidebar="true"]:is([data-rfdm-page="home"], [data-rfdm-page="list"], [data-rfdm-page="classic-list"]) #partition_forums .forums_nav_sidebar_column {
     display: none !important;
   }
-  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread,
-  html[data-rfdm-enabled="true"][data-rfdm-page="list"] #forum-topics {
-    float: none; width: 100% !important; max-width: none; box-sizing: border-box; margin-inline: 0;
-  }
 }
 @media screen {
   html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread {
+    float: none; min-width: 0; box-sizing: border-box;
     width: calc(100% - 32px) !important;
     max-width: none;
     margin-inline: auto;
@@ -121,10 +119,7 @@
     font-size: clamp(24px, calc(var(--rfdm-post-font-size) * 1.7), 41px);
     line-height: 1.25;
     font-weight: 700;
-  }
-  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread > .thread_posts > [data-rfdm-role="post"] {
-    padding: 20px 16px;
-    border-bottom: 1px solid var(--forum-item-border, #e2e2e2);
+    overflow-wrap: anywhere;
   }
   html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread > .thread_posts > article.thread_post:not(.thread_original_post)[data-rfdm-role="post"] {
     border-inline: 1px solid var(--forum-item-border, #e2e2e2);
@@ -135,10 +130,8 @@
       margin-bottom: 2rem;
     }
   }
-  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] [data-rfdm-role="post-body"] {
-    line-height: 1.6;
-  }
   html[data-rfdm-enabled="true"][data-rfdm-page="list"] #forum-topics {
+    float: none; width: 100% !important; box-sizing: border-box;
     max-width: 1280px;
     margin-inline: auto;
   }
