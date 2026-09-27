@@ -8,6 +8,7 @@
 - Let discussion threads use the available page width, with a bounded deal list width, clearer spacing and more readable metadata.
 - Apply Hide sidebar on the forum home page and scale thread deal headers with the Text size control.
 - Use the same small side gutters on forum lists and thread lists as on threads.
+- Connect discussion replies with a visible rail and consistent dividers.
 - Match the popup accent to RFD red.
 - Support hostname and query based redirect rules alongside existing regex rules.
 - Migrate existing rule configuration from IndexedDB to extension storage.
