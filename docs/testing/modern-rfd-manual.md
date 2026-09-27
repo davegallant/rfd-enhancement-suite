@@ -15,7 +15,7 @@ On a current RFD forum list and thread in Brave/Chromium and Firefox:
 
 - Confirm layout improvements are initially on and there is no major layout breakage. Check menus, filters, sort, pagination, search, post anchors and recovery through the popup switch.
 - Toggle RFD's own light/dark mode, then move the Text size slider through 16, 18 and 24 px. Check post text, reply dates, author details, action labels, quotes, card titles, classic list titles and list metadata in both modes. Test at narrow width, 200% zoom and keyboard focus.
-- On a desktop Hot Deals card list with Hide sidebar on, confirm rows form a centered list no wider than 1280 px. Open and close More Filters; its controls must remain usable. Threads should use the available width with 16 px side gutters.
+- On a desktop Hot Deals card list with Hide sidebar on, confirm rows form a centered list no wider than 1280 px, with 16 px minimum side gutters. Open and close More Filters; its controls must remain usable. Threads, classic lists and the forum home page should also have 16 px side gutters when the sidebar is hidden.
 - On the forum home page, toggle Hide sidebar and confirm the forum directory remains usable while the primary column reclaims the space. On a deal thread, confirm Text size changes the title, retailer, category, score and deal details without resizing icons.
 - Confirm the 1.1.0 update page opens only when upgrading from an earlier version, and that its popup link works. Reloading the same unpacked version must not reopen the page.
 - Confirm page-local cleaned links still rewrite while Modern layout is off. Toggle Remove clutter independently and check promotions, sidebar, signatures and author details.

@@ -87,11 +87,12 @@
   html[data-rfdm-hide-sidebar="true"]:is([data-rfdm-page="home"], [data-rfdm-page="classic-list"]) #site_content {
     width: 100%; max-width: none; box-sizing: border-box; padding-inline: 0;
   }
-  html[data-rfdm-enabled="true"]:is([data-rfdm-page="list"], [data-rfdm-page="thread"]) #partition_forums .forums_layout {
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #partition_forums .forums_layout {
     width: 100%; max-width: none; display: flow-root;
   }
+  html[data-rfdm-enabled="true"][data-rfdm-page="list"] #partition_forums .forums_layout,
   html[data-rfdm-hide-sidebar="true"]:is([data-rfdm-page="home"], [data-rfdm-page="classic-list"]) #partition_forums .forums_layout {
-    width: 100%; max-width: none; display: flow-root;
+    width: calc(100% - 32px); max-width: none; margin-inline: auto; display: flow-root;
   }
   html[data-rfdm-hide-sidebar="true"]:is([data-rfdm-page="home"], [data-rfdm-page="list"], [data-rfdm-page="thread"], [data-rfdm-page="classic-list"]) #partition_forums .forums_layout > .primary_content {
     float: none; width: 100% !important; max-width: none; margin: 0; padding-inline: 0; box-sizing: border-box;
