@@ -4,13 +4,13 @@
 
 Give [RedFlagDeals forums](https://forums.redflagdeals.com/) a simpler interface for Hot Deals lists and discussion threads, and clean supported affiliate redirects and tracking parameters from forum links. Layout improvements and link cleaning are independent and both on by default.
 
-[Firefox store listing](https://addons.mozilla.org/en-US/firefox/addon/rfd-redirect-stripper/) · [Chrome store listing](https://chromewebstore.google.com/detail/rfd-affiliate-stripper/nhjomcijhonhoggkckbjjfnjdcefbblo)
+[![Get the Firefox add-on](docs/images/firefox-add-on-button.png)](https://addons.mozilla.org/en-US/firefox/addon/rfd-redirect-stripper/) [![Available in the Chrome Web Store](docs/images/chrome-web-store-badge.png)](https://chromewebstore.google.com/detail/rfd-affiliate-stripper/nhjomcijhonhoggkckbjjfnjdcefbblo)
 
 Version 1.1.2 is available from source. Store listings may take time to update after submission and review.
 
 ## Appearance
 
-The extension gives Hot Deals listings more consistent rows and discussion threads room to use the available page width, with small side gutters on both. Thin borders connect discussion replies. Classic Hot Deals lists keep their native rows and controls. RFD controls page colours and light/dark mode. The extension keeps RFD's links, filters, pagination, posting controls, thread order, timestamps and emoji sizing. The forum home page keeps its native content and controls, with the sidebar setting available there too. Search results support sidebar cleanup. Account, profile and unknown page layouts retain RFD's native appearance.
+The extension gives Hot Deals listings a quieter, text-first layout: clear titles, muted metadata and thin separators, with product thumbnails and decorative card styling removed. Both card and classic lists use connected rows with the same system font as discussion replies. Classic lists hide view counts, category columns and repeated author details. Discussion threads use the available page width, with small side gutters. RFD controls page colours and light/dark mode. The extension keeps RFD's links, filters, pagination, posting controls, thread order, timestamps and emoji sizing. The forum home page keeps its native content and controls, with the sidebar setting available there too. Search results support sidebar cleanup. Account, profile and unknown page layouts retain RFD's native appearance.
 
 | Popup control | Default | Effect |
 | --- | --- | --- |
