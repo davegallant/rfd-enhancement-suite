@@ -1,6 +1,7 @@
 @media screen {
   html[data-rfdm-enabled="true"] { --rfdm-post-font-size: 17px; }
   html[data-rfdm-hide-footer="true"] :is(#site_footer, #footer_leaderboard, #header_billboard_bottom) { display: none !important; }
+  html[data-rfdm-hide-footer="true"] #site_container { padding-bottom: 24px; }
   html[data-rfdm-hide-promotions="true"] :is([data-rfdm-role="promotion"], [data-rfdm-sponsored="true"], #header_leaderboard_member_wrapper, [class^="pencil_ad"], [class*=" pencil_ad"]) { display: none !important; }
 }
 @media screen {
