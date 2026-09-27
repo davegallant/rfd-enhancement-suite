@@ -141,7 +141,7 @@
   }
   html[data-rfdm-enabled="true"][data-rfdm-page="list"] #forum-topics [data-rfdm-role="deal-row"] {
     padding: 12px 16px;
-    border-bottom: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+    border-bottom: 1px solid var(--forum-item-border, #e2e2e2);
   }
   html[data-rfdm-enabled="true"] :is(#thread, #forum-topics) a:focus-visible {
     outline: 2px solid currentColor;
