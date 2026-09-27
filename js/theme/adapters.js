@@ -15,6 +15,10 @@
     if (list && document.querySelector('#partition_forums')?.contains(list) && list.querySelector(SELECTORS.row + ' a.topic-card-info.thread_info[href]')) return { kind: 'list', variant: 'card-v1', root: list };
     const classic = document.querySelector('#site_container.hot_deals_page #partition_forums .forums_layout .topiclist.topics');
     if (classic?.querySelector('li.row.topic[data-thread-id] a[href]')) return { kind: 'classic-list', variant: 'classic-sidebar-v1', root: classic };
+    if (url.pathname === '/') {
+      const home = document.querySelector('#site_content.with_sidebar > #partition_forums > .forums_layout');
+      if (home?.querySelector(':scope > .primary_content') && home.querySelector(':scope > .sidebar_content')) return { kind: 'home', variant: 'forum-home-v1', root: home };
+    }
     return null;
   }
   function enhanceShell(document, match, journal, root = document) {

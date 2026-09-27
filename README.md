@@ -8,15 +8,15 @@ Version 1.1.0 is prepared from source. Store listings may take time to update af
 
 ## Appearance
 
-The extension gives Hot Deals listings more consistent rows and discussion threads room to use the available page width. Classic Hot Deals lists keep their native rows and controls. RFD controls page colours and light/dark mode. The extension keeps RFD's links, filters, pagination, posting controls, thread order, timestamps and emoji sizing. Search, account, profile, forum directory and unknown page layouts retain RFD's native appearance.
+The extension gives Hot Deals listings more consistent rows and discussion threads room to use the available page width. Classic Hot Deals lists keep their native rows and controls. RFD controls page colours and light/dark mode. The extension keeps RFD's links, filters, pagination, posting controls, thread order, timestamps and emoji sizing. The forum home page keeps its native content and controls, with the sidebar setting available there too. Search, account, profile and unknown page layouts retain RFD's native appearance.
 
 | Popup control | Default | Effect |
 | --- | --- | --- |
 | Modern layout | On | Use clearer deal rows and a spacious discussion layout. |
 | Remove clutter | On | Master switch for the cleanup options below. Works independently of Modern layout. |
-| Text size | 18 px | Adjust discussion and quoted text from 16 to 24 px with a slider. Reply details and Hot Deals list titles and metadata scale with it. |
+| Text size | 18 px | Adjust discussion and quoted text from 16 to 24 px with a slider. Deal headers, reply details, and Hot Deals list titles and metadata scale with it. |
 | Hide promotions and sponsored threads | On | Hide recognized ads, sponsored placements and labeled sponsored threads in both Hot Deals list layouts, including pencil ads and the member header leaderboard. This changes display; it does not block requests. |
-| Hide sidebar | On | Hide sidebars on card lists, classic Hot Deals lists and threads, using the freed space. On card lists, RFD's filters remain available through More Filters. Turn it off to restore RFD's sidebar spacing. |
+| Hide sidebar | On | Hide sidebars on the forum home page, card lists, classic Hot Deals lists and threads, using the freed space. On card lists, RFD's filters remain available through More Filters. Turn it off to restore RFD's sidebar spacing. |
 | Hide signatures | On for new installs | Hide signatures present in discussion posts. Existing version 1 choices are preserved. |
 | Compact author details | On for new installs | Hide join date, post count, upvotes and location; names and ranks remain. Existing version 1 choices are preserved. |
 

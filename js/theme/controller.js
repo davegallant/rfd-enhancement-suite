@@ -14,7 +14,7 @@
       if (!match) return;
       const values = { enabled: 'true', page: match.kind,
         'font-size': String(settings.fontSize),
-        'hide-promotions': String(settings.clutterEnabled && settings.hidePromotions), 'hide-sidebar': String(settings.clutterEnabled && settings.hideSidebar), 'compact-profiles': String(settings.clutterEnabled && settings.compactProfiles) };
+        'hide-promotions': String(match.kind !== 'home' && settings.clutterEnabled && settings.hidePromotions), 'hide-sidebar': String(settings.clutterEnabled && settings.hideSidebar), 'compact-profiles': String(settings.clutterEnabled && settings.compactProfiles) };
       for (const name of attributes) if (name !== 'enabled' || settings.enabled) journal.setAttribute(html, 'data-rfdm-' + name, values[name]);
     }
     function apply(settings) {
@@ -38,7 +38,7 @@
       }
       try {
         setAttributes(settings);
-        api.adapters.enhanceShell(document, match, journal);
+        if (match.kind !== 'home') api.adapters.enhanceShell(document, match, journal);
         if (match.kind === 'list' || match.kind === 'classic-list') api.list?.enhance(match.root, settings, journal);
         if (match.kind === 'thread') api.thread?.enhance(match.root, settings, journal);
         status = { enabled: settings.enabled, applied: settings.enabled, page: match.kind, reason: settings.enabled ? null : 'disabled' };
@@ -61,6 +61,7 @@
         if (!scheduled) { scheduled = true; window.requestAnimationFrame(() => { scheduled = false; if (active && current) apply(current); }); }
         return;
       }
+      if (match.kind === 'home') return;
       for (const record of records) for (const node of record.addedNodes) {
         if (node.nodeType !== 1) continue;
         added.add(node);
