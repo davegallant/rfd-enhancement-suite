@@ -49,6 +49,7 @@
       }
     }
     const added = new Set();
+    let removed = false;
     let scheduled = false;
     const observer = new window.MutationObserver(records => {
       if (!active || !current || (!current.enabled && !current.clutterEnabled)) return;
@@ -62,16 +63,18 @@
         return;
       }
       if (match.kind === 'home') return;
-      for (const record of records) for (const node of record.addedNodes) {
-        if (node.nodeType !== 1) continue;
-        added.add(node);
+      for (const record of records) {
+        if (record.removedNodes.length) removed = true;
+        for (const node of record.addedNodes) {
+          if (node.nodeType === 1) added.add(node);
+        }
       }
-      if (!added.size || scheduled) return;
+      if ((!added.size && !removed) || scheduled) return;
       scheduled = true;
       window.requestAnimationFrame(() => {
         scheduled = false;
-        if (!active || !current || !match) { added.clear(); return; }
-        if (!match.root.isConnected) { added.clear(); apply(current); return; }
+        if (!active || !current || !match) { added.clear(); removed = false; return; }
+        if (!match.root.isConnected) { added.clear(); removed = false; apply(current); return; }
         const roots = [...added]; added.clear();
         const containers = new Set();
         for (const node of roots) {
@@ -90,6 +93,7 @@
           } catch (error) { console.warn('RFD appearance:', error); }
         }
         journal.prune();
+        removed = false;
       });
     });
     const stopSettings = api.settings.subscribe(settings => {
