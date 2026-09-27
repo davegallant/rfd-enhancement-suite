@@ -18,10 +18,10 @@ test('thread enhancer keeps post bodies, actions and anchors intact', () => {
   reply.click(); assert.equal(replies, 1);
   journal.restore(); assert.equal(root.querySelectorAll('[data-rfdm-role]').length, 0); h.dispose();
 });
-test('verified signature and profile statistics are marked without hiding author status', () => {
+test('profile statistics are marked while signatures and author status stay native', () => {
   const h = fixture('thread-rich'), journal = h.api.dom.createJournal();
   h.api.thread.enhance(h.document.querySelector('#thread'), h.api.settings.DEFAULTS, journal);
-  assert.equal(h.document.querySelector('.signature').getAttribute('data-rfdm-role'), 'signature');
+  assert.equal(h.document.querySelector('.signature').textContent, 'Signature');
   assert.equal(h.document.querySelector('.profile_upvotes').getAttribute('data-rfdm-role'), 'profile-stats');
   assert.equal(h.document.querySelector('.profile_rank').getAttribute('data-rfdm-role'), null);
   assert.equal(h.document.querySelector('blockquote').textContent, 'Nested quote'); h.dispose();

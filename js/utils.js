@@ -1,4 +1,4 @@
-// IndexedDB utility functions
+// Extension settings with a one-time migration from the pre-1.1 IndexedDB store.
 const DB_NAME = 'rfdAffiliateStripperDB';
 const STORE_NAME = 'config';
 const DB_VERSION = 1;
@@ -20,7 +20,7 @@ function openDB() {
   });
 }
 
-export async function dbGet(key) {
+async function legacyGet(key) {
   const db = await openDB();
   return new Promise((resolve, reject) => {
     const transaction = db.transaction(STORE_NAME, 'readonly');
@@ -37,24 +37,49 @@ export async function dbSet(key, value) {
   return dbSetMany({ [key]: value });
 }
 
+let migration;
+function migrate() {
+  migration ||= (async () => {
+    const current = await chrome.storage.local.get(null);
+    if (current.rulesStorageVersion === 1) return;
+    const values = { rulesStorageVersion: 1 };
+    for (const key of ['config', 'redirects', 'updateStatus']) {
+      if (Object.hasOwn(current, key)) continue;
+      try {
+        const old = await legacyGet(key);
+        if (old !== undefined) values[key] = old;
+      } catch { /* New installs and unavailable legacy storage need no migration. */ }
+    }
+    await chrome.storage.local.set(values);
+  })().catch(error => { migration = null; throw error; });
+  return migration;
+}
+
+export async function dbGet(key) {
+  await migrate();
+  return (await chrome.storage.local.get(key))[key];
+}
+
 async function dbSetMany(values) {
-  const db = await openDB();
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction(STORE_NAME, 'readwrite');
-    const store = transaction.objectStore(STORE_NAME);
-    transaction.oncomplete = () => { db.close(); resolve(true); };
-    transaction.onabort = transaction.onerror = () => {
-      db.close(); reject(transaction.error || new Error('Could not save configuration'));
-    };
-    for (const [key, value] of Object.entries(values)) store.put({ key, value });
-  });
+  await migrate();
+  await chrome.storage.local.set(values);
+  return true;
 }
 
 export function validateRedirects(redirects) {
   if (!Array.isArray(redirects)) throw new Error('Config must be a JSON array');
   for (const [index, rule] of redirects.entries()) {
     try {
-      if (typeof rule?.pattern !== 'string') throw new Error('Missing pattern');
+      const structured = typeof rule?.host === 'string' || Array.isArray(rule?.hosts) || Array.isArray(rule?.hostSuffixes) || typeof rule?.hostPattern === 'string';
+      if (typeof rule?.pattern !== 'string' && !structured) throw new Error('Missing pattern or host');
+      if (rule.host !== undefined && (typeof rule.host !== 'string' || !rule.host)) throw new Error('host must be a non-empty string');
+      if (rule.hosts !== undefined && (!Array.isArray(rule.hosts) || !rule.hosts.length || !rule.hosts.every(host => typeof host === 'string' && host))) throw new Error('hosts must be non-empty strings');
+      if (rule.hostSuffixes !== undefined && (!Array.isArray(rule.hostSuffixes) || !rule.hostSuffixes.length || !rule.hostSuffixes.every(host => typeof host === 'string' && host))) throw new Error('hostSuffixes must be non-empty strings');
+      if (rule.hostPattern !== undefined && typeof rule.hostPattern !== 'string') throw new Error('hostPattern must be a string');
+      if (rule.hostPattern !== undefined) new RegExp(rule.hostPattern);
+      if (rule.pathPattern !== undefined && typeof rule.pathPattern !== 'string') throw new Error('pathPattern must be a string');
+      if (rule.pathPattern !== undefined) new RegExp(rule.pathPattern);
+      if (structured && !rule.destinationParam && !rule.removeParams && !rule.removePathRef) throw new Error('Structured rule needs an operation');
       if (rule.destinationParam !== undefined && (typeof rule.destinationParam !== 'string' || !rule.destinationParam)) {
         throw new Error('destinationParam must be a non-empty string');
       }
@@ -65,8 +90,10 @@ export function validateRedirects(redirects) {
         throw new Error('removePathRef must be a boolean');
       }
       // An empty alternative exposes named groups even when the rule does not match.
-      const groups = new RegExp(`(?:${rule.pattern})|`).exec('').groups;
-      if (!groups || !Object.hasOwn(groups, 'baseUrl')) throw new Error('Missing baseUrl capture group');
+      if (rule.pattern !== undefined) {
+        const groups = new RegExp(`(?:${rule.pattern})|`).exec('').groups;
+        if (!groups || !Object.hasOwn(groups, 'baseUrl')) throw new Error('Missing baseUrl capture group');
+      }
     } catch (error) {
       throw new Error(`Rule ${index + 1}: ${error.message}`);
     }
@@ -74,7 +101,14 @@ export function validateRedirects(redirects) {
   return redirects;
 }
 
-export async function updateRedirects(configUrl) {
+let updateQueue = Promise.resolve();
+export function updateRedirects(configUrl) {
+  const pending = updateQueue.then(() => performUpdate(configUrl));
+  updateQueue = pending.catch(() => {});
+  return pending;
+}
+
+async function performUpdate(configUrl) {
   try {
     configUrl = configUrl || await dbGet('config') || DEFAULT_CONFIG_URL;
     const parsed = new URL(configUrl);

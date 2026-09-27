@@ -2,14 +2,33 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const { loadThemeFixture } = require('./test/helpers/themeHarness.cjs');
 const scripts = ['js/theme/dom.js','js/theme/adapters.js','js/theme/list.js','js/theme/thread.js','js/theme/controller.js'];
-test('added deal rows are marked and disabling removes all appearance markers', async () => {
+test('supported shell added after startup is enhanced', async () => {
+  const h = loadThemeFixture('unsupported', { scripts });
+  const stop = h.api.controller.start(h.document, h.window); await h.flush();
+  const donor = loadThemeFixture('list-card');
+  h.document.querySelector('#site_content').replaceWith(h.document.importNode(donor.document.querySelector('#site_content'), true));
+  await h.flush();
+  assert.equal(h.api.controller.getStatus().page, 'list');
+  assert.equal(h.document.querySelector('li.topic-card').getAttribute('data-rfdm-role'), 'deal-row');
+  stop(); donor.dispose(); h.dispose();
+});
+test('new content inside an existing post is enhanced', async () => {
+  const h = loadThemeFixture('thread', { url: 'https://forums.redflagdeals.com/example-1/', scripts });
+  const stop = h.api.controller.start(h.document, h.window); await h.flush();
+  const stats = h.document.createElement('dd'); stats.className = 'profile_numposts';
+  h.document.querySelector('.post_profilearea').append(stats); await h.flush();
+  assert.equal(stats.getAttribute('data-rfdm-role'), 'profile-stats');
+  stop(); h.dispose();
+});
+test('added deal rows remain marked for cleanup when layout is disabled', async () => {
   const h = loadThemeFixture('list-card', { scripts });
   const stop = h.api.controller.start(h.document,h.window); await h.flush();
   const row = h.document.querySelector('li.topic-card').cloneNode(true); row.dataset.threadId='3'; for (const el of [row, ...row.querySelectorAll('[data-rfdm-role]')]) el.removeAttribute('data-rfdm-role');
   h.document.querySelector('#forum-topics ul').append(row); await h.flush();
   assert.equal(row.getAttribute('data-rfdm-role'),'deal-row');
   await h.api.settings.save({enabled:false}); await h.flush();
-  assert.equal(row.hasAttribute('data-rfdm-role'),false);
+  assert.equal(row.getAttribute('data-rfdm-role'),'deal-row');
+  assert.equal(h.document.documentElement.hasAttribute('data-rfdm-enabled'), false);
   assert.equal(h.document.querySelectorAll('[data-rfdm-owned]').length,0);
   stop(); h.dispose();
 });

@@ -4,26 +4,27 @@ Give [RedFlagDeals forums](https://forums.redflagdeals.com/) a simpler interface
 
 [Firefox store listing](https://addons.mozilla.org/en-US/firefox/addon/rfd-redirect-stripper/) · [Chrome store listing](https://chromewebstore.google.com/detail/rfd-affiliate-stripper/nhjomcijhonhoggkckbjjfnjdcefbblo)
 
-Version 1.0.1 is available from source. Store listings may take time to update after submission and review.
+Version 1.1.0 is prepared from source. Store listings may take time to update after submission and review.
 
 ## Appearance
 
-The extension makes small layout changes to Hot Deals card listings and discussion threads: it uses the available page width and puts rows and posts flush together. Classic Hot Deals lists keep their native rows and controls while the sidebar setting works there too. RFD controls page colours and light/dark mode; this extension changes layout and visibility. It keeps RFD's links, filters, pagination, posting controls, thread order, timestamps and emoji sizing. Search, account, profile, forum directory and unknown page layouts retain RFD's native appearance.
+The extension gives Hot Deals listings more consistent rows and discussion threads a centered reading column. Classic Hot Deals lists keep their native rows and controls. RFD controls page colours and light/dark mode. The extension keeps RFD's links, filters, pagination, posting controls, thread order, timestamps and emoji sizing. Search, account, profile, forum directory and unknown page layouts retain RFD's native appearance.
 
 | Popup control | Default | Effect |
 | --- | --- | --- |
-| Simplify layout | On | Use more of the page width and place deal rows and posts together on supported pages. Turn this off for link cleaning alone. |
+| Modern layout | On | Use clearer deal rows and a narrower discussion reading column. |
+| Remove clutter | On | Master switch for the cleanup options below. Works independently of Modern layout. |
 | Text size | 18 px | Adjust discussion and quoted text from 16 to 24 px with a slider. Reply details and Hot Deals list titles and metadata scale with it. |
 | Hide promotions and sponsored threads | On | Hide recognized ads, sponsored placements and labeled sponsored threads in both Hot Deals list layouts, including pencil ads and the member header leaderboard. This changes display; it does not block requests. |
 | Hide sidebar | On | Hide sidebars on card lists, classic Hot Deals lists and threads, using the freed space. On card lists, RFD's filters remain available through More Filters. Turn it off to restore RFD's sidebar spacing. |
-| Hide signatures | Off | Show signatures present in the page by default. Turn it on to hide them. |
-| Hide join date, posts, upvotes and location | Off | Optionally hide those profile details on deal posts and replies; names and ranks remain. |
+| Hide signatures | On for new installs | Hide signatures present in discussion posts. Existing version 1 choices are preserved. |
+| Compact author details | On for new installs | Hide join date, post count, upvotes and location; names and ranks remain. Existing version 1 choices are preserved. |
 
-<img src="docs/images/popup.png" alt="RFD Enhancement Suite popup with appearance and link cleaning controls" width="409">
+<img src="docs/images/popup.png" alt="RFD Enhancement Suite popup with independent browsing controls" width="360">
 
-Appearance settings persist across supported tabs. **Reset appearance** restores only these defaults. Turning Simplify layout off leaves link cleaning and the signature switch at their own settings. RFD may omit signature markup for some posts or page states; the extension can only show signatures present in the page.
+Appearance settings persist across supported tabs. **Reset appearance** restores these defaults. Turning Modern layout off leaves cleanup and link cleaning active. Turning Remove clutter off reveals promotions, sidebars, signatures and secondary author details while preserving each individual preference. RFD may omit signature markup for some posts or page states; the extension can only show signatures present in the page.
 
-The popup links to the 1.0.0 update page. When an installed extension updates to version 1.0.0, that page opens once in a new tab. Reloading an unpacked extension without changing its version does not reopen it.
+The popup links to the 1.1.0 update page. When an installed extension updates to version 1.1.0, that page opens once in a new tab. Reloading an unpacked extension without changing its version does not reopen it.
 
 ### Quick test in Brave
 
@@ -32,7 +33,7 @@ The popup links to the 1.0.0 update page. When an installed extension updates to
 3. Open or reload `https://forums.redflagdeals.com/hot-deals-f9/`, then open a deal thread. The layout improvements should appear by default.
 4. Use the popup to change layout improvements, signatures and link cleaning independently. After editing source files, reload the extension on `brave://extensions` and refresh the forum tab.
 
-To use link cleaning alone, turn **Simplify layout** off. To use only the visual changes, turn **Clean links on forum pages** off.
+The Clean links, Remove clutter and Modern layout switches work independently.
 
 ## How it works
 
@@ -43,10 +44,10 @@ Only matching links are changed. The extension checks links in forum posts and d
 ## Using the popup
 
 - **Cleaned links:** Shows how many distinct links were cleaned on the current forum page. Expand **Recent cleaned links** to see up to 50 recent original and cleaned URL pairs. This history lives in the page's memory and clears when link cleaning is turned off, rules change, or the page reloads.
-- **Clean links on forum pages:** Controls automatic rewrites independently of appearance settings. It is on by default.
+- **Clean links:** Controls automatic rewrites independently of appearance settings. It is on by default.
 - **Test a link:** Paste an HTTP or HTTPS URL to preview the result and each rule applied. The tester does not open the destination. It reports invalid URLs and warns if cleaning stops at a cycle or the 20-step limit.
-- **Rules status:** Shows the last successful rules update or an update error. Bundled rules are available before the first successful download and when there is no usable cached configuration.
-- **Config URL:** Enter the URL of a trusted JSON rules file and select **Save** to validate and use it. **Reset** restores the default URL. Open forum pages receive changed rules automatically; the popup tester uses them immediately.
+- **Rules status:** Advanced shows the last successful rules update or an update error. Bundled rules are available before the first successful download and when there is no usable cached configuration.
+- **Rules URL:** In Advanced, enter the URL of a trusted JSON rules file and select **Save rules URL** to validate and use it. **Use default** restores the default URL. Open forum pages receive changed rules automatically; the popup tester uses them immediately.
 
 The extension checks for updated rules hourly and refreshes open forum pages when the rules change. If a download or validation fails, it keeps the last valid rules and shows the error in the popup.
 
@@ -71,21 +72,22 @@ npm run build
 
 ## Contributing redirect rules
 
-Rules live in [redirects.json](redirects.json). Open a pull request to add or update a rule. To try rules from your branch, set **Config URL** in the popup to its raw JSON file, for example:
+Rules live in [redirects.json](redirects.json). Open a pull request to add or update a rule. To try rules from your branch, set **Rules URL** in Advanced to its raw JSON file, for example:
 
 ```text
 https://raw.githubusercontent.com/davegallant/rfd-affiliate-stripper/my-new-branch/redirects.json
 ```
 
-The file must contain a JSON array. Every rule needs a regex `pattern` with a named `baseUrl` capture group. An optional `name` labels it in the link tester. Supported operations are:
+The file must contain a JSON array. Rules may use a regex `pattern` with a named `baseUrl` capture group, or match an exact `host`, a list of exact `hosts`, `hostSuffixes` (a domain and its subdomains), or a regex `hostPattern` applied only to the hostname. Structured rules need at least one operation. An optional `name` labels a rule in the link tester. Supported operations are:
 
 | Field | Effect |
 | --- | --- |
 | `destinationParam` | Read the destination URL from this query parameter. |
 | `removeParams` | Remove the listed query parameters while preserving the encoding of retained values. |
 | `removePathRef` | Remove a trailing `/ref=...` path segment. |
+| `pathPattern` | Limit a structured rule to matching URL paths. |
 
-These operations run only when the rule's pattern matches. Rules using only a regex remain supported. The extension accepts only HTTP or HTTPS destinations and stops after 20 cleaning steps or a cycle. Use trusted rule sources: validation and redirect limits do not bound the runtime of an individual regex. [regex101.com](https://regex101.com/) can help test a pattern.
+These operations run only when the rule matches. Rules using only a regex remain supported. The extension accepts only HTTP or HTTPS destinations and stops after 20 cleaning steps or a cycle. Use trusted rule sources: validation and redirect limits do not bound the runtime of an individual regex. [regex101.com](https://regex101.com/) can help test a pattern.
 
 ## Tampermonkey userscript
 

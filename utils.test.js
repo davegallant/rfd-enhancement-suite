@@ -3,10 +3,20 @@ const assert = require('node:assert/strict');
 const { readFileSync } = require('node:fs');
 const vm = require('node:vm');
 
-function setup(values = {}, failDB = false) {
+function setup(values = {}, failDB = false, legacyValues = {}) {
   const data = new Map(Object.entries(values));
+  const legacy = new Map(Object.entries(legacyValues));
   const bundled = [{ name: 'Bundled', pattern: '(?<baseUrl>https://example.com)' }];
-  const context = vm.createContext({ console, URL, Date, chrome: { runtime: { getURL: path => `extension://${path}` } },
+  const context = vm.createContext({ console, URL, Date, chrome: {
+    runtime: { getURL: path => `extension://${path}` },
+    storage: { local: {
+      async get(keys) {
+        const names = keys === null ? [...data.keys()] : Array.isArray(keys) ? keys : [keys];
+        return Object.fromEntries(names.filter(key => data.has(key)).map(key => [key, data.get(key)]));
+      },
+      async set(values) { for (const [key, value] of Object.entries(values)) data.set(key, value); },
+    } },
+  },
     fetch: async url => {
       assert.equal(url, 'extension://redirects.json');
       return { ok: true, json: async () => bundled };
@@ -19,11 +29,11 @@ function setup(values = {}, failDB = false) {
           close() {},
           transaction() { const transaction = { objectStore() { return {
             get(key) { const req = {}; queueMicrotask(() => {
-              req.onsuccess({ target: { result: data.has(key) ? { value: data.get(key) } : undefined } });
+              req.onsuccess({ target: { result: legacy.has(key) ? { value: legacy.get(key) } : undefined } });
               transaction.oncomplete?.();
             }); return req; },
             put({ key, value }) { const req = {}; queueMicrotask(() => {
-              data.set(key, value); req.onsuccess?.(); transaction.oncomplete?.();
+              legacy.set(key, value); req.onsuccess?.(); transaction.oncomplete?.();
             }); return req; },
           }; } }; return transaction; },
         } } });
@@ -32,8 +42,34 @@ function setup(values = {}, failDB = false) {
     } },
   });
   vm.runInContext(readFileSync('js/utils.js', 'utf8').replaceAll('export ', ''), context);
-  return { context, data, bundled };
+  return { context, data, legacy, bundled };
 }
+
+test('existing IndexedDB rules migrate into extension storage without replacing newer values', async () => {
+  const old = [{ pattern: '(?<baseUrl>https://old.example)' }];
+  const newer = [{ pattern: '(?<baseUrl>https://new.example)' }];
+  const first = setup({}, false, { config: 'https://old.example/rules', redirects: old });
+  assert.deepEqual(await first.context.getRedirects(), old);
+  assert.deepEqual(first.data.get('redirects'), old);
+  assert.equal(first.data.get('config'), 'https://old.example/rules');
+  const second = setup({ redirects: newer }, false, { redirects: old });
+  assert.deepEqual(await second.context.getRedirects(), newer);
+});
+
+test('overlapping updates commit in request order', async () => {
+  const { context, data } = setup();
+  let release;
+  context.fetch = url => url.includes('slow')
+    ? new Promise(resolve => { release = () => resolve({ ok: true, json: async () => [{ name: 'Slow', pattern: '(?<baseUrl>https://slow.example)' }] }); })
+    : Promise.resolve({ ok: true, json: async () => [{ name: 'New', pattern: '(?<baseUrl>https://new.example)' }] });
+  const first = context.updateRedirects('https://slow.example/rules');
+  await new Promise(resolve => setImmediate(resolve));
+  const second = context.updateRedirects('https://new.example/rules');
+  release();
+  await Promise.all([first, second]);
+  assert.equal(data.get('config'), 'https://new.example/rules');
+  assert.equal(data.get('redirects')[0].name, 'New');
+});
 
 test('serves bundled rules without a network request on a fresh installation', async () => {
   const { context, bundled } = setup();

@@ -16,7 +16,7 @@ chrome.runtime.onInstalled.addListener((details) => {
   setDefaultConfig(false).then(() => updateRedirects()).catch(console.error);
   setAlarm();
   const version = chrome.runtime.getManifest().version;
-  if (details.reason === 'update' && details.previousVersion && details.previousVersion !== version && version === '1.0.0') {
+  if (details.reason === 'update' && details.previousVersion && details.previousVersion !== version && ['1.0.0', '1.1.0'].includes(version)) {
     chrome.tabs.create({ url: chrome.runtime.getURL('html/whats-new.html') }, () => {
       if (chrome.runtime.lastError) console.warn('Could not open the update page:', chrome.runtime.lastError.message);
     });
@@ -30,6 +30,11 @@ chrome.runtime.onStartup.addListener(() => {
 
 // Serve redirects from IndexedDB to content scripts via messaging
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === 'updateRedirects') {
+    updateRedirects(message.configUrl).then(redirects => sendResponse({ redirects }))
+      .catch(error => sendResponse({ error: error.message }));
+    return true;
+  }
   if (message.type === "getRedirects") {
     getRedirects().then((redirects) => {
       sendResponse({ redirects });

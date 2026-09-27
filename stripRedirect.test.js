@@ -2,6 +2,19 @@ const { describe, it } = require("node:test");
 const { strict: assert } = require("node:assert");
 const { readFileSync } = require("node:fs");
 const { stripRedirect } = require("./js/stripRedirect.js");
+it('structured rules match the real host and preserve destination values', () => {
+  const rules = [{ name: 'Shop redirect', host: 'go.example.com', destinationParam: 'url' }];
+  const destination = 'https://shop.example/item?color=red%26blue#reviews';
+  assert.equal(stripRedirect(`https://go.example.com/path?other=1&url=${encodeURIComponent(destination)}&sid=2`, rules), destination);
+  const lookalike = `https://bad.example/path?next=https://go.example.com/&url=${encodeURIComponent(destination)}`;
+  assert.equal(stripRedirect(lookalike, rules), lookalike);
+});
+it('hostname patterns are checked only against hostnames', () => {
+  const rules = [{ hostPattern: '^imp\\.i[0-9]+\\.net$', destinationParam: 'u' }];
+  assert.equal(stripRedirect('https://imp.i123.net/click?u=https%3A%2F%2Fshop.example%2Fitem', rules), 'https://shop.example/item');
+  const lookalike = 'https://evil.example/imp.i123.net/click?u=https%3A%2F%2Fshop.example%2Fitem';
+  assert.equal(stripRedirect(lookalike, rules), lookalike);
+});
 
 const redirects = JSON.parse(readFileSync("redirects.json", "utf8"));
 

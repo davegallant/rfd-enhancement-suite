@@ -16,173 +16,19 @@
     var Links = document.querySelectorAll('a.postlink, a.autolinker_link');
 
     const REDIRECT_REGEX = [
-  {
-    "name": "Amazon redirect",
-    "pattern": "^https?://(?:[a-zA-Z0-9-]+\\.)*amazon\\.(?:ca|com)/gp/redirect\\.html\\?(?:[^#]*&)?location=(?<baseUrl>[^&#]+)",
-    "destinationParam": "location"
-  },
-  {
-    "name": "Amazon tag",
-    "pattern": "^(?<baseUrl>https?://(?:[a-zA-Z0-9-]+\\.)*amazon\\.(?:ca|com)/[^#]*?)[?&]tag=[^&#]*(?:&(?<rest>[^#]+))?(?:#.*)?$",
-    "removeParams": ["tag"]
-  },
-  {
-    "name": "Amazon ref query param",
-    "pattern": "^(?<baseUrl>https?://(?:[a-zA-Z0-9-]+\\.)*amazon\\.(?:ca|com)/[^#]*?)[?&]ref=[^&#]*(?:&(?<rest>[^#]+))?(?:#.*)?$",
-    "removeParams": ["ref"]
-  },
-  {
-    "name": "Amazon ref path segment",
-    "pattern": "^(?<baseUrl>https?://(?:[a-zA-Z0-9-]+\\.)*amazon\\.(?:ca|com)/[^?#]*?)/ref=[^?#]*(?:\\?(?<rest>[^#]+))?(?:#.*)?$",
-    "removePathRef": true
-  },
-  {
-    "name": "Amazon search tracking params",
-    "pattern": "^(?<baseUrl>https?://(?:[a-zA-Z0-9-]+\\.)*amazon\\.(?:ca|com)/(?:[^?#]*/)?(?:dp|gp/product)/[A-Z0-9]+[^?#]*?(?:\\?[^#]*?)?)[?&](?:crid|dib|dib_tag|keywords|keywor|qid|sprefix)(?:=[^&#]*)?(?:&(?<rest>[^#]+))?(?:#.*)?$",
-    "removeParams": ["crid", "dib", "dib_tag", "keywords", "keywor", "qid", "sprefix"]
-  },
-  {
-    "name": "Amazon ref_ query param",
-    "pattern": "^(?<baseUrl>https?://(?:[a-zA-Z0-9-]+\\.)*amazon\\.(?:ca|com)/[^#]*?)[?&]ref_=[^&#]*(?:&(?<rest>[^#]+))?(?:#.*)?$",
-    "removeParams": ["ref_"]
-  },
-  {
-    "name": "Amazon social_share query param",
-    "pattern": "^(?<baseUrl>https?://(?:[a-zA-Z0-9-]+\\.)*amazon\\.(?:ca|com)/[^#]*?)[?&]social_share=[^&#]*(?:&(?<rest>[^#]+))?(?:#.*)?$",
-    "removeParams": ["social_share"]
-  },
-  {
-    "name": "Best Buy",
-    "pattern": "bestbuyca.(.*).net(.*)\\?u=(?<baseUrl>.*)"
-  },
-  {
-    "name": "HP",
-    "pattern": "www.awin1.com(.*)&clickref=&p=(?<baseUrl>.*)"
-  },
-  {
-    "name": "Samsung",
-    "pattern": "www.awin1.com(.*)?p=(?<baseUrl>.*)"
-  },
-  {
-    "name": "redirectingat.com",
-    "pattern": "go.redirectingat.com/.*url=(?<baseUrl>.*).*"
-  },
-  {
-    "name": "homedepot",
-    "pattern": "the-home-depot-ca.pxf.io(.*)?u=(?<baseUrl>.*)"
-  },
-  {
-    "name": "redirectingat",
-    "pattern": "go.redirectingat.com(.*)?url=(?<baseUrl>.*)"
-  },
-  {
-    "name": "sjv.io",
-    "pattern": ".*sjv\\.io.*[?&]u=(?<baseUrl>.*?)(?:&subId1=.*)?$"
-  },
-  {
-    "name": "ldw66v.net",
-    "pattern": ".*ldw66v\\.net.*[?&]u=(?<baseUrl>.*)"
-  },
-  {
-    "name": "canadiantire",
-    "pattern": "imp.i([0-9]*).net(.*)?u=(?<baseUrl>.*)"
-  },
-  {
-    "name": "underarmour",
-    "pattern": "www.awin1.com(.*)?ued=(?<baseUrl>.*)"
-  },
-  {
-    "name": "lenovo",
-    "pattern": "(.*).evyy.net(.*)?u=(?<baseUrl>.*)"
-  },
-  {
-    "name": "kqzyfj",
-    "pattern": "www.kqzyfj.com(.*)?url=(?<baseUrl>.*)&sid=.*"
-  },
-  {
-    "name": "walmart",
-    "pattern": "click.linksynergy.com(.*)?murl=(?<baseUrl>.*)&u1=.*"
-  },
-  {
-    "name": "dpbolvw.net",
-    "pattern": "www.dpbolvw.net(.*)?url=(?<baseUrl>.*)"
-  },
-  {
-    "name": "jdoqocy.com",
-    "pattern": "www.jdoqocy.com(.*)?url=(?<baseUrl>.*)&sid=rfdcb"
-  },
-  {
-    "name": "pfx.io",
-    "pattern": "(.*).pxf.io(.*)?u=(?<baseUrl>.*)"
-  },
-  {
-    "name": "avantlink.com",
-    "pattern": "(.*).avantlink.com(.*)?url=(?<baseUrl>.*)"
-  },
-  {
-    "name": "anrdoezrs.net",
-    "pattern": ".*anrdoezrs\\.net.+\\?url=(?<baseUrl>.*)&sid=.*"
-  },
-  {
-    "name": "tkqlhce.com",
-    "pattern": ".*tkqlhce\\.com.+?url=(?<baseUrl>.*)&sid=.*"
-  },
-  {
-    "name": "staples",
-    "pattern": ".*staplescanada\\.4u8mqw\\.net.+\\?u=(?<baseUrl>.*)"
-  },
-  {
-    "name": "pjtra.com",
-    "pattern": ".*pjtra\\.com.*\\?url=(?<baseUrl>.*)&sid.*"
-  },
-  {
-    "name": "pjatr.com",
-    "pattern": ".*pjatr\\.com.*\\?url=(?<baseUrl>.*)&sid.*"
-  },
-  {
-    "name": "pntra.com",
-    "pattern": ".*pntra\\.com.*\\?url=(?<baseUrl>.*)&sid.*"
-  },
-  {
-    "name": "pntrs.com",
-    "pattern": ".*pntrs\\.com.*\\?url=(?<baseUrl>.*)&sid.*"
-  },
-  {
-    "name": "pntrac.com",
-    "pattern": ".*pntrac\\.com.*\\?url=(?<baseUrl>.*)&sid.*"
-  },
-  {
-    "name": "shareasale.com",
-    "pattern": ".*shareasale\\.com.*&urllink=(?<baseUrl>.*)"
-  },
-  {
-    "name": "mkr3.net",
-    "pattern": ".*mkr3\\.net.*\\?u=(?<baseUrl>.*)"
-  },
-  {
-    "name": "njih.net",
-    "pattern": "(.*).njih.net(.*)?u=(?<baseUrl>.*)"
-  },
-  {
-    "name": "fintelconnect.com",
-    "pattern": ".*fintelconnect\\.com.*\\?u=(?<baseUrl>.*)"
-  },
-  {
-    "name": "c2ukkg.net",
-    "pattern": ".*c2ukkg\\.net.*\\?u=(?<baseUrl>.*)"
-  },
-  {
-    "name": "dodxnr.net",
-    "pattern": ".*dodxnr\\.net.*\\?u=(?<baseUrl>.*)"
-  },
-  {
-    "name": "doubleclick",
-    "pattern": "adclick\\.g\\.doubleclick\\.net(.*)?adurl=(?<baseUrl>.*)"
-  },
-  {
-    "name": "RFD subId1 tracking param",
-    "pattern": "(?<baseUrl>https?://\\S+?)[&?]subId1=[^&]*(?:&(?<rest>\\S+))?$"
-  }
+  { "name": "Amazon redirect", "hostSuffixes": ["amazon.ca", "amazon.com"], "pathPattern": "^/gp/redirect\\.html$", "destinationParam": "location" },
+  { "name": "Amazon tracking", "hostSuffixes": ["amazon.ca", "amazon.com"], "removeParams": ["tag", "ref", "ref_", "social_share"], "removePathRef": true },
+  { "name": "Amazon product tracking", "hostSuffixes": ["amazon.ca", "amazon.com"], "pathPattern": "/(?:dp|gp/product)/[A-Z0-9]+(?:/|$)", "removeParams": ["crid", "dib", "dib_tag", "keywords", "keywor", "qid", "sprefix"] },
+  { "name": "URL affiliate redirect", "hosts": ["go.redirectingat.com", "www.kqzyfj.com", "www.dpbolvw.net", "www.jdoqocy.com", "www.anrdoezrs.net", "www.tkqlhce.com", "www.pjtra.com", "www.pjatr.com", "www.pntra.com", "www.pntrs.com", "www.pntrac.com"], "hostSuffixes": ["avantlink.com"], "destinationParam": "url" },
+  { "name": "U affiliate redirect", "hosts": ["the-home-depot-ca.pxf.io", "staplescanada.4u8mqw.net", "www.mkr3.net", "www.fintelconnect.com", "www.c2ukkg.net", "www.dodxnr.net"], "hostSuffixes": ["sjv.io", "ldw66v.net", "evyy.net", "pxf.io", "njih.net"], "destinationParam": "u" },
+  { "name": "Awin product redirect", "host": "www.awin1.com", "destinationParam": "p" },
+  { "name": "Awin encoded redirect", "host": "www.awin1.com", "destinationParam": "ued" },
+  { "name": "Linksynergy redirect", "host": "click.linksynergy.com", "destinationParam": "murl" },
+  { "name": "ShareASale redirect", "host": "www.shareasale.com", "destinationParam": "urllink" },
+  { "name": "DoubleClick redirect", "host": "adclick.g.doubleclick.net", "destinationParam": "adurl" },
+  { "name": "Best Buy redirect", "hostPattern": "^bestbuyca\\.[a-zA-Z0-9-]+\\.net$", "destinationParam": "u" },
+  { "name": "Canadian Tire redirect", "hostPattern": "^imp\\.i[0-9]+\\.net$", "destinationParam": "u" },
+  { "name": "RFD subId1 tracking param", "pattern": "(?<baseUrl>https?://\\S+?)[&?]subId1=[^&]*(?:&(?<rest>\\S+))?$" }
 ]
 ;
 
@@ -230,8 +76,11 @@ function compileRules(redirectRegex) {
   const rules = [];
   for (const rule of redirectRegex) {
     try {
-      if (typeof rule?.pattern === 'string') rules.push({
-        regex: new RegExp(rule.pattern), name: rule.name || 'Unnamed rule', rule,
+      if (typeof rule?.pattern === 'string' || typeof rule?.host === 'string' || Array.isArray(rule?.hosts) || Array.isArray(rule?.hostSuffixes) || typeof rule?.hostPattern === 'string') rules.push({
+        regex: rule.pattern ? new RegExp(rule.pattern) : null,
+        hostRegex: rule.hostPattern ? new RegExp(rule.hostPattern) : null,
+        pathRegex: rule.pathPattern ? new RegExp(rule.pathPattern) : null,
+        name: rule.name || 'Unnamed rule', rule,
       });
     } catch { /* Ignore invalid legacy cached rules. */ }
   }
@@ -246,12 +95,16 @@ function inspectRedirect(URL, redirectRegex) {
   const rules = compileRules(redirectRegex);
   for (let step = 0; step < 20; step++) {
     const previousURL = URL;
-    for (const { regex, name, rule } of rules) {
-      const result = regex.exec(URL);
-      if (result?.groups?.baseUrl) {
+    const parsed = new globalThis.URL(URL);
+    for (const { regex, hostRegex, pathRegex, name, rule } of rules) {
+      const hostMatch = rule.host === parsed.hostname || rule.hosts?.includes(parsed.hostname) ||
+        rule.hostSuffixes?.some(host => parsed.hostname === host || parsed.hostname.endsWith('.' + host)) || hostRegex?.test(parsed.hostname);
+      const structured = hostMatch && (!pathRegex || pathRegex.test(parsed.pathname));
+      const result = regex?.exec(URL);
+      if (structured || result?.groups?.baseUrl) {
         let newURL;
         try {
-          newURL = applyRedirectRule(URL, rule, result.groups);
+          newURL = applyRedirectRule(URL, rule, result?.groups || {});
         } catch {
           continue;
         }

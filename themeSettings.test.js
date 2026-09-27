@@ -2,6 +2,30 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const { loadThemeFixture } = require('./test/helpers/themeHarness.cjs');
 function start(options) { return loadThemeFixture('list-card', options); }
+test('new users get clutter removed while version 1 choices remain unchanged', async () => {
+  const fresh = start();
+  assert.equal((await fresh.api.settings.load()).hideSignatures, true);
+  assert.equal((await fresh.api.settings.load()).compactProfiles, true);
+  fresh.dispose();
+  const existing = start({ initial: { 'rfdm.schemaVersion': 1, 'rfdm.fontSize': 20 } });
+  const saved = await existing.api.settings.load();
+  assert.equal(saved.hideSignatures, false);
+  assert.equal(saved.compactProfiles, false);
+  assert.equal(saved.fontSize, 20);
+  existing.dispose();
+});
+test('concurrent changes on version 1 keep earlier choices and saved values', async () => {
+  const h = start({ initial: { 'rfdm.schemaVersion': 1 } });
+  await Promise.all([
+    h.api.settings.save({ hideSignatures: true }),
+    h.api.settings.save({ fontSize: 20 }),
+  ]);
+  const value = await h.api.settings.load();
+  assert.equal(value.hideSignatures, true);
+  assert.equal(value.compactProfiles, false);
+  assert.equal(value.fontSize, 20);
+  h.dispose();
+});
 test('missing and corrupt settings use safe defaults', async () => {
   const h = start({ initial: { 'rfdm.enabled': 'true', 'rfdm.theme': 'sepia', 'rfdm.fontSize': 15, 'rfdm.hidePromotions': false } });
   const settings = await h.api.settings.load();

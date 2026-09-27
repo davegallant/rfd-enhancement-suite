@@ -1,6 +1,7 @@
 (() => {
   const fields = {
     enabled: document.getElementById('modern-enabled'),
+    clutterEnabled: document.getElementById('modern-clutter-enabled'),
     fontSize: document.getElementById('modern-font-size'), hidePromotions: document.getElementById('modern-hide-promotions'),
     hideSidebar: document.getElementById('modern-hide-sidebar'),
     hideSignatures: document.getElementById('modern-hide-signatures'), compactProfiles: document.getElementById('modern-compact-profiles'),
@@ -17,7 +18,8 @@
       if (field.type === 'checkbox') field.checked = value[name];
       else field.value = String(value[name]);
       if (name === 'fontSize') fontSizeValue.value = `${value[name]} px`;
-      if (name !== 'enabled' && name !== 'hideSignatures') field.disabled = !value.enabled;
+      if (name === 'fontSize') field.disabled = !value.enabled;
+      if (['hidePromotions', 'hideSidebar', 'hideSignatures', 'compactProfiles'].includes(name)) field.disabled = !value.clutterEnabled;
     }
     rendering = false;
   }
@@ -27,14 +29,15 @@
   settings.subscribe(value => { saved = value; render(value); });
   function save(name, value) {
     chain = chain.catch(() => {}).then(async () => {
-      try { await settings.save({ [name]: value }); saved = { ...saved, [name]: value }; status.textContent = 'Appearance saved'; }
+      try { await settings.save({ [name]: value }); saved = { ...saved, [name]: value }; status.textContent = ''; }
       catch (error) { status.textContent = error.message; render(saved); }
     });
   }
   for (const [name, field] of Object.entries(fields)) field.addEventListener('change', () => {
     if (rendering) return;
     const value = field.type === 'checkbox' ? field.checked : name === 'fontSize' ? Number(field.value) : field.value;
-    if (name === 'enabled') for (const [key, other] of Object.entries(fields)) if (key !== 'enabled' && key !== 'hideSignatures') other.disabled = !value;
+    if (name === 'enabled') fields.fontSize.disabled = !value;
+    if (name === 'clutterEnabled') for (const key of ['hidePromotions', 'hideSidebar', 'hideSignatures', 'compactProfiles']) fields[key].disabled = !value;
     save(name, value);
   });
   document.getElementById('appearance-reset').addEventListener('click', () => {

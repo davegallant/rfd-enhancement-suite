@@ -7,7 +7,7 @@
   "scripts": {
     "test": "node --test *.test.js",
     "start:firefox": "web-ext run --source-dir .",
-    "build": "web-ext build --overwrite-dest --source-dir . --ignore-files extensions/ package.json package-lock.json 'flake.*' renovate.json script.js.tmpl test/ 'docs/**' '*.test.js' 'test/**' 'test-results/**' 'playwright-report/**' 'playwright.config.cjs' 'web-ext-artifacts/**'",
+    "build": "web-ext build --overwrite-dest --source-dir . --ignore-files extensions/ package.json package-lock.json 'flake.*' renovate.json script.js script.js.tmpl README.md CHANGELOG.md test/ 'docs/**' '*.test.js' 'test/**' 'test-results/**' 'playwright-report/**' 'playwright.config.cjs' 'web-ext-artifacts/**'",
     "lint": "web-ext lint --source-dir .",
     "sign": "web-ext sign --source-dir .",
     "test:browser": "playwright test"

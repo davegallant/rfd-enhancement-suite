@@ -1,4 +1,11 @@
-import { updateRedirects, dbGet, getRedirects, DEFAULT_CONFIG_URL } from "../js/utils.js"
+import { dbGet, getRedirects, DEFAULT_CONFIG_URL } from "../js/utils.js"
+
+async function updateRedirects(configUrl) {
+  const response = await chrome.runtime.sendMessage({ type: 'updateRedirects', configUrl });
+  if (response?.error) throw new Error(response.error);
+  if (!response?.redirects) throw new Error('Could not update rules');
+  return response.redirects;
+}
 
 const inputField = document.getElementById("input-field");
 const saveButton = document.getElementById("save-button");

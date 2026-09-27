@@ -2,51 +2,49 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>rfd-enhancement-suite</title>
+    <title>RFD Enhancement Suite</title>
     <link rel="stylesheet" href="../css/popup.css" />
   </head>
   <body>
-    <h1>RFD Enhancement Suite</h1>
-    <p class="hint"><a href="whats-new.html" target="_blank">What's new in 1.0.0</a></p>
+    <header class="popup-header">
+      <span class="brand-mark" aria-hidden="true">R</span>
+      <div><h1>RFD</h1><p>A quieter forum</p></div>
+    </header>
+    <p id="activity-count" class="page-activity" role="status">Loading page activity…</p>
+    <p id="appearance-page-status" role="status"></p>
     <section id="appearance-section" aria-labelledby="appearance-heading">
-      <h2 id="appearance-heading">Appearance</h2>
-      <label class="check"><input id="modern-enabled" type="checkbox" /> Simplify layout</label>
-      <p id="appearance-page-status" role="status"></p>
-      <form id="appearance-form">
-        <label for="modern-font-size">Text size</label><div class="range-control"><input id="modern-font-size" type="range" min="16" max="24" step="1" value="18" /><output id="modern-font-size-value" for="modern-font-size">18 px</output></div>
-        <label class="check"><input id="modern-hide-promotions" type="checkbox" /> Hide promotions and sponsored threads</label>
-        <label class="check"><input id="modern-hide-sidebar" type="checkbox" /> Hide sidebar</label>
-        <label class="check"><input id="modern-hide-signatures" type="checkbox" /> Hide signatures</label>
-        <label class="check"><input id="modern-compact-profiles" type="checkbox" /> Hide join date, posts, upvotes and location</label>
-      </form>
-      <button id="appearance-reset" type="button">Reset appearance</button>
+      <h2 id="appearance-heading">Browsing</h2>
+      <label class="switch-row"><span><strong>Clean links</strong><small>Open direct, tracking-free URLs</small></span><input id="link-cleaning-enabled" type="checkbox" /></label>
+      <label class="switch-row"><span><strong>Remove clutter</strong><small>Promotions and secondary details</small></span><input id="modern-clutter-enabled" type="checkbox" /></label>
+      <label class="switch-row"><span><strong>Modern layout</strong><small>Cleaner rows and easier reading</small></span><input id="modern-enabled" type="checkbox" /></label>
+      <div class="range-row"><label for="modern-font-size">Text size</label><div class="range-control"><input id="modern-font-size" type="range" min="16" max="24" step="1" value="18" /><output id="modern-font-size-value" for="modern-font-size">18 px</output></div></div>
+      <details id="customize-cleanup"><summary>Customize cleanup</summary>
+        <form id="appearance-form">
+          <label class="check"><input id="modern-hide-promotions" type="checkbox" /> Hide promotions and sponsored threads</label>
+          <label class="check"><input id="modern-hide-sidebar" type="checkbox" /> Hide sidebar</label>
+          <label class="check"><input id="modern-hide-signatures" type="checkbox" /> Hide signatures</label>
+          <label class="check"><input id="modern-compact-profiles" type="checkbox" /> Compact author details</label>
+        </form>
+      </details>
       <p id="appearance-status" role="status" aria-live="polite"></p>
+      <p id="link-cleaning-status" role="status" aria-live="polite"></p>
     </section>
-    <h2>Link cleaning</h2>
-    <label class="check"><input id="link-cleaning-enabled" type="checkbox" /> Clean links on forum pages</label>
-    <p id="link-cleaning-status" role="status" aria-live="polite"></p>
-    <p id="activity-count" role="status">Loading page activity…</p>
-    <details>
-      <summary>Recent cleaned links</summary>
-      <p class="hint">Up to 50 recent changes, kept only in this page’s memory.</p>
-      <ol id="activity-links"></ol>
-    </details>
-    <p id="last-update"></p>
-    <p id="update-error" role="status"></p>
-    <details id="link-tools"><summary>Link tools and advanced settings</summary>
-    <form id="test-form">
-      <label for="test-url">Test a link</label>
-      <input type="text" id="test-url" placeholder="https://…" required />
-      <button id="test-button" type="submit">Test link</button>
-      <p class="hint">Uses your active rules without opening the destination.</p>
-      <output id="test-result" aria-live="polite"></output>
-      <ol id="test-steps"></ol>
-    </form>
-    <label for="input-field">Config URL</label>
-    <input type="text" id="input-field" />
-    <button id="save-button">Save</button>
-    <button id="reset-button">Reset</button>
-    <div id="status-message" role="status"></div>
+    <details id="link-tools"><summary>Advanced</summary>
+      <details><summary>Recent cleaned links</summary><p class="hint">Up to 50 changes on this page.</p><ol id="activity-links"></ol></details>
+      <form id="test-form">
+        <label for="test-url">Test a link</label>
+        <input type="url" id="test-url" placeholder="https://…" required />
+        <button id="test-button" type="submit">Test link</button>
+        <p class="hint">Preview the destination without opening it.</p>
+        <output id="test-result" aria-live="polite"></output><ol id="test-steps"></ol>
+      </form>
+      <p id="last-update"></p><p id="update-error" role="status"></p>
+      <label for="input-field">Rules URL</label>
+      <input type="url" id="input-field" />
+      <div class="actions"><button id="save-button" type="button">Save rules URL</button><button id="reset-button" type="button">Use default</button></div>
+      <div id="status-message" role="status"></div>
+      <button id="appearance-reset" type="button">Reset appearance</button>
+      <p class="hint"><a href="whats-new.html" target="_blank">What’s new in 1.1</a></p>
     </details>
     <script src="../js/stripRedirect.js"></script>
     <script src="../js/theme/settings.js"></script>

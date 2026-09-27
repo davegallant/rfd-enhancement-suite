@@ -15,6 +15,7 @@ function element() {
 
 async function popup({ activity, status, unavailable = false } = {}) {
   const elements = new Map();
+  const ruleMessages = [];
   const context = vm.createContext({ console, URL, Date,
     setTimeout: () => 0, clearTimeout() {},
     document: {
@@ -32,12 +33,20 @@ async function popup({ activity, status, unavailable = false } = {}) {
         if (unavailable) throw new Error('No receiver');
         return activity;
       },
-    } },
+    }, runtime: { sendMessage: async message => { ruleMessages.push(message); return { redirects: [] }; } } },
   });
   vm.runInContext(readFileSync('js/popup.js', 'utf8').replace(/^import .*$/gm, ''), context);
   await new Promise(resolve => setImmediate(resolve));
-  return { elements, context };
+  return { elements, context, ruleMessages };
 }
+
+test('saving a rules source delegates update to the background', async () => {
+  const { elements, ruleMessages } = await popup({ unavailable: true });
+  elements.get('input-field').value = 'https://example.com/custom.json';
+  await elements.get('save-button').listeners.click();
+  assert.equal(ruleMessages[0].type, 'updateRedirects');
+  assert.equal(ruleMessages[0].configUrl, 'https://example.com/custom.json');
+});
 
 test('popup displays count, original/destination details, and update failure', async () => {
   const { elements } = await popup({ activity: { count: 2, links: [

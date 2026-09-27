@@ -9,7 +9,7 @@ for (const pageType of ['list-card', 'thread-rich']) for (const width of [390, 7
       const data = {};
       const listeners = [];
       window.chrome = { storage: { local: {
-        async get(keys) { return Object.fromEntries(keys.filter(k => k in data).map(k => [k,data[k]])); },
+        async get(keys) { const names = Array.isArray(keys) ? keys : [keys]; return Object.fromEntries(names.filter(k => k in data).map(k => [k,data[k]])); },
         async set(patch) { const changes={}; for(const [k,v] of Object.entries(patch)) {changes[k]={oldValue:data[k],newValue:v};data[k]=v;} listeners.forEach(fn=>fn(changes,'local')); },
         async remove(keys) { keys.forEach(k=>delete data[k]); }
       }, onChanged: { addListener(fn){listeners.push(fn)}, removeListener(fn){const i=listeners.indexOf(fn);if(i>=0)listeners.splice(i,1)} } }, runtime: {onMessage:{addListener(){},removeListener(){}}} };
@@ -26,7 +26,14 @@ for (const pageType of ['list-card', 'thread-rich']) for (const width of [390, 7
     if (width === 1440) {
       expect((await page.locator('#site_content').boundingBox()).width).toBeGreaterThanOrEqual(1390);
       expect((await page.locator('.primary_content').boundingBox()).width).toBeGreaterThanOrEqual(1300);
-      expect((await page.locator(pageType === 'list-card' ? '#forum-topics' : '#thread').boundingBox()).width).toBeGreaterThanOrEqual(1300);
+      const content = await page.locator(pageType === 'list-card' ? '#forum-topics' : '#thread').boundingBox();
+      if (pageType === 'list-card') {
+        expect(content.width).toBeGreaterThanOrEqual(1100);
+        expect(content.width).toBeLessThanOrEqual(1280);
+      } else {
+        expect(content.width).toBeLessThanOrEqual(860);
+        expect(content.x).toBeGreaterThan(250);
+      }
       await expect(page.locator('#trending_hotdeals_threads')).toBeHidden();
     }
     await expect(page.locator('[data-rfdm-role="deal-row"], [data-rfdm-role="post"]')).not.toHaveCount(0);
@@ -52,6 +59,13 @@ for (const pageType of ['list-card', 'thread-rich']) for (const width of [390, 7
       await page.evaluate(() => window.RFDModern.settings.save({enabled:false}));
       await expect(page.locator('html')).not.toHaveAttribute('data-rfdm-enabled','true');
       await expect(page.locator('html')).toHaveAttribute('data-theme','dark');
+      await expect(page.locator('.sidebar_content')).toBeHidden();
+    }
+    if (pageType === 'thread-rich' && width === 1440) {
+      await page.evaluate(() => window.RFDModern.settings.save({enabled:false}));
+      await expect(page.locator('.signature')).toBeHidden();
+      await page.evaluate(() => window.RFDModern.settings.save({clutterEnabled:false}));
+      await expect(page.locator('.signature')).toBeVisible();
     }
   });
 }

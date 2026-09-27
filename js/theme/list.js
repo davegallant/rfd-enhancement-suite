@@ -10,8 +10,6 @@
       if (!primary) continue;
       journal.setAttribute(row, 'data-rfdm-role', 'deal-row');
       if (primary.classList.contains('sponsored-offer') && row.querySelector('.sponsored-badge')) journal.setAttribute(row, 'data-rfdm-sponsored', 'true');
-      journal.setAttribute(primary, 'data-rfdm-role', 'deal-title');
-      for (const image of row.querySelectorAll('.thread_image')) journal.setAttribute(image, 'data-rfdm-role', 'deal-thumbnail');
     }
     for (const row of classicRows) {
       if (row.querySelector('.thread_info_title > .topictitle > .sponsored')) journal.setAttribute(row, 'data-rfdm-sponsored', 'true');

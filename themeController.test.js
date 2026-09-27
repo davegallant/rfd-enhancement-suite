@@ -1,7 +1,7 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const { loadThemeFixture } = require('./test/helpers/themeHarness.cjs');
-const scripts = ['js/theme/dom.js', 'js/theme/adapters.js', 'js/theme/controller.js'];
+const scripts = ['js/theme/dom.js', 'js/theme/adapters.js', 'js/theme/thread.js', 'js/theme/controller.js'];
 function page(name, initial = {}, options = {}) { return loadThemeFixture(name, { url: name === 'thread' ? 'https://forums.redflagdeals.com/example-1/' : 'https://forums.redflagdeals.com/hot-deals-f9/', initial, scripts, ...options }); }
 test('layout improvements can be disabled while preserving native theme', async () => {
   const h = page('list-card', { 'rfdm.enabled': false });
@@ -17,6 +17,34 @@ test('layout improvements can be disabled while preserving native theme', async 
   assert.equal(h.document.documentElement.hasAttribute('data-rfdm-enabled'), false);
   assert.equal(h.document.documentElement.getAttribute('data-theme'), 'dark');
   assert.equal(h.document.querySelectorAll('[data-rfdm-owned]').length, 0);
+  stop(); h.dispose();
+});
+test('clutter cleanup stays active when modern layout is off', async () => {
+  const h = page('thread', { 'rfdm.enabled': false, 'rfdm.hidePromotions': true, 'rfdm.compactProfiles': true });
+  const stop = h.api.controller.start(h.document, h.window); await h.flush();
+  const html = h.document.documentElement;
+  assert.equal(html.hasAttribute('data-rfdm-enabled'), false);
+  assert.equal(html.getAttribute('data-rfdm-hide-promotions'), 'true');
+  assert.equal(html.getAttribute('data-rfdm-compact-profiles'), 'true');
+  assert.equal(h.document.querySelector('.profile_numposts').getAttribute('data-rfdm-role'), 'profile-stats');
+  stop(); h.dispose();
+});
+test('clutter master restores promotions and profile details independently of layout', async () => {
+  const h = page('thread', { 'rfdm.enabled': true, 'rfdm.clutterEnabled': false });
+  const stop = h.api.controller.start(h.document, h.window); await h.flush();
+  const html = h.document.documentElement;
+  assert.equal(html.getAttribute('data-rfdm-enabled'), 'true');
+  assert.equal(html.getAttribute('data-rfdm-hide-promotions'), 'false');
+  assert.equal(html.getAttribute('data-rfdm-compact-profiles'), 'false');
+  assert.equal(html.getAttribute('data-rfdm-hide-signatures'), 'false');
+  stop(); h.dispose();
+});
+test('turning both appearance features off avoids page annotations until one is enabled', async () => {
+  const h = page('thread', { 'rfdm.enabled': false, 'rfdm.clutterEnabled': false });
+  const stop = h.api.controller.start(h.document, h.window); await h.flush();
+  assert.equal(h.document.querySelectorAll('[data-rfdm-role]').length, 0);
+  await h.api.settings.save({ clutterEnabled: true }); await h.flush();
+  assert.ok(h.document.querySelectorAll('[data-rfdm-role]').length > 0);
   stop(); h.dispose();
 });
 test('native theme changes and repeated layout toggles stay independent', async () => {
@@ -60,4 +88,14 @@ test('document-start startup tolerates a missing document root', async () => {
   h.document.documentElement.remove();
   assert.doesNotThrow(() => h.api.controller.start(h.document, h.window));
   h.dispose();
+});
+test('startup starts loading settings while the document is still parsing', () => {
+  const h = page('list-card');
+  Object.defineProperty(h.document, 'readyState', { configurable: true, value: 'loading' });
+  const originalLoad = h.api.settings.load;
+  let reads = 0;
+  h.api.settings.load = () => { reads++; return originalLoad(); };
+  const stop = h.api.controller.start(h.document, h.window);
+  assert.equal(reads, 1);
+  stop(); h.dispose();
 });

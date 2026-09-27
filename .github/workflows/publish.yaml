@@ -149,7 +149,7 @@ jobs:
           cmd: build
           source: .
           filename: "rfd-enhancement-suite-{version}.xpi"
-          ignoreFiles: '[ "package.json", "package-lock.json", "yarn.lock", "*.test.js", "docs/**", "web-ext-artifacts/**", "extensions/**", "test/**", "test-results/**", "playwright-report/**", "playwright.config.cjs" ]'
+          ignoreFiles: '[ "package.json", "package-lock.json", "yarn.lock", "README.md", "CHANGELOG.md", "script.js", "script.js.tmpl", "*.test.js", "docs/**", "web-ext-artifacts/**", "extensions/**", "test/**", "test-results/**", "playwright-report/**", "playwright.config.cjs" ]'
       - name: Submit to Firefox Add-ons
         uses: kewisch/action-web-ext@v2
         with:

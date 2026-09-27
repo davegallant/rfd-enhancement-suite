@@ -28,6 +28,13 @@ test('does not mistake lookalike hosts or Amazon URLs in query values for Amazon
     'https://example.com/?next=https://www.amazon.ca/dp/B0TEST?tag=rfd',
   ]) assert.equal(stripRedirect(input, rules), input);
 });
+test('affiliate wrappers match only their own hostnames', () => {
+  for (const input of [
+    'https://evil.example/path/go.redirectingat.com/?url=https%3A%2F%2Fshop.example%2Fitem',
+    'https://go.redirectingat.com.evil.example/?url=https%3A%2F%2Fshop.example%2Fitem',
+    'https://evil.example/?next=https%3A%2F%2Fwww.awin1.com%2F&p=https%3A%2F%2Fshop.example%2Fitem',
+  ]) assert.equal(stripRedirect(input, rules), input);
+});
 
 test('preserves search keywords while removing product search tracking consistently', () => {
   assert.equal(stripRedirect('https://www.amazon.ca/s?keywords=coffee&tag=rfd', rules),

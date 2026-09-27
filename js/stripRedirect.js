@@ -42,8 +42,11 @@ function compileRules(redirectRegex) {
   const rules = [];
   for (const rule of redirectRegex) {
     try {
-      if (typeof rule?.pattern === 'string') rules.push({
-        regex: new RegExp(rule.pattern), name: rule.name || 'Unnamed rule', rule,
+      if (typeof rule?.pattern === 'string' || typeof rule?.host === 'string' || Array.isArray(rule?.hosts) || Array.isArray(rule?.hostSuffixes) || typeof rule?.hostPattern === 'string') rules.push({
+        regex: rule.pattern ? new RegExp(rule.pattern) : null,
+        hostRegex: rule.hostPattern ? new RegExp(rule.hostPattern) : null,
+        pathRegex: rule.pathPattern ? new RegExp(rule.pathPattern) : null,
+        name: rule.name || 'Unnamed rule', rule,
       });
     } catch { /* Ignore invalid legacy cached rules. */ }
   }
@@ -58,12 +61,16 @@ function inspectRedirect(URL, redirectRegex) {
   const rules = compileRules(redirectRegex);
   for (let step = 0; step < 20; step++) {
     const previousURL = URL;
-    for (const { regex, name, rule } of rules) {
-      const result = regex.exec(URL);
-      if (result?.groups?.baseUrl) {
+    const parsed = new globalThis.URL(URL);
+    for (const { regex, hostRegex, pathRegex, name, rule } of rules) {
+      const hostMatch = rule.host === parsed.hostname || rule.hosts?.includes(parsed.hostname) ||
+        rule.hostSuffixes?.some(host => parsed.hostname === host || parsed.hostname.endsWith('.' + host)) || hostRegex?.test(parsed.hostname);
+      const structured = hostMatch && (!pathRegex || pathRegex.test(parsed.pathname));
+      const result = regex?.exec(URL);
+      if (structured || result?.groups?.baseUrl) {
         let newURL;
         try {
-          newURL = applyRedirectRule(URL, rule, result.groups);
+          newURL = applyRedirectRule(URL, rule, result?.groups || {});
         } catch {
           continue;
         }

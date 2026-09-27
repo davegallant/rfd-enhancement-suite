@@ -1,5 +1,27 @@
 # Changelog
 
+## 1.1.0 - 2026-09-27
+
+### Added
+
+- Separate Clean links, Remove clutter, and Modern layout controls in a smaller popup.
+- Use a comfortable discussion reading width, bounded deal list width, clearer spacing and more readable metadata.
+- Support hostname and query based redirect rules alongside existing regex rules.
+- Migrate existing rule configuration from IndexedDB to extension storage.
+
+### Changed
+
+- Hide signatures and secondary author details on new installations; preserve version 1 settings on upgrade.
+- Allow clutter removal while Modern layout is off.
+- Group the link tester, recent activity, rule source, and update status under Advanced.
+- Serialize background rule updates to avoid overlapping saves.
+
+### Fixed
+
+- Recognize supported content added after the page initially loads, and details inserted inside existing posts.
+- Match bundled affiliate wrappers by hostname, avoiding lookalike URLs.
+- Let RFD determine signature display when the extension does not hide it.
+
 ## 1.0.1 - 2026-09-27
 
 ### Fixed

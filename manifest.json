@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "rfd-enhancement-suite",
+  "name": "RFD Enhancement Suite",
   "description": "A calmer RedFlagDeals forum with direct, tracking-free deal links",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "content_scripts": [
     {
       "matches": [
@@ -58,6 +58,9 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "davegallant@gmail.com",
+      "data_collection_permissions": {
+        "required": ["none"]
+      },
       "strict_min_version": "112.0"
     },
     "gecko_android": {
