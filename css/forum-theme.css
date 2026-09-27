@@ -143,13 +143,41 @@
     overflow-wrap: anywhere;
   }
   html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread > .thread_posts > article.thread_post:not(.thread_original_post)[data-rfdm-role="post"] {
+    display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 16px;
     border-inline: 1px solid var(--forum-item-border, #e2e2e2);
-    padding: 0 15px 8px;
+    padding: 12px 15px 8px;
   }
-  @media (min-width: 50.063em) {
-    html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread > .thread_posts > article.thread_post:not(.thread_original_post) :is(.post_content, .ignore) {
-      margin-bottom: 2rem;
-    }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread > .thread_posts > article.thread_post:not(.thread_original_post)::after { display: none; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread > .thread_posts > article.thread_post:not(.thread_original_post) > .post_profilearea {
+    grid-column: 1; grid-row: 1; float: none; width: auto; min-width: 0; min-height: 0; padding: 0;
+  }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread > .thread_posts > article.thread_post:not(.thread_original_post) .postprofile {
+    display: flex; align-items: center; flex-wrap: wrap; gap: 4px 10px; margin: 0;
+  }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread > .thread_posts > article.thread_post:not(.thread_original_post) .postprofile > :is(dt, dd) { margin: 0; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread > .thread_posts > article.thread_post:not(.thread_original_post) .profile_avatar {
+    position: static; order: -1; flex: 0 0 32px; line-height: 0;
+  }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread > .thread_posts > article.thread_post:not(.thread_original_post) .profile_username { overflow-wrap: anywhere; min-width: 0; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread > .thread_posts > article.thread_post:not(.thread_original_post) .profile_post_timestamp { display: none; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread > .thread_posts > article.thread_post:not(.thread_original_post) > .post_dateline {
+    grid-column: 2; grid-row: 1; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; padding: 0; min-height: 0;
+  }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread > .thread_posts > article.thread_post:not(.thread_original_post) > :is(.post_body, .actionbar_wrapper, .ignore) {
+    grid-column: 1 / -1; min-width: 0;
+  }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread > .thread_posts > article.thread_post:not(.thread_original_post) > .post_body {
+    padding: 0; margin: 10px 0 0; background: none;
+  }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread > .thread_posts > article.thread_post:not(.thread_original_post) > .actionbar_wrapper { position: static; margin: 0; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread > .thread_posts > article.thread_post:not(.thread_original_post) .actionbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread > .thread_posts > article.thread_post:not(.thread_original_post) .actionbar_before_post_buttons { position: static; float: none; width: auto; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread > .thread_posts > article.thread_post:not(.thread_original_post) .post_actions_primary { float: none; margin: 0 0 0 auto; min-height: 0; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread > .thread_posts > article.thread_post.bulk_moderation_selected:not(.thread_original_post) { background: var(--surface-warning-light, #fff2d1); }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread > .thread_posts > article.thread_post:not(.thread_original_post) :is(.post_content, .ignore) { margin-bottom: 12px; }
+  @media (max-width: 640px) {
+    html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread > .thread_posts > article.thread_post:not(.thread_original_post)[data-rfdm-role="post"] { grid-template-columns: minmax(0, 1fr); }
+    html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread > .thread_posts > article.thread_post:not(.thread_original_post) > .post_dateline { grid-column: 1; grid-row: 2; margin-top: 6px; }
   }
   html[data-rfdm-enabled="true"][data-rfdm-page="list"] #forum-topics {
     float: none; width: 100% !important; box-sizing: border-box;

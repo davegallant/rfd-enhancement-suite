@@ -18,6 +18,7 @@
 
 ### Changed
 
+- Move reply authors and timestamps into a compact header, removing the grey author column and giving reply text the full width.
 - Polish replies with rounded avatars, consistent author typography, softly rounded blue quote panels with a thin accent, and compact action links.
 - Replace solid red reply headers with plain, muted timestamps and post links.
 - Make original post text follow the Text size slider, including deal descriptions.
