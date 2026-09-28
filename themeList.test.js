@@ -3,6 +3,23 @@ const assert = require('node:assert/strict');
 const { loadThemeFixture } = require('./test/helpers/themeHarness.cjs');
 const scripts = ['js/theme/dom.js', 'js/theme/adapters.js', 'js/theme/list.js'];
 function fixture() { return loadThemeFixture('list-card', { scripts }); }
+test('classifies scores in both list layouts and restores their original markup', () => {
+  const h = fixture(), root = h.document.querySelector('#forum-topics');
+  root.insertAdjacentHTML('beforeend', '<li class="row topic" data-thread-id="3"><dl class="post_voting"><dd class="total_count">+1</dd></dl><ul class="thread-meta-small"><li class="total_count">−1 SCORE</li></ul></li>');
+  const score = root.querySelector('.votes');
+  const journal = h.api.dom.createJournal();
+  for (const [value, state] of [['+1', 'positive'], ['0', 'zero'], ['-1', 'negative'], ['1,234 votes', 'positive'], ['−42', 'negative'], ['unavailable', '']]) {
+    score.textContent = value;
+    h.api.list.enhance(root, h.api.settings.DEFAULTS, journal);
+    assert.equal(score.getAttribute('data-rfdm-score'), state);
+    assert.equal(score.textContent, value);
+  }
+  assert.equal(root.querySelector('.post_voting .total_count').getAttribute('data-rfdm-score'), 'positive');
+  assert.equal(root.querySelector('.thread-meta-small .total_count').getAttribute('data-rfdm-score'), 'negative');
+  journal.restore();
+  assert.equal(root.querySelector('[data-rfdm-score]'), null);
+  h.dispose();
+});
 test('marks deal rows without changing links, order or existing handlers', () => {
   const h = fixture(), root = h.document.querySelector('#forum-topics');
   const before = [...root.querySelectorAll('a.topic-card-info')];

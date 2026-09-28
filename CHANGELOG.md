@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.3 - 2026-09-28
+
+- Give Hot Deals card and classic lists a quieter, text-first layout with compact, connected rows and less unused space.
+- Show scores in small green, grey, or red badges with subtle backgrounds and borders, including when scores change dynamically and in dark mode.
+- Expand browser and unit coverage for the updated lists and score states.
+
 ## 1.1.2 - 2026-09-27
 
 - Soften quote attribution and dim disabled cleanup controls.

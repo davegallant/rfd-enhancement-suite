@@ -66,6 +66,12 @@
       }
       if (match.kind === 'home') return;
       for (const record of records) {
+        if (match.kind === 'list' || match.kind === 'classic-list') {
+          const target = record.target.nodeType === 1 ? record.target : record.target.parentElement;
+          const score = target?.closest(api.list.SCORE_SELECTOR);
+          if (score) added.add(score);
+        }
+        if (record.type === 'characterData') continue;
         if (record.removedNodes.length) removed = true;
         for (const node of record.addedNodes) {
           if (node.nodeType === 1) added.add(node);
@@ -108,7 +114,7 @@
     async function ready() {
       if (document.readyState === 'loading') await new Promise(resolve => document.addEventListener('DOMContentLoaded', resolve, { once: true }));
       if (!active) return;
-      if (document.documentElement) observer.observe(document.documentElement, { childList: true, subtree: true });
+      if (document.documentElement) observer.observe(document.documentElement, { childList: true, characterData: true, subtree: true });
       const started = generation;
       const result = await settingsPromise;
       if (started !== generation || !active) return;

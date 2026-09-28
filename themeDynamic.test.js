@@ -2,6 +2,21 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const { loadThemeFixture } = require('./test/helpers/themeHarness.cjs');
 const scripts = ['js/theme/dom.js','js/theme/adapters.js','js/theme/list.js','js/theme/thread.js','js/theme/controller.js'];
+test('score colour follows live text updates and stops when modern layout is disabled', async () => {
+  const h = loadThemeFixture('list-card', { scripts });
+  const stop = h.api.controller.start(h.document, h.window); await h.flush();
+  const score = h.document.querySelector('.votes');
+  assert.equal(score.getAttribute('data-rfdm-score'), 'positive');
+  score.textContent = '-1'; await h.flush();
+  assert.equal(score.getAttribute('data-rfdm-score'), 'negative');
+  score.firstChild.nodeValue = '0'; await h.flush();
+  assert.equal(score.getAttribute('data-rfdm-score'), 'zero');
+  await h.api.settings.save({ enabled: false }); await h.flush();
+  assert.equal(h.document.documentElement.hasAttribute('data-rfdm-enabled'), false);
+  stop();
+  assert.equal(score.hasAttribute('data-rfdm-score'), false);
+  h.dispose();
+});
 test('supported shell added after startup is enhanced', async () => {
   const h = loadThemeFixture('unsupported', { scripts });
   const stop = h.api.controller.start(h.document, h.window); await h.flush();

@@ -38,8 +38,9 @@ for (const pageType of ['list-card', 'thread-rich', 'search']) for (const width 
       expect((await page.locator('.primary_content').boundingBox()).width).toBeGreaterThanOrEqual(1300);
       const content = await page.locator(pageType === 'search' ? '#search_results' : pageType === 'list-card' ? '#forum-topics' : '#thread').boundingBox();
       if (pageType === 'list-card') {
-        expect(content.width).toBeGreaterThanOrEqual(1100);
-        expect(content.width).toBeLessThanOrEqual(1280);
+        const parent = await page.locator('.primary_content').boundingBox();
+        expect(Math.abs(content.x - parent.x)).toBeLessThanOrEqual(1);
+        expect(Math.abs(content.width - parent.width)).toBeLessThanOrEqual(1);
       } else {
         expect(content.width).toBeGreaterThanOrEqual(1390);
         expect(content.x).toBeLessThanOrEqual(25);
@@ -68,6 +69,16 @@ for (const pageType of ['list-card', 'thread-rich', 'search']) for (const width 
       const row = page.locator('[data-rfdm-role="deal-row"]').first();
       expect(await row.evaluate(el => getComputedStyle(el).listStyleType)).toBe('none');
       expect((await row.boundingBox()).height).toBeLessThan(160);
+      const score = row.locator('.votes');
+      for (const [text, colour] of [['+1', 'rgb(24, 115, 59)'], ['0', 'rgb(102, 102, 102)'], ['-1', 'rgb(186, 48, 48)']]) {
+        await score.evaluate((el, value) => { el.textContent = value; }, text);
+        await expect(score).toHaveCSS('color', colour);
+      }
+      await page.evaluate(() => document.documentElement.setAttribute('data-theme', 'dark'));
+      await expect(score).toHaveCSS('color', 'rgb(255, 139, 133)');
+      await score.evaluate(el => { el.textContent = '+1'; });
+      await expect(score).toHaveCSS('color', 'rgb(110, 211, 151)');
+      await page.evaluate(() => document.documentElement.removeAttribute('data-theme'));
     }
     if (pageType === 'thread-rich' && width === 390) await page.evaluate(() => {
       const row = document.querySelector('.post_content table tr');
