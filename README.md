@@ -2,15 +2,15 @@
 
 <img src="docs/images/popup.png" alt="RFD Enhancement Suite popup with cleanup options expanded" width="360">
 
-Give [RedFlagDeals forums](https://forums.redflagdeals.com/) a simpler interface for Hot Deals lists and discussion threads, and clean supported affiliate redirects and tracking parameters from forum links. Layout improvements and link cleaning are independent and both on by default.
+Gives [RedFlagDeals forums](https://forums.redflagdeals.com/) a simpler interface for Hot Deals lists and discussion threads, and cleans supported affiliate redirects and tracking parameters from forum links. Appearance improvements and link cleaning are independent, and both are on by default.
 
 [![Get the Firefox add-on](docs/images/firefox-add-on-button.png)](https://addons.mozilla.org/en-US/firefox/addon/rfd-redirect-stripper/) [![Available in the Chrome Web Store](docs/images/chrome-web-store-badge.png)](https://chromewebstore.google.com/detail/rfd-affiliate-stripper/nhjomcijhonhoggkckbjjfnjdcefbblo)
 
-Version 1.1.3 is available from source. Store listings may take time to update after submission and review.
+The latest release is available from source; store listings may lag while a new version is under review.
 
 ## Appearance
 
-The extension gives Hot Deals listings a quieter, text-first layout: clear titles, muted metadata and thin separators, with product thumbnails and decorative card styling removed. Both card and classic lists use connected rows with the same system font as discussion replies. Scores are green above zero, grey at zero and red below zero, including in RFD's dark mode. Classic lists hide view counts, category columns and repeated author details. Discussion threads use the available page width, with small side gutters. RFD controls page colours and light/dark mode. The extension keeps RFD's links, filters, pagination, posting controls, thread order, timestamps and emoji sizing. The forum home page keeps its native content and controls, with the sidebar setting available there too. Search results support sidebar cleanup. Account, profile and unknown page layouts retain RFD's native appearance.
+Hot Deals listings get a quieter, text-first layout: clear titles, muted metadata, thin separators, no product thumbnails or decorative card styling. Both card and classic lists use connected rows in the same system font as discussion replies, with scores in green above zero, grey at zero and red below zero — including in RFD's dark mode. Classic lists hide view counts, category columns and repeated author details. Discussion threads use the available page width with small side gutters. RFD keeps control of page colours and light/dark mode, and the extension preserves RFD's links, filters, pagination, posting controls, thread order, timestamps and emoji sizing. The forum home page keeps its native content and controls (the sidebar setting still applies there), search results support sidebar cleanup, and account, profile and unrecognized page layouts stay native.
 
 | Popup control | Default | Effect |
 | --- | --- | --- |
@@ -24,63 +24,59 @@ The extension gives Hot Deals listings a quieter, text-first layout: clear title
 
 Discussion text defaults to 17 px. Use your browser’s zoom controls to adjust the page size.
 
-Appearance settings persist across supported tabs. **Reset appearance** restores these defaults. Turning Modern layout off leaves cleanup and link cleaning active, except that an existing version 1 user who had disabled the layout starts with Remove clutter off as well. Turning Remove clutter off reveals promotions, sidebars, the footer, signatures and secondary author details while preserving each individual preference. RFD may omit signature markup for some posts or page states; the extension can only show signatures present in the page.
+Settings persist across supported tabs, and **Reset appearance** restores the defaults above. Turning Modern layout off leaves cleanup and link cleaning active — unless you're upgrading from version 1 with the layout disabled, in which case Remove clutter starts off too. Turning Remove clutter off reveals promotions, sidebars, the footer, signatures and secondary author details without discarding your individual preferences. The popup links to the latest update page, and patch releases update quietly without opening a new tab. Note that RFD sometimes omits signature markup itself; the extension can only hide signatures present in the page.
 
-The popup links to the latest update page. Version 1.1.3 updates quietly without opening a new tab.
+### Quick test in a Chromium browser
 
-### Quick test in Brave
-
-1. Open `brave://extensions` and turn on **Developer mode**.
-2. Select **Load unpacked** and choose this checkout's folder, the one containing `manifest.json`. No build or package is needed.
-3. Open or reload `https://forums.redflagdeals.com/hot-deals-f9/`, then open a deal thread. The layout improvements should appear by default.
-4. Use the popup to change layout improvements, signatures and link cleaning independently. After editing source files, reload the extension on `brave://extensions` and refresh the forum tab.
-
-The Clean links, Remove clutter and Modern layout switches work independently.
+1. Open the extensions page (`chrome://extensions`, `brave://extensions`, …) and turn on **Developer mode**.
+2. Select **Load unpacked** and choose this checkout's folder — the one containing `manifest.json`. No build step needed.
+3. Open or reload `https://forums.redflagdeals.com/hot-deals-f9/`, then open a deal thread. The layout improvements apply by default.
+4. Use the popup to toggle the appearance and link-cleaning switches. After editing source files, reload the extension on the extensions page and refresh the forum tab.
 
 ## How it works
 
-When link cleaning is on, the extension checks forum post links against its [redirect rules](redirects.json). For example, a `go.redirectingat.com` link containing an encoded Amazon product URL is replaced with the direct `amazon.ca/dp/...` link. Amazon rules also remove selected tracking parameters while preserving unrelated query values, seller and variant information, and URL fragments. Search keywords remain on Amazon search pages.
+When link cleaning is on, the extension checks forum post and deal-button links against its [redirect rules](redirects.json). A `go.redirectingat.com` link wrapping an Amazon product URL becomes the direct `amazon.ca/dp/...` link, and Amazon rules strip selected tracking parameters while preserving unrelated query values, seller and variant info, URL fragments and search keywords. Visible link text is updated when it shows the full original URL.
 
-Only matching links are changed. The extension checks links in forum posts and deal buttons, and updates visible link text when it is the full original URL. Turning cleaning off stops new rewrites and restores links previously changed by the extension when the site has not changed them since. Turning it back on resumes cleaning. If you installed the extension while an RFD tab was already open, reload that tab to activate it.
+Turning cleaning off stops new rewrites and restores previously cleaned links the site hasn't changed since; turning it back on resumes. Reload any RFD tabs that were open before installation.
 
 ## Using the popup
 
-- **Cleaned links:** Shows how many distinct links were cleaned on the current forum page. Expand **Recent cleaned links** to see up to 50 recent original and cleaned URL pairs. This history lives in the page's memory and clears when link cleaning is turned off, rules change, or the page reloads.
-- **Clean links:** Controls automatic rewrites independently of appearance settings. It is on by default.
-- **Test a link:** Paste an HTTP or HTTPS URL to preview the result and each rule applied. The tester does not open the destination. It reports invalid URLs and warns if cleaning stops at a cycle or the 20-step limit.
-- **Rules status:** Advanced shows the last successful rules update or an update error. Bundled rules are available before the first successful download and when there is no usable cached configuration.
-- **Rules URL:** In Advanced, enter the URL of a trusted JSON rules file and select **Save rules URL** to validate and use it. **Use default** restores the default URL. Open forum pages receive changed rules automatically; the popup tester uses them immediately.
+- **Cleaned links:** how many distinct links were cleaned on the current page. **Recent cleaned links** lists up to 50 recent original/cleaned pairs; the history lives in page memory and clears on reload, when cleaning is turned off, or when rules change.
+- **Clean links:** the automatic rewrite switch, independent of appearance settings.
+- **Test a link:** preview the cleaned destination and each applied rule for a pasted URL, without opening it. Reports invalid URLs and warns on cycles or the 20-step limit.
+- **Rules status:** last successful update or error. Bundled rules cover fresh installs and failed updates.
+- **Rules URL:** validate and use a trusted JSON rules file, or **Use default** to restore the bundled source. Open forum pages pick up changed rules automatically.
 
-The extension checks for updated rules hourly and refreshes open forum pages when the rules change. If a download or validation fails, it keeps the last valid rules and shows the error in the popup.
+Rules are re-checked hourly and open forum pages refresh when they change; failed downloads keep the last valid rules and surface the error in the popup.
 
 ## Running from source
 
-Requires Node.js and npm. To run the extension in Firefox during development:
+Requires Node.js and npm.
 
 ```sh
 npm ci
-npm run start:firefox
+npm run start:firefox   # dev loop in Firefox (auto-reload)
 ```
-
-To run the checks and build a package in `web-ext-artifacts/`:
 
 ```sh
-npm test
+npm test                         # unit tests
 npx playwright install chromium firefox
-npm run test:browser
+npm run test:browser              # browser tests
 npm run lint
-npm run build
+npm run build                     # package in web-ext-artifacts/
 ```
+
+`web-ext run` does not work with LibreWolf ([upstream issue](https://github.com/mozilla/web-ext/issues/3473)); load it there via `about:debugging` → Load Temporary Add-on → `manifest.json`.
 
 ## Contributing redirect rules
 
-Rules live in [redirects.json](redirects.json). Open a pull request to add or update a rule. To try rules from your branch, set **Rules URL** in Advanced to its raw JSON file, for example:
+Rules live in [redirects.json](redirects.json) — open a pull request to add or update one. To try rules from a branch, point **Rules URL** at its raw JSON file, for example:
 
 ```text
 https://raw.githubusercontent.com/davegallant/rfd-enhancement-suite/my-new-branch/redirects.json
 ```
 
-The file must contain a JSON array. Rules may use a regex `pattern` with a named `baseUrl` capture group, or match an exact `host`, a list of exact `hosts`, `hostSuffixes` (a domain and its subdomains), or a regex `hostPattern` applied only to the hostname. Structured rules need at least one operation. An optional `name` labels a rule in the link tester. Supported operations are:
+The file must be a JSON array. A rule matches by regex `pattern` (with a named `baseUrl` capture group), exact `host`, `hosts` list, `hostSuffixes` (a domain plus its subdomains), or regex `hostPattern` on the hostname. Structured rules need at least one operation, and `name` labels the rule in the link tester. Supported operations are:
 
 | Field | Effect |
 | --- | --- |
@@ -91,7 +87,7 @@ The file must contain a JSON array. Rules may use a regex `pattern` with a named
 
 When a rule sets `destinationParam`, it takes precedence: `removeParams` and `removePathRef` on the same rule are ignored.
 
-These operations run only when the rule matches. Rules using only a regex remain supported. The extension accepts only HTTP or HTTPS destinations and stops after 20 cleaning steps or a cycle. Use trusted rule sources: validation and redirect limits do not bound the runtime of an individual regex. [regex101.com](https://regex101.com/) can help test a pattern.
+Operations run only when the rule matches; regex-only rules remain supported. Only HTTP/HTTPS destinations are accepted, and cleaning stops after 20 steps or a cycle. Use trusted rule sources: validation does not bound an individual regex's runtime — [regex101.com](https://regex101.com/) helps test patterns.
 
 ## Tampermonkey userscript
 
@@ -99,17 +95,17 @@ The project began as a [Tampermonkey](https://www.tampermonkey.net/) userscript.
 
 ## Store publishing
 
-The [publish workflow](.github/workflows/publish.yaml) runs for `v*` tags and can be started manually with an existing tag. The tag must match the version in [manifest.json](manifest.json). It runs tests and linting, builds the package, and submits to stores whose credentials are configured. The Chrome job reports upload and submission states and API errors; a successful submission can still require store review before the version becomes public.
+The [publish workflow](.github/workflows/publish.yaml) runs for `v*` tags (the tag must match [manifest.json](manifest.json)) and can be triggered manually. It tests, lints, builds, and submits to each store with credentials configured. The Chrome job reports upload/submission states and API errors; a successful submission may still await store review.
 
-For future releases, complete the [live browser release checks](docs/testing/modern-rfd-manual.md), update the manifest version and changelog, then tag the release.
+To release: complete the [live browser release checks](docs/testing/modern-rfd-manual.md), bump the manifest version, update the changelog, and tag.
 
-Set the repository Actions variable `CHROME_PUBLISH_PAUSED` to `true` to skip Chrome submissions while a previous version is under review. GitHub releases and Firefox submissions can continue. Remove the variable or set it to `false` before manually publishing the latest tag to Chrome.
+Set the Actions variable `CHROME_PUBLISH_PAUSED` to `true` to skip Chrome submissions while an earlier version is under review (GitHub releases and Firefox submissions continue); clear it before manually publishing the latest tag to Chrome.
 
-Complete the store listings in their dashboards, then add these GitHub Actions secrets:
+Add these secrets after completing the store listings in their dashboards:
 
 | Store | Required secrets |
 | --- | --- |
 | Chrome Web Store | `CWS_CLIENT_ID`, `CWS_CLIENT_SECRET`, `CWS_REFRESH_TOKEN`, `CWS_PUBLISHER_ID`, `CWS_EXTENSION_ID` |
 | Firefox Add-ons | `AMO_JWT_ISSUER`, `AMO_JWT_SECRET` |
 
-Chrome uses an OAuth client and refresh token with the `chromewebstore` scope, plus IDs from the Chrome Developer Dashboard. Firefox uses an AMO API key and secret. A store's publishing job is skipped until all its secrets are present.
+Chrome uses an OAuth client + refresh token with the `chromewebstore` scope and IDs from the Chrome Developer Dashboard; Firefox uses an AMO API key and secret. A store's job is skipped until all its secrets are present.
