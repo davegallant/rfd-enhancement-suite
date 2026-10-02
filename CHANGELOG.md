@@ -1,6 +1,8 @@
 # Changelog
 
-## Unreleased
+## 1.2.0 - 2026-10-02
+
+- New extension icon: the red R from the popup replaces the flag.
 
 - Reject empty `hostPattern` and `pathPattern` rule values, which previously compiled to match-all patterns.
 - Generate the Tampermonkey userscript from its template with `npm run build:userscript` instead of a separate templating step; the userscript is now named RFD Enhancement Suite.
