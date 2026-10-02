@@ -78,5 +78,6 @@ button:focus-visible, summary:focus-visible, input:focus-visible, a:focus-visibl
 .hint { margin: 4px 0; }
 #update-error, #status-message.error { color: var(--danger); font-size: 12px; }
 #status-message.success { color: var(--muted); font-size: 12px; }
+#status-message.info { color: var(--muted); font-size: 12px; }
 #status-message:empty, #update-error:empty, #test-result:empty { display: none; }
 a { color: var(--accent); }

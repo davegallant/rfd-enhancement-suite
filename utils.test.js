@@ -109,7 +109,10 @@ test('invalid remote rules retain the last valid config and record an error', as
     [{ pattern: '\\(?<baseUrl>literal' }],
     [{ pattern: '(?<baseUrl>.*)', removeParams: 'tag' }],
     [{ pattern: '(?<baseUrl>.*)', destinationParam: 5 }],
-    [{ pattern: '(?<baseUrl>.*)', removePathRef: 'yes' }]]) {
+    [{ pattern: '(?<baseUrl>.*)', removePathRef: 'yes' }],
+    [{ hostPattern: '', removeParams: ['tag'] }],
+    [{ host: 'shop.com', pathPattern: '', removeParams: ['tag'] }],
+    [{ host: '', removeParams: ['tag'] }]]) {
     const { context, data } = setup({ config: 'https://old.com/rules', redirects: oldRules,
       updateStatus: { lastSuccess: '2026-01-01T00:00:00.000Z' } });
     context.fetch = async () => ({ ok: true, json: async () => invalid });

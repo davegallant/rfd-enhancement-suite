@@ -1,6 +1,6 @@
 (() => {
   const api = globalThis.RFDModern ||= {};
-  function enhance(root, settings, journal) {
+  function enhance(root, journal) {
     const posts = root.matches?.('article.thread_post[id]') ? [root] : [...root.querySelectorAll('article.thread_post[id]')];
     for (const post of posts) {
       if (!post.querySelector('.post_body .post_content')) continue;

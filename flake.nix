@@ -1,5 +1,5 @@
 {
-  description = "rfd-affiliate-stripper development environment";
+  description = "rfd-enhancement-suite development environment";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -27,7 +27,7 @@
           ];
 
           shellHook = ''
-            echo "🚀 rfd-affiliate-stripper development environment loaded"
+            echo "🚀 rfd-enhancement-suite development environment loaded"
           '';
         };
       }

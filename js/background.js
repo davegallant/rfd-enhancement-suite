@@ -1,5 +1,15 @@
 import { updateRedirects, setDefaultConfig, getRedirects } from "../js/utils.js"
 
+// True when moving to a release with a higher major or minor version, so the
+// update page appears for feature releases while patch releases stay quiet.
+function isNewerMinorOrMajor(previous, current) {
+  const parse = version => String(version).split('.').map(Number);
+  const [previousMajor = 0, previousMinor = 0] = parse(previous);
+  const [currentMajor = 0, currentMinor = 0] = parse(current);
+  return currentMajor > previousMajor ||
+    (currentMajor === previousMajor && currentMinor > previousMinor);
+}
+
 function setAlarm() {
   chrome.alarms.get('update-redirects', alarm => {
     if (!alarm) {
@@ -16,7 +26,7 @@ chrome.runtime.onInstalled.addListener((details) => {
   setDefaultConfig(false).then(() => updateRedirects()).catch(console.error);
   setAlarm();
   const version = chrome.runtime.getManifest().version;
-  if (details.reason === 'update' && details.previousVersion && details.previousVersion !== version && ['1.0.0', '1.1.0'].includes(version)) {
+  if (details.reason === 'update' && details.previousVersion && isNewerMinorOrMajor(details.previousVersion, version)) {
     chrome.tabs.create({ url: chrome.runtime.getURL('html/whats-new.html') }, () => {
       if (chrome.runtime.lastError) console.warn('Could not open the update page:', chrome.runtime.lastError.message);
     });

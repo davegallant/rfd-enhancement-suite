@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+- Reject empty `hostPattern` and `pathPattern` rule values, which previously compiled to match-all patterns.
+- Generate the Tampermonkey userscript from its template with `npm run build:userscript` instead of a separate templating step; the userscript is now named RFD Enhancement Suite.
+- Show the update page on any major/minor release instead of a hardcoded version list.
+- Keep both `background.scripts` and `background.service_worker` in the manifest: Firefox MV3 ignores `service_worker` and needs `scripts` (event page), while Chrome ignores `scripts`.
+- Remove the unused `settings` parameter from the list/thread enhancers.
+- Read the link-cleaning helpers in the popup through the explicit `RFDStripRedirect` namespace.
+- Use a neutral status style for in-progress popup actions instead of the success style.
+- Document that `destinationParam` takes precedence over `removeParams`/`removePathRef` on the same rule.
+
 ## 1.1.3 - 2026-09-28
 
 - Give Hot Deals card and classic lists a quieter, text-first layout with compact, connected rows and less unused space.

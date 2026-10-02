@@ -1,12 +1,14 @@
 // Extension settings with a one-time migration from the pre-1.1 IndexedDB store.
-const DB_NAME = 'rfdAffiliateStripperDB';
+// The legacy database name is kept verbatim: renaming it would strand the
+// migration for anyone upgrading directly from a pre-1.1 install.
+const LEGACY_DB_NAME = 'rfdAffiliateStripperDB';
 const STORE_NAME = 'config';
 const DB_VERSION = 1;
 export const DEFAULT_CONFIG_URL = 'https://raw.githubusercontent.com/davegallant/rfd-enhancement-suite/main/redirects.json';
 
 function openDB() {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME, DB_VERSION);
+    const request = indexedDB.open(LEGACY_DB_NAME, DB_VERSION);
 
     request.onupgradeneeded = (event) => {
       const db = event.target.result;
@@ -75,9 +77,9 @@ export function validateRedirects(redirects) {
       if (rule.host !== undefined && (typeof rule.host !== 'string' || !rule.host)) throw new Error('host must be a non-empty string');
       if (rule.hosts !== undefined && (!Array.isArray(rule.hosts) || !rule.hosts.length || !rule.hosts.every(host => typeof host === 'string' && host))) throw new Error('hosts must be non-empty strings');
       if (rule.hostSuffixes !== undefined && (!Array.isArray(rule.hostSuffixes) || !rule.hostSuffixes.length || !rule.hostSuffixes.every(host => typeof host === 'string' && host))) throw new Error('hostSuffixes must be non-empty strings');
-      if (rule.hostPattern !== undefined && typeof rule.hostPattern !== 'string') throw new Error('hostPattern must be a string');
+      if (rule.hostPattern !== undefined && (typeof rule.hostPattern !== 'string' || !rule.hostPattern)) throw new Error('hostPattern must be a non-empty string');
       if (rule.hostPattern !== undefined) new RegExp(rule.hostPattern);
-      if (rule.pathPattern !== undefined && typeof rule.pathPattern !== 'string') throw new Error('pathPattern must be a string');
+      if (rule.pathPattern !== undefined && (typeof rule.pathPattern !== 'string' || !rule.pathPattern)) throw new Error('pathPattern must be a non-empty string');
       if (rule.pathPattern !== undefined) new RegExp(rule.pathPattern);
       if (structured && !rule.destinationParam && !rule.removeParams && !rule.removePathRef) throw new Error('Structured rule needs an operation');
       if (rule.destinationParam !== undefined && (typeof rule.destinationParam !== 'string' || !rule.destinationParam)) {
@@ -153,6 +155,8 @@ export async function getRedirects() {
 
 export async function setDefaultConfig(reset = true) {
   const existing = reset ? null : await dbGet('config');
+  // Pre-rename default: installs still pointed at the old repository get moved
+  // to the new one; anything else custom is left alone.
   const oldDefault = 'https://raw.githubusercontent.com/davegallant/rfd-affiliate-stripper/main/redirects.json';
   if (existing && existing !== oldDefault) return;
   await dbSet(

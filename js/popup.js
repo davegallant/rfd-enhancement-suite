@@ -1,5 +1,10 @@
 import { dbGet, getRedirects, DEFAULT_CONFIG_URL } from "../js/utils.js"
 
+// stripRedirect.js is loaded as a classic script before this module in
+// popup.html (content scripts rely on its bare globals); the popup reads the
+// shared helpers through this explicit namespace instead of bare globals.
+const { inspectRedirect } = globalThis.RFDStripRedirect;
+
 async function updateRedirects(configUrl) {
   const response = await chrome.runtime.sendMessage({ type: 'updateRedirects', configUrl });
   if (response?.error) throw new Error(response.error);
@@ -154,7 +159,7 @@ saveButton.addEventListener("click", async () => {
   }
 
   setButtonsDisabled(true);
-  showStatus("Validating…", "success");
+  showStatus("Validating…", "info");
 
   try {
     await updateRedirects(value);
@@ -169,7 +174,7 @@ saveButton.addEventListener("click", async () => {
 
 resetButton.addEventListener("click", async () => {
   setButtonsDisabled(true);
-  showStatus("Resetting…", "success");
+  showStatus("Resetting…", "info");
 
   try {
     await updateRedirects(DEFAULT_CONFIG_URL);

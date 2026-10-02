@@ -25,7 +25,7 @@ async function popup({ activity, status, unavailable = false } = {}) {
     dbGet: async key => key === 'updateStatus' ? status : undefined,
     DEFAULT_CONFIG_URL: 'https://example.com/rules', updateRedirects: async () => [],
     getRedirects: async () => [{ name: 'Remove tag', pattern: '(?<baseUrl>https://shop.com/item)\\?tag=.*' }],
-    inspectRedirect: cleaner.inspectRedirect,
+    RFDStripRedirect: { inspectRedirect: cleaner.inspectRedirect },
     chrome: { tabs: {
       query: async () => [{ id: 42 }],
       sendMessage: async (id, message) => {

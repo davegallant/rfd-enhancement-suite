@@ -9,7 +9,7 @@ test('thread enhancer keeps post bodies, actions and anchors intact', () => {
   const reply = h.document.querySelector('.post_action_reply');
   const anchors = [...h.document.querySelectorAll('.dateline_permalink, .postlink')];
   let replies = 0; reply.addEventListener('click', () => replies++);
-  const journal = h.api.dom.createJournal(); h.api.thread.enhance(root, h.api.settings.DEFAULTS, journal);
+  const journal = h.api.dom.createJournal(); h.api.thread.enhance(root, journal);
   assert.equal(h.document.querySelector('#p1 .post_content'), body);
   assert.equal(h.document.querySelector('.post_action_reply'), reply);
   assert.deepEqual([...h.document.querySelectorAll('.dateline_permalink, .postlink')], anchors);
@@ -20,7 +20,7 @@ test('thread enhancer keeps post bodies, actions and anchors intact', () => {
 });
 test('profile statistics are marked while signatures and author status stay native', () => {
   const h = fixture('thread-rich'), journal = h.api.dom.createJournal();
-  h.api.thread.enhance(h.document.querySelector('#thread'), h.api.settings.DEFAULTS, journal);
+  h.api.thread.enhance(h.document.querySelector('#thread'), journal);
   assert.equal(h.document.querySelector('.signature').textContent, 'Signature');
   assert.equal(h.document.querySelector('.profile_upvotes').getAttribute('data-rfdm-role'), 'profile-stats');
   assert.equal(h.document.querySelector('.profile_rank').getAttribute('data-rfdm-role'), null);
@@ -29,7 +29,7 @@ test('profile statistics are marked while signatures and author status stay nati
 test('editor input, labels and validation text remain native', () => {
   const h = fixture('thread-editor'), journal = h.api.dom.createJournal();
   const form = h.document.querySelector('#reply'), textarea = h.document.querySelector('#draft');
-  h.api.thread.enhance(h.document.querySelector('#thread'), h.api.settings.DEFAULTS, journal);
+  h.api.thread.enhance(h.document.querySelector('#thread'), journal);
   assert.equal(h.document.querySelector('#reply'), form);
   assert.equal(textarea.value, 'Draft text');
   assert.equal(h.document.querySelector('label[for="draft"]').textContent, 'Reply');

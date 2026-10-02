@@ -89,11 +89,13 @@ The file must contain a JSON array. Rules may use a regex `pattern` with a named
 | `removePathRef` | Remove a trailing `/ref=...` path segment. |
 | `pathPattern` | Limit a structured rule to matching URL paths. |
 
+When a rule sets `destinationParam`, it takes precedence: `removeParams` and `removePathRef` on the same rule are ignored.
+
 These operations run only when the rule matches. Rules using only a regex remain supported. The extension accepts only HTTP or HTTPS destinations and stops after 20 cleaning steps or a cycle. Use trusted rule sources: validation and redirect limits do not bound the runtime of an individual regex. [regex101.com](https://regex101.com/) can help test a pattern.
 
 ## Tampermonkey userscript
 
-The project began as a [Tampermonkey](https://www.tampermonkey.net/) userscript. You can copy [script.js](script.js) into Tampermonkey if you prefer that format. It contains the cleaning rules and URL preservation logic, but the browser extension provides dynamic link monitoring, rule updates, and the popup.
+The project began as a [Tampermonkey](https://www.tampermonkey.net/) userscript. You can copy [script.js](script.js) into Tampermonkey if you prefer that format. It contains the cleaning rules and URL preservation logic, but the browser extension provides dynamic link monitoring, rule updates, and the popup. Regenerate it from the template after changing rules or the cleaning logic with `npm run build:userscript`.
 
 ## Store publishing
 

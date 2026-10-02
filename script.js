@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         RedFlagDeals Affiliate Stripper
+// @name         RFD Enhancement Suite
 // @author       Dave Gallant
 // @description  Strip redirect links on forums.redflagdeals.com
 // @downloadURL  https://raw.githubusercontent.com/davegallant/rfd-enhancement-suite/main/script.js
@@ -128,6 +128,10 @@ function inspectRedirect(URL, redirectRegex) {
 if (typeof module !== "undefined" && module.exports) {
   module.exports = { stripRedirect, inspectRedirect, isHttpUrl };
 }
+
+// Explicit shared namespace for extension pages (e.g. the popup) that load
+// this file as a classic script alongside ES modules.
+globalThis.RFDStripRedirect = { stripRedirect, inspectRedirect, isHttpUrl };
 
 
     Links.forEach(function(Link) {

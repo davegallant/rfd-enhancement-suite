@@ -11,7 +11,7 @@
       if (state || score.hasAttribute('data-rfdm-score')) journal.setAttribute(score, 'data-rfdm-score', state);
     }
   }
-  function enhance(root, settings, journal) {
+  function enhance(root, journal) {
     const rows = root.matches?.('li.topic-card.topic[data-thread-id]') ? [root] : [...root.querySelectorAll('li.topic-card.topic[data-thread-id]')];
     const classicRow = root.closest?.('li.row.topic[data-thread-id]');
     const classicRows = classicRow ? [classicRow] : [...root.querySelectorAll('li.row.topic[data-thread-id]')];

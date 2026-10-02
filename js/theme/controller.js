@@ -41,8 +41,8 @@
       try {
         setAttributes(settings);
         if (match.kind !== 'home') api.adapters.enhanceShell(document, match, journal);
-        if (match.kind === 'list' || match.kind === 'classic-list') api.list?.enhance(match.root, settings, journal);
-        if (match.kind === 'thread') api.thread?.enhance(match.root, settings, journal);
+        if (match.kind === 'list' || match.kind === 'classic-list') api.list?.enhance(match.root, journal);
+        if (match.kind === 'thread') api.thread?.enhance(match.root, journal);
         status = { enabled: settings.enabled, applied: settings.enabled, page: match.kind, reason: settings.enabled ? null : 'disabled' };
       } catch (error) {
         clear();
@@ -96,8 +96,8 @@
         }
         for (const node of containers) {
           try {
-            if (match.kind === 'list' || match.kind === 'classic-list') api.list?.enhance(node, current, journal);
-            if (match.kind === 'thread') api.thread?.enhance(node, current, journal);
+            if (match.kind === 'list' || match.kind === 'classic-list') api.list?.enhance(node, journal);
+            if (match.kind === 'thread') api.thread?.enhance(node, journal);
           } catch (error) { console.warn('RFD appearance:', error); }
         }
         journal.prune();
@@ -112,6 +112,11 @@
     chrome.runtime.onMessage.addListener(message);
     const settingsPromise = api.settings.load().then(settings => ({ settings }), error => ({ error }));
     async function ready() {
+      // Settings come from async extension storage, so the data-rfdm-*
+      // attributes land after first paint and RFD's native layout can flash
+      // briefly on cold loads. Storage has no synchronous read, so this is
+      // inherent to document_start content scripts; the journal keeps the
+      // later apply() cheap and the observer catches late DOM.
       if (document.readyState === 'loading') await new Promise(resolve => document.addEventListener('DOMContentLoaded', resolve, { once: true }));
       if (!active) return;
       if (document.documentElement) observer.observe(document.documentElement, { childList: true, characterData: true, subtree: true });
