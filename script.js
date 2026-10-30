@@ -7,7 +7,7 @@
 // @match        *://forums.redflagdeals.com/*
 // @namespace    http://tampermonkey.net/
 // @updateURL    https://raw.githubusercontent.com/davegallant/rfd-enhancement-suite/main/script.js
-// @version      2026-10-17
+// @version      2026-10-30
 // ==/UserScript==
 
 (function() {
