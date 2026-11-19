@@ -105,8 +105,10 @@ test('journal restores only its own attributes and nodes', () => {
 test('document-start startup tolerates a missing document root', async () => {
   const h = page('list-card');
   h.document.documentElement.remove();
-  assert.doesNotThrow(() => h.api.controller.start(h.document, h.window));
-  h.dispose();
+  let stop;
+  assert.doesNotThrow(() => { stop = h.api.controller.start(h.document, h.window); });
+  await h.flush();
+  stop(); h.dispose();
 });
 test('startup starts loading settings while the document is still parsing', () => {
   const h = page('list-card');
