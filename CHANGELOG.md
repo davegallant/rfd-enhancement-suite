@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.0 - 2026-11-19
+
+- Add a Classic layout option that restores RFD's previous thread look. It is mutually exclusive with Compact layout and reloads open RFD tabs when changed.
+- Rename Modern layout to Compact layout.
+- Remove the thick grey borders, box shadow and extra padding from Compact layout discussion replies, and hide the avatar on discussion posts.
+
 ## 1.2.0 - 2026-10-02
 
 - New extension icon: the red R from the popup replaces the flag.

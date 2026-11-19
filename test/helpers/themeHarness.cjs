@@ -14,7 +14,7 @@ function loadThemeFixture(name, options = {}) {
       async remove(keys) { const changes = {}; for (const key of keys) { changes[key] = { oldValue: data[key] }; delete data[key]; } for (const listener of listeners) listener(changes, 'local'); },
     },
     onChanged: { addListener(fn) { listeners.add(fn); }, removeListener(fn) { listeners.delete(fn); } },
-  }, runtime: { onMessage: { addListener(fn) { messageListeners.add(fn); }, removeListener(fn) { messageListeners.delete(fn); } } } };
+  }, runtime: { getURL: path => 'chrome-extension://test/' + path, onMessage: { addListener(fn) { messageListeners.add(fn); }, removeListener(fn) { messageListeners.delete(fn); } } } };
   let dark = false;
   const mediaListeners = new Set();
   window.matchMedia = () => ({ get matches() { return dark; }, addEventListener(_, fn) { mediaListeners.add(fn); }, removeEventListener(_, fn) { mediaListeners.delete(fn); } });

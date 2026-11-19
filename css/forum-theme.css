@@ -74,7 +74,7 @@
 }
 @media screen {
   html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread {
-    --rfdm-reply-padding: 18px 20px 16px;
+    --rfdm-reply-padding: 10px 16px 12px;
     --rfdm-reply-header-gap: 14px;
     --rfdm-avatar-size: 32px;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -232,10 +232,16 @@
 @media screen {
   html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread > .thread_posts > [data-rfdm-role="post"]:not(.thread_original_post) {
     display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 16px;
-    border-inline: 1px solid var(--forum-item-border, #e2e2e2); padding: var(--rfdm-reply-padding);
+    border: 0; border-bottom: 1px solid var(--forum-item-border, #e2e2e2); border-radius: 0; box-shadow: none;
+    background: transparent; margin: 0; padding: var(--rfdm-reply-padding);
   }
-  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread > .thread_posts > [data-rfdm-role="post"]:not(.thread_original_post)::after {
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread > .thread_posts > [data-rfdm-role="post"]:not(.thread_original_post)::after,
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread > .thread_posts > [data-rfdm-role="post"]:not(.thread_original_post)::before {
     display: none;
+  }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread .profile_avatar,
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread .profile_avatar_initial {
+    display: none !important;
   }
   html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread > .thread_posts > [data-rfdm-role="post"]:not(.thread_original_post) :is(.post_dateline, .profile_username, .postprofile > dd:not(.profile_avatar), .post_action_text, .post_voting .total_count) {
     font-size: 14px;

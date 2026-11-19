@@ -89,3 +89,22 @@ test('a partial storage change retains all previously saved preferences', async 
   assert.equal(events.at(-1).compactProfiles, false);
   stop(); h.dispose();
 });
+test('classic layout turns compact layout off and back on', async () => {
+  const h = start({ initial: { 'rfdm.enabled': true } });
+  await h.api.settings.save({ classicLayout: true });
+  let value = await h.api.settings.load();
+  assert.equal(value.classicLayout, true);
+  assert.equal(value.enabled, false);
+  await h.api.settings.save({ enabled: true });
+  value = await h.api.settings.load();
+  assert.equal(value.enabled, true);
+  assert.equal(value.classicLayout, false);
+  h.dispose();
+});
+test('stored conflicting layouts resolve to classic', async () => {
+  const h = start({ initial: { 'rfdm.enabled': true, 'rfdm.classicLayout': true } });
+  const value = await h.api.settings.load();
+  assert.equal(value.classicLayout, true);
+  assert.equal(value.enabled, false);
+  h.dispose();
+});

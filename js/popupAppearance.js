@@ -1,6 +1,7 @@
 (() => {
   const fields = {
     enabled: document.getElementById('modern-enabled'),
+    classicLayout: document.getElementById('classic-layout-enabled'),
     clutterEnabled: document.getElementById('modern-clutter-enabled'),
     hidePromotions: document.getElementById('modern-hide-promotions'),
     hideSidebar: document.getElementById('modern-hide-sidebar'),
@@ -31,7 +32,7 @@
   settings.subscribe(value => { saved = value; render(value); });
   function save(name, value) {
     chain = chain.catch(() => {}).then(async () => {
-      try { await settings.save({ [name]: value }); saved = { ...saved, [name]: value }; status.textContent = ''; }
+      try { const written = await settings.save({ [name]: value }); saved = { ...saved, ...written }; render(saved); status.textContent = ''; }
       catch (error) { status.textContent = error.message; render(saved); }
     });
   }
@@ -49,6 +50,6 @@
   });
   chrome.tabs.query({ active: true, currentWindow: true }).then(async ([tab]) => {
     const state = await chrome.tabs.sendMessage(tab.id, { type: 'getThemeStatus' });
-    pageStatus.textContent = state.applied || state.reason === 'disabled' ? '' : 'Modern layout is unavailable on this page.';
+    pageStatus.textContent = state.applied || state.reason === 'disabled' ? '' : 'Compact layout is unavailable on this page.';
   }).catch(() => { pageStatus.textContent = 'Open or reload an RFD forum tab to apply the extension.'; });
 })();

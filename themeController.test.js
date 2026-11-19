@@ -38,7 +38,7 @@ test('layout improvements can be disabled while preserving native theme', async 
   assert.equal(h.document.querySelectorAll('[data-rfdm-owned]').length, 0);
   stop(); h.dispose();
 });
-test('clutter cleanup stays active when modern layout is off', async () => {
+test('clutter cleanup stays active when compact layout is off', async () => {
   const h = page('thread', { 'rfdm.enabled': false, 'rfdm.hidePromotions': true, 'rfdm.compactProfiles': true });
   const stop = h.api.controller.start(h.document, h.window); await h.flush();
   const html = h.document.documentElement;

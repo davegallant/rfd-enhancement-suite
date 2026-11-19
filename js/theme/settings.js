@@ -1,11 +1,12 @@
 (() => {
   const api = globalThis.RFDModern ||= {};
-  const DEFAULTS = Object.freeze({ enabled: true, clutterEnabled: true, hidePromotions: true, hideSidebar: true, hideFooter: true, hideSignatures: true, compactProfiles: true });
+  const DEFAULTS = Object.freeze({ enabled: true, classicLayout: false, clutterEnabled: true, hidePromotions: true, hideSidebar: true, hideFooter: true, hideSignatures: true, compactProfiles: true });
   const PREFIX = 'rfdm.';
   const names = Object.keys(DEFAULTS);
   const allKeys = names.map(name => PREFIX + name);
   const validators = {
     enabled: value => typeof value === 'boolean',
+    classicLayout: value => typeof value === 'boolean',
     clutterEnabled: value => typeof value === 'boolean',
     hidePromotions: value => typeof value === 'boolean',
     hideSidebar: value => typeof value === 'boolean',
@@ -17,6 +18,8 @@
     const out = { ...DEFAULTS };
     if (!raw || typeof raw !== 'object') return out;
     for (const name of names) if (validators[name](raw[name])) out[name] = raw[name];
+    // Classic and Compact layouts are mutually exclusive; Classic wins if both are stored.
+    if (out.classicLayout) out.enabled = false;
     return out;
   }
   async function load() {
@@ -37,7 +40,12 @@
     if (!patch || typeof patch !== 'object' || !Object.keys(patch).length || Object.keys(patch).some(name => !validators[name]?.(patch[name]))) throw new Error('Invalid appearance settings');
     const raw = await chrome.storage.local.get(PREFIX + 'schemaVersion');
     const version = raw[PREFIX + 'schemaVersion'] === 1 ? 1 : 2;
-    await chrome.storage.local.set(Object.fromEntries([...Object.entries(patch).map(([name, value]) => [PREFIX + name, value]), [PREFIX + 'schemaVersion', version]]));
+    // Enforce the layout exclusion in the written patch so both keys always agree.
+    const expanded = { ...patch };
+    if (patch.enabled === true) expanded.classicLayout = false;
+    if (patch.classicLayout === true) expanded.enabled = false;
+    await chrome.storage.local.set(Object.fromEntries([...Object.entries(expanded).map(([name, value]) => [PREFIX + name, value]), [PREFIX + 'schemaVersion', version]]));
+    return expanded;
   }
   async function reset() { await chrome.storage.local.remove([...allKeys, PREFIX + 'fontSize', PREFIX + 'theme', PREFIX + 'density', PREFIX + 'contentWidth', PREFIX + 'schemaVersion']); }
   function subscribe(fn) {

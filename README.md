@@ -14,8 +14,9 @@ Hot Deals listings get a quieter, text-first layout: clear titles, muted metadat
 
 | Popup control | Default | Effect |
 | --- | --- | --- |
-| Modern layout | On | Use clearer deal rows and a spacious discussion layout. |
-| Remove clutter | On | Master switch for the cleanup options below. Works independently of Modern layout. |
+| Compact layout | On | Use clearer deal rows and a spacious discussion layout. |
+| Classic layout | Off | Restore RFD’s previous thread look (red date bar, left profile column, classic reply buttons). Replaces Compact layout; turning it on reloads open RFD tabs. The bundled stylesheet is adapted from the RFD Classic Layout extension 1.2.0 by CalgaryBen. |
+| Remove clutter | On | Master switch for the cleanup options below. Works independently of Compact layout. |
 | Hide promotions and sponsored threads | On | Hide recognized ads, sponsored placements and labeled sponsored threads in both Hot Deals list layouts, including pencil ads and the member header leaderboard. This changes display; it does not block requests. |
 | Hide sidebar | On | Hide sidebars on the forum home page, search results, card lists, classic Hot Deals lists and threads, using the freed space. On card lists, RFD's filters remain available through More Filters. Turn it off to restore RFD's sidebar spacing. |
 | Hide footer | On | Hide the site footer and reserved bottom ad spaces across forum pages. Turn it off to restore footer links. |
@@ -24,7 +25,9 @@ Hot Deals listings get a quieter, text-first layout: clear titles, muted metadat
 
 Discussion text defaults to 17 px. Use your browser’s zoom controls to adjust the page size.
 
-Settings persist across supported tabs, and **Reset appearance** restores the defaults above. Turning Modern layout off leaves cleanup and link cleaning active — unless you're upgrading from version 1 with the layout disabled, in which case Remove clutter starts off too. Turning Remove clutter off reveals promotions, sidebars, the footer, signatures and secondary author details without discarding your individual preferences. The popup links to the latest update page, and patch releases update quietly without opening a new tab. Note that RFD sometimes omits signature markup itself; the extension can only hide signatures present in the page.
+Prefer RFD’s previous thread look? Turn on **Classic layout** in the popup. It replaces Compact layout and reloads open RFD tabs when changed.
+
+Settings persist across supported tabs, and **Reset appearance** restores the defaults above. Turning Compact layout off leaves cleanup and link cleaning active — unless you're upgrading from version 1 with the layout disabled, in which case Remove clutter starts off too. Turning Remove clutter off reveals promotions, sidebars, the footer, signatures and secondary author details without discarding your individual preferences. The popup links to the latest update page, and patch releases update quietly without opening a new tab. Note that RFD sometimes omits signature markup itself; the extension can only hide signatures present in the page.
 
 ### Quick test in a Chromium browser
 

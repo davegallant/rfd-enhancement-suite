@@ -10,6 +10,7 @@ function popup(initial = {}, options = {}) {
     async set(patch) { if (options.failWrite) throw Error('save failed'); const changes = {}; for (const [k,v] of Object.entries(patch)) { changes[k] = { oldValue:data[k], newValue:v }; data[k] = v; } for (const fn of listeners) fn(changes,'local'); },
     async remove(keys) { for (const k of keys) delete data[k]; },
   }, onChanged: { addListener(fn) { listeners.add(fn); }, removeListener(fn) { listeners.delete(fn); } } },
+  runtime: { getURL: path => path },
   tabs: { query: async () => [{id:42}], sendMessage: async () => options.status || { enabled:true, applied:true, page:'list', reason:null } } };
   w.eval(readFileSync('js/theme/settings.js','utf8'));
   w.eval(readFileSync('js/popupAppearance.js','utf8'));
@@ -50,4 +51,20 @@ test('popup reports unsupported page and failed saves', async () => {
   assert.match(p.document.querySelector('#appearance-page-status').textContent, /unavailable on this page/);
   const input=p.document.querySelector('#modern-enabled'); input.checked=false; input.dispatchEvent(new p.document.defaultView.Event('change'));
   await p.flush(); assert.match(p.document.querySelector('#appearance-status').textContent, /save failed/); p.dispose();
+});
+test('classic and compact layouts are mutually exclusive in the popup', async () => {
+  const p = popup({ 'rfdm.enabled': true, 'rfdm.classicLayout': false }); await p.flush();
+  const compact = p.document.querySelector('#modern-enabled'), classic = p.document.querySelector('#classic-layout-enabled');
+  classic.checked = true; classic.dispatchEvent(new p.document.defaultView.Event('change'));
+  await p.flush();
+  assert.equal(p.data['rfdm.classicLayout'], true);
+  assert.equal(p.data['rfdm.enabled'], false);
+  assert.equal(compact.checked, false);
+  assert.equal(classic.checked, true);
+  compact.checked = true; compact.dispatchEvent(new p.document.defaultView.Event('change'));
+  await p.flush();
+  assert.equal(p.data['rfdm.enabled'], true);
+  assert.equal(p.data['rfdm.classicLayout'], false);
+  assert.equal(classic.checked, false);
+  p.dispose();
 });
