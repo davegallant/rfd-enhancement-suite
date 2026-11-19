@@ -1,6 +1,6 @@
 # RFD Enhancement Suite
 
-<img src="docs/images/popup.png" alt="RFD Enhancement Suite popup with cleanup options expanded" width="360">
+<img src="docs/images/popup.jpg" alt="RFD Enhancement Suite popup with cleanup options expanded" width="360">
 
 Gives [RedFlagDeals forums](https://forums.redflagdeals.com/) a simpler interface for Hot Deals lists and discussion threads, and cleans supported affiliate redirects and tracking parameters from forum links. Appearance improvements and link cleaning are independent, and both are on by default.
 
