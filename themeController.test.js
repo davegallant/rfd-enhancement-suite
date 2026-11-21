@@ -21,6 +21,21 @@ test('search cleanup persists footer choices and restores both controls with clu
   assert.equal(html.hasAttribute('data-rfdm-hide-footer'), false);
   h.dispose();
 });
+test('header banner cleanup follows the hideHeaderBanner setting and clutter master switch', async () => {
+  const h = loadThemeFixture('search', { url: 'https://forums.redflagdeals.com/search.php?keywords=anker', initial: { 'rfdm.enabled': false }, scripts });
+  const stop = h.api.controller.start(h.document, h.window); await h.flush();
+  const html = h.document.documentElement;
+  assert.equal(html.getAttribute('data-rfdm-hide-header-banner'), 'true');
+  await h.api.settings.save({ hideHeaderBanner: false }); await h.flush();
+  assert.equal(html.getAttribute('data-rfdm-hide-header-banner'), 'false');
+  await h.api.settings.save({ hideHeaderBanner: true, clutterEnabled: false }); await h.flush();
+  assert.notEqual(html.getAttribute('data-rfdm-hide-header-banner'), 'true');
+  await h.api.settings.save({ clutterEnabled: true }); await h.flush();
+  assert.equal(html.getAttribute('data-rfdm-hide-header-banner'), 'true');
+  stop();
+  assert.equal(html.hasAttribute('data-rfdm-hide-header-banner'), false);
+  h.dispose();
+});
 function page(name, initial = {}, options = {}) { return loadThemeFixture(name, { url: name === 'thread' ? 'https://forums.redflagdeals.com/example-1/' : 'https://forums.redflagdeals.com/hot-deals-f9/', initial, scripts, ...options }); }
 test('layout improvements can be disabled while preserving native theme', async () => {
   const h = page('list-card', { 'rfdm.enabled': false });

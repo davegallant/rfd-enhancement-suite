@@ -4,12 +4,13 @@
     classicLayout: document.getElementById('classic-layout-enabled'),
     clutterEnabled: document.getElementById('modern-clutter-enabled'),
     hidePromotions: document.getElementById('modern-hide-promotions'),
+    hideHeaderBanner: document.getElementById('modern-hide-header-banner'),
     hideSidebar: document.getElementById('modern-hide-sidebar'),
     hideFooter: document.getElementById('modern-hide-footer'),
     hideSignatures: document.getElementById('modern-hide-signatures'), compactProfiles: document.getElementById('modern-compact-profiles'),
   };
   if (Object.values(fields).some(field => !field)) return;
-  const cleanupFields = ['hidePromotions', 'hideSidebar', 'hideFooter', 'hideSignatures', 'compactProfiles'];
+  const cleanupFields = ['hidePromotions', 'hideHeaderBanner', 'hideSidebar', 'hideFooter', 'hideSignatures', 'compactProfiles'];
   const cleanupForm = document.getElementById('appearance-form');
   function setCleanupEnabled(enabled) {
     cleanupForm.setAttribute('aria-disabled', String(!enabled));

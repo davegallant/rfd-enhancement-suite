@@ -18,6 +18,7 @@ Hot Deals listings get a quieter, text-first layout: clear titles, muted metadat
 | Classic layout | Off | Restore RFD’s previous thread look (red date bar, left profile column, classic reply buttons). Replaces Compact layout; turning it on reloads open RFD tabs. The bundled stylesheet is adapted from the RFD Classic Layout extension 1.2.0 by CalgaryBen. |
 | Remove clutter | On | Master switch for the cleanup options below. Works independently of Compact layout. |
 | Hide promotions and sponsored threads | On | Hide recognized ads, sponsored placements and labeled sponsored threads in both Hot Deals list layouts, including pencil ads and the member header leaderboard. This changes display; it does not block requests. |
+| Hide header banner | On | Hide the banner ad above the site header, such as the Insurance Hub promotion. Turn it off to restore it. |
 | Hide sidebar | On | Hide sidebars on the forum home page, search results, card lists, classic Hot Deals lists and threads, using the freed space. On card lists, RFD's filters remain available through More Filters. Turn it off to restore RFD's sidebar spacing. |
 | Hide footer | On | Hide the site footer and reserved bottom ad spaces across forum pages. Turn it off to restore footer links. |
 | Hide signatures | On for new installs | Hide signatures present in discussion posts. Existing version 1 choices are preserved. |

@@ -13,6 +13,7 @@
       if (!html) return;
       const url = new URL(window.location.href);
       if (url.hostname === 'forums.redflagdeals.com' && url.searchParams.get('view') !== 'print') journal.setAttribute(html, 'data-rfdm-hide-footer', String(settings.clutterEnabled && settings.hideFooter));
+      if (url.hostname === 'forums.redflagdeals.com') journal.setAttribute(html, 'data-rfdm-hide-header-banner', String(settings.clutterEnabled && settings.hideHeaderBanner));
       if (match?.kind === 'thread') journal.setAttribute(html, 'data-rfdm-hide-signatures', String(settings.clutterEnabled && settings.hideSignatures));
       if (!match) return;
       const values = { enabled: 'true', page: match.kind,
