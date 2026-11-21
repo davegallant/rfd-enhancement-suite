@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.0 - 2026-11-21
+
+- Add a default-on Hide header banner option under Customize cleanup that removes the banner ad above the RFD site header, such as the Insurance Hub promotion.
+
 ## 1.3.0 - 2026-11-19
 
 - Add a Classic layout option that restores RFD's previous thread look. It is mutually exclusive with Compact layout and reloads open RFD tabs when changed.
