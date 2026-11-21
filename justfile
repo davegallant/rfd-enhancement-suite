@@ -1,7 +1,7 @@
 # Load the unpacked extension into Brave for manual testing.
 # Brave uses a separate profile in .brave-profile, so your real Brave profile is untouched.
 
-brave_bin := env("BRAVE_BIN", "/Applications/Brave Browser.app/Contents/MacOS/Brave Browser")
+brave_bin := env("BRAVE_BIN", if os() == "macos" { "/Applications/Brave Browser.app/Contents/MacOS/Brave Browser" } else { "brave" })
 profile := justfile_directory() + "/.brave-profile"
 
 default:
