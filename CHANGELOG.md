@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.0 - 2026-11-24
+
+- Add a default-on **Match system theme** option that sets RFD's light or dark mode to match the operating system and follows changes while the page is open.
+
 ## 1.4.0 - 2026-11-21
 
 - Add a default-on Hide header banner option under Customize cleanup that removes the banner ad above the RFD site header, such as the Insurance Hub promotion.
