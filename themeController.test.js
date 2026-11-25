@@ -38,7 +38,7 @@ test('header banner cleanup follows the hideHeaderBanner setting and clutter mas
 });
 function page(name, initial = {}, options = {}) { return loadThemeFixture(name, { url: name === 'thread' ? 'https://forums.redflagdeals.com/example-1/' : 'https://forums.redflagdeals.com/hot-deals-f9/', initial, scripts, ...options }); }
 test('layout improvements can be disabled while preserving native theme', async () => {
-  const h = page('list-card', { 'rfdm.enabled': false });
+  const h = page('list-card', { 'rfdm.enabled': false, 'rfdm.matchSystemTheme': false });
   h.document.documentElement.setAttribute('data-theme', 'dark');
   const stop = h.api.controller.start(h.document, h.window);
   await h.flush();
@@ -82,7 +82,7 @@ test('turning both appearance features off avoids page annotations until one is 
   stop(); h.dispose();
 });
 test('native theme changes and repeated layout toggles stay independent', async () => {
-  const h = page('thread', { 'rfdm.enabled': true });
+  const h = page('thread', { 'rfdm.enabled': true, 'rfdm.matchSystemTheme': false });
   const stop = h.api.controller.start(h.document, h.window); await h.flush();
   assert.equal(h.document.documentElement.hasAttribute('data-rfdm-theme'), false);
   h.document.documentElement.setAttribute('data-theme', 'dark'); await h.flush();
@@ -134,4 +134,40 @@ test('startup starts loading settings while the document is still parsing', () =
   const stop = h.api.controller.start(h.document, h.window);
   assert.equal(reads, 1);
   stop(); h.dispose();
+});
+
+test('system theme is on by default and follows OS light/dark changes', async () => {
+  const h = page('thread', {});
+  const stop = h.api.controller.start(h.document, h.window); await h.flush();
+  const html = h.document.documentElement;
+  assert.equal((await h.api.settings.load()).matchSystemTheme, true);
+  assert.equal(html.getAttribute('data-theme'), 'light');
+  h.setDark(true); await h.flush();
+  assert.equal(html.getAttribute('data-theme'), 'dark');
+  h.setDark(false); await h.flush();
+  assert.equal(html.getAttribute('data-theme'), 'light');
+  stop(); h.dispose();
+});
+
+test('turning off system theme restores the native data-theme', async () => {
+  const h = page('thread', { 'rfdm.matchSystemTheme': true });
+  h.document.documentElement.setAttribute('data-theme', 'dark');
+  const stop = h.api.controller.start(h.document, h.window); await h.flush();
+  assert.equal(h.document.documentElement.getAttribute('data-theme'), 'light');
+  await h.api.settings.save({ matchSystemTheme: false }); await h.flush();
+  assert.equal(h.document.documentElement.getAttribute('data-theme'), 'dark');
+  h.setDark(true); await h.flush();
+  assert.equal(h.document.documentElement.getAttribute('data-theme'), 'dark');
+  stop(); h.dispose();
+});
+
+test('stopping the controller removes the system theme and listener', async () => {
+  const h = page('thread', {});
+  const stop = h.api.controller.start(h.document, h.window); await h.flush();
+  assert.equal(h.document.documentElement.getAttribute('data-theme'), 'light');
+  stop();
+  assert.equal(h.document.documentElement.hasAttribute('data-theme'), false);
+  h.setDark(true); await h.flush();
+  assert.equal(h.document.documentElement.hasAttribute('data-theme'), false);
+  h.dispose();
 });

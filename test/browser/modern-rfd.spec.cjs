@@ -134,6 +134,7 @@ for (const pageType of ['list-card', 'thread-rich', 'search']) for (const width 
     expect(scroll).toBeLessThanOrEqual(1);
     await page.screenshot({path:`test-results/${pageType}-${width}.png`,fullPage:true});
     if (pageType === 'list-card' && width === 1440) {
+      await page.evaluate(() => window.RFDModern.settings.save({matchSystemTheme:false}));
       await page.evaluate(() => { document.documentElement.setAttribute('data-theme','dark'); });
       await expect(page.locator('html')).not.toHaveAttribute('data-rfdm-theme');
       await page.evaluate(() => window.RFDModern.settings.save({enabled:false}));

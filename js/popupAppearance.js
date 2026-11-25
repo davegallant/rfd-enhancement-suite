@@ -8,6 +8,7 @@
     hideSidebar: document.getElementById('modern-hide-sidebar'),
     hideFooter: document.getElementById('modern-hide-footer'),
     hideSignatures: document.getElementById('modern-hide-signatures'), compactProfiles: document.getElementById('modern-compact-profiles'),
+    matchSystemTheme: document.getElementById('system-theme-enabled'),
   };
   if (Object.values(fields).some(field => !field)) return;
   const cleanupFields = ['hidePromotions', 'hideHeaderBanner', 'hideSidebar', 'hideFooter', 'hideSignatures', 'compactProfiles'];

@@ -1,6 +1,6 @@
 (() => {
   const api = globalThis.RFDModern ||= {};
-  const DEFAULTS = Object.freeze({ enabled: true, classicLayout: false, clutterEnabled: true, hidePromotions: true, hideSidebar: true, hideHeaderBanner: true, hideFooter: true, hideSignatures: true, compactProfiles: true });
+  const DEFAULTS = Object.freeze({ enabled: true, classicLayout: false, clutterEnabled: true, hidePromotions: true, hideSidebar: true, hideHeaderBanner: true, hideFooter: true, hideSignatures: true, compactProfiles: true, matchSystemTheme: true });
   const PREFIX = 'rfdm.';
   const names = Object.keys(DEFAULTS);
   const allKeys = names.map(name => PREFIX + name);
@@ -14,6 +14,7 @@
     hideFooter: value => typeof value === 'boolean',
     hideSignatures: value => typeof value === 'boolean',
     compactProfiles: value => typeof value === 'boolean',
+    matchSystemTheme: value => typeof value === 'boolean',
   };
   function normalize(raw) {
     const out = { ...DEFAULTS };

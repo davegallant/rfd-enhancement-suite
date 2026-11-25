@@ -20,6 +20,20 @@
         'hide-promotions': String(match.kind !== 'home' && settings.clutterEnabled && settings.hidePromotions), 'hide-sidebar': String(settings.clutterEnabled && settings.hideSidebar), 'compact-profiles': String(settings.clutterEnabled && settings.compactProfiles) };
       for (const name of attributes) if (name !== 'enabled' || settings.enabled) journal.setAttribute(html, 'data-rfdm-' + name, values[name]);
     }
+    // Light/dark follows the OS by writing RFD's own data-theme attribute.
+    // Kept in its own journal so layout toggles never clear or restore it.
+    let themeJournal = api.dom.createJournal();
+    const systemQuery = window.matchMedia?.('(prefers-color-scheme: dark)');
+    let themeSettings = null;
+    function applySystemTheme(settings) {
+      if (!active) return;
+      themeSettings = settings;
+      if (!settings.matchSystemTheme || !systemQuery) { themeJournal.restore(); return; }
+      const html = document.documentElement;
+      if (html) themeJournal.setAttribute(html, 'data-theme', systemQuery.matches ? 'dark' : 'light');
+    }
+    const onSystemThemeChange = () => { if (themeSettings) applySystemTheme(themeSettings); };
+    systemQuery?.addEventListener?.('change', onSystemThemeChange);
     function apply(settings) {
       if (!active) return;
       if (current?.enabled === settings.enabled && (current.enabled || current.clutterEnabled) && (settings.enabled || settings.clutterEnabled) && match?.root?.isConnected && appliedHref === window.location.href) {
@@ -108,11 +122,13 @@
     });
     const stopSettings = api.settings.subscribe(settings => {
       generation++;
+      applySystemTheme(settings);
       apply(settings);
     });
     const message = (request, sender, respond) => { if (request?.type === 'getThemeStatus') respond(getStatus()); };
     chrome.runtime.onMessage.addListener(message);
-    const settingsPromise = api.settings.load().then(settings => ({ settings }), error => ({ error }));
+    // Apply the theme as soon as settings load, before DOMContentLoaded; subscribe() only reports later changes.
+    const settingsPromise = api.settings.load().then(settings => { applySystemTheme(settings); return { settings }; }, error => ({ error }));
     async function ready() {
       // Settings come from async extension storage, so the data-rfdm-*
       // attributes land after first paint and RFD's native layout can flash
@@ -129,7 +145,7 @@
       else apply(result.settings);
     }
     ready();
-    return () => { active = false; stopSettings(); chrome.runtime.onMessage.removeListener(message); observer.disconnect(); clear(); };
+    return () => { active = false; stopSettings(); systemQuery?.removeEventListener?.('change', onSystemThemeChange); themeJournal.restore(); chrome.runtime.onMessage.removeListener(message); observer.disconnect(); clear(); };
   }
   api.controller = { start, getStatus };
 })();
