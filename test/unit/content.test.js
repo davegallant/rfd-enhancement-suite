@@ -2,8 +2,8 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const { readFileSync } = require('node:fs');
 const vm = require('node:vm');
-const { stripRedirect } = require('./js/stripRedirect.js');
-const rules = require('./redirects.json');
+const { stripRedirect } = require('../../js/stripRedirect.js');
+const rules = require('../../redirects.json');
 
 function anchor(href, eligible = true) {
   return { nodeType: 1, href, eligible,

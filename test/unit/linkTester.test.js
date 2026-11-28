@@ -1,6 +1,6 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const cleaner = require('./js/stripRedirect.js');
+const cleaner = require('../../js/stripRedirect.js');
 
 test('explains each applied rule in a nested redirect chain', () => {
   assert.equal(typeof cleaner.inspectRedirect, 'function');

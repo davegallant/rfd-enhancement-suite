@@ -1,0 +1,33 @@
+// Shared web-ext settings. Every package (`npm run build`, release workflows)
+// uses this list, so the store uploads and the local build contain the same files.
+module.exports = {
+  ignoreFiles: [
+    '.brave-profile/**',
+    '.direnv/**',
+    '.github/**',
+    '.gitignore',
+    '.envrc',
+    '.superpowers/**',
+    'AGENTS.md',
+    'CHANGELOG.md',
+    'README.md',
+    'docs/**',
+    'extensions/**',
+    'flake.*',
+    'justfile',
+    'node_modules/**',
+    'package.json',
+    'package-lock.json',
+    'playwright.config.cjs',
+    'playwright-report/**',
+    'renovate.json',
+    'script.js',
+    'script.js.tmpl',
+    'scripts/**',
+    'test/**',
+    'test-results/**',
+    'web-ext-artifacts/**',
+    'web-ext-config.cjs',
+    '**/*.test.js',
+  ],
+};

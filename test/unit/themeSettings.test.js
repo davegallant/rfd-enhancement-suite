@@ -1,6 +1,6 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const { loadThemeFixture } = require('./test/helpers/themeHarness.cjs');
+const { loadThemeFixture } = require('../helpers/themeHarness.cjs');
 function start(options) { return loadThemeFixture('list-card', options); }
 test('new users get clutter removed while version 1 choices remain unchanged', async () => {
   const fresh = start();

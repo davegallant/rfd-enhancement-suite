@@ -1,6 +1,6 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const { loadThemeFixture } = require('./test/helpers/themeHarness.cjs');
+const { loadThemeFixture } = require('../helpers/themeHarness.cjs');
 const scripts = ['js/theme/dom.js', 'js/theme/adapters.js', 'js/theme/thread.js'];
 function fixture(name='thread') { return loadThemeFixture(name, { url: 'https://forums.redflagdeals.com/example-1/', scripts }); }
 test('thread enhancer keeps post bodies, actions and anchors intact', () => {

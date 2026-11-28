@@ -13,27 +13,20 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@v7
 
-      - name: Install jq
-        run: sudo apt-get install jq
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 26
+          cache: npm
+          cache-dependency-path: package-lock.json
 
-      - name: Get extension version
-        id: vars
-        run: |
-          version=$(jq -r .version manifest.json)
-          echo "version=$version" >> $GITHUB_OUTPUT
-          echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+      - run: npm ci
 
       - name: "web-ext build"
-        id: web-ext-build
-        uses: kewisch/action-web-ext@v2
-        with:
-          cmd: build
-          source: .
-          filename: "rfd-enhancement-suite-${{steps.vars.outputs.version}}-${{steps.vars.outputs.sha_short}}.xpi"
-          ignoreFiles: '[ "package.json", "package-lock.json", "yarn.lock", "README.md", "CHANGELOG.md", "script.js", "script.js.tmpl", "*.test.js", "docs/**", "web-ext-artifacts/**", "extensions/**", "test/**", "test-results/**", "playwright-report/**", "playwright.config.cjs" ]'
+        run: npm run build
 
       - name: "Upload Artifact"
         uses: actions/upload-artifact@v7
         with:
-          name: "rfd-enhancement-suite-${{steps.vars.outputs.version}}-${{steps.vars.outputs.sha_short}}.xpi"
-          path: ${{ steps.web-ext-build.outputs.target }}
+          name: "rfd-enhancement-suite-${{ github.sha }}"
+          path: web-ext-artifacts/*.zip
+          if-no-files-found: error

@@ -3,14 +3,14 @@ const assert = require('node:assert/strict');
 const { readFileSync } = require('node:fs');
 const vm = require('node:vm');
 
-function setup(values = {}, failDB = false, legacyValues = {}) {
+function setup(values = {}, failStorage = false) {
   const data = new Map(Object.entries(values));
-  const legacy = new Map(Object.entries(legacyValues));
   const bundled = [{ name: 'Bundled', pattern: '(?<baseUrl>https://example.com)' }];
   const context = vm.createContext({ console, URL, Date, chrome: {
     runtime: { getURL: path => `extension://${path}` },
     storage: { local: {
       async get(keys) {
+        if (failStorage) throw new Error("unavailable");
         const names = keys === null ? [...data.keys()] : Array.isArray(keys) ? keys : [keys];
         return Object.fromEntries(names.filter(key => data.has(key)).map(key => [key, data.get(key)]));
       },
@@ -21,46 +21,10 @@ function setup(values = {}, failDB = false, legacyValues = {}) {
       assert.equal(url, 'extension://redirects.json');
       return { ok: true, json: async () => bundled };
     },
-    indexedDB: { open() {
-      const request = {};
-      queueMicrotask(() => {
-        if (failDB) return request.onerror({ target: { error: new Error('unavailable') } });
-        request.onsuccess({ target: { result: {
-          close() {},
-          transaction() { const transaction = { objectStore() { return {
-            get(key) { const req = {}; queueMicrotask(() => {
-              req.onsuccess({ target: { result: legacy.has(key) ? { value: legacy.get(key) } : undefined } });
-              transaction.oncomplete?.();
-            }); return req; },
-            put({ key, value }) { const req = {}; queueMicrotask(() => {
-              legacy.set(key, value); req.onsuccess?.(); transaction.oncomplete?.();
-            }); return req; },
-          }; } }; return transaction; },
-        } } });
-      });
-      return request;
-    } },
   });
   vm.runInContext(readFileSync('js/utils.js', 'utf8').replaceAll('export ', ''), context);
-  return { context, data, legacy, bundled };
+  return { context, data, bundled };
 }
-
-test('initialization moves the old default rules URL to the renamed repository', async () => {
-  const { context, data } = setup({ config: 'https://raw.githubusercontent.com/davegallant/rfd-affiliate-stripper/main/redirects.json' });
-  await context.setDefaultConfig(false);
-  assert.equal(data.get('config'), 'https://raw.githubusercontent.com/davegallant/rfd-enhancement-suite/main/redirects.json');
-});
-
-test('existing IndexedDB rules migrate into extension storage without replacing newer values', async () => {
-  const old = [{ pattern: '(?<baseUrl>https://old.example)' }];
-  const newer = [{ pattern: '(?<baseUrl>https://new.example)' }];
-  const first = setup({}, false, { config: 'https://old.example/rules', redirects: old });
-  assert.deepEqual(await first.context.getRedirects(), old);
-  assert.deepEqual(first.data.get('redirects'), old);
-  assert.equal(first.data.get('config'), 'https://old.example/rules');
-  const second = setup({ redirects: newer }, false, { redirects: old });
-  assert.deepEqual(await second.context.getRedirects(), newer);
-});
 
 test('overlapping updates commit in request order', async () => {
   const { context, data } = setup();

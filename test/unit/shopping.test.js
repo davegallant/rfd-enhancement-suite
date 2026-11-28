@@ -1,9 +1,8 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const { stripRedirect } = require('./js/stripRedirect.js');
-const rules = require('./redirects.json');
+const { stripRedirect } = require('../../js/stripRedirect.js');
+const rules = require('../../redirects.json');
 const { readFileSync } = require('node:fs');
-const vm = require('node:vm');
 
 test('preserves seller, variant, unknown parameters, and fragments after ref paths', () => {
   assert.equal(stripRedirect('https://www.amazon.ca/Product/dp/B0TEST/ref=sr_1_1?tag=rfd&th=1&psc=1&smid=SELLER&custom=yes#reviews', rules),
@@ -51,9 +50,8 @@ test('RFD subId1 cleanup preserves encoded values and fragments after Amazon cle
 });
 
 test('the generated userscript preserves shopping parameters too', () => {
-  const link = { href: 'https://www.amazon.ca/Product/dp/B0TEST/ref=sr_1?tag=rfd&th=1&custom=a%26b#reviews' };
-  vm.runInNewContext(readFileSync('script.js', 'utf8'), {
-    URL, URLSearchParams, console, document: { querySelectorAll: () => [link] },
-  });
-  assert.equal(link.href, 'https://www.amazon.ca/Product/dp/B0TEST?th=1&custom=a%26b#reviews');
+  const { JSDOM } = require('jsdom');
+  const dom = new JSDOM('<a class="postlink" href="https://www.amazon.ca/Product/dp/B0TEST/ref=sr_1?tag=rfd&th=1&custom=a%26b#reviews">x</a>', { runScripts: 'outside-only', url: 'https://forums.redflagdeals.com/' });
+  dom.window.eval(readFileSync('script.js', 'utf8'));
+  assert.equal(dom.window.document.querySelector('a').href, 'https://www.amazon.ca/Product/dp/B0TEST?th=1&custom=a%26b#reviews');
 });

@@ -1,6 +1,6 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const { loadThemeFixture } = require('./test/helpers/themeHarness.cjs');
+const { loadThemeFixture } = require('../helpers/themeHarness.cjs');
 const scripts = ['js/theme/dom.js', 'js/theme/adapters.js', 'js/theme/thread.js', 'js/theme/controller.js'];
 test('search cleanup persists footer choices and restores both controls with clutter off', async () => {
   const h = loadThemeFixture('search', { url: 'https://forums.redflagdeals.com/search.php?keywords=anker', initial: { 'rfdm.enabled': false }, scripts });

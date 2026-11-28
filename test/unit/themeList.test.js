@@ -1,6 +1,6 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const { loadThemeFixture } = require('./test/helpers/themeHarness.cjs');
+const { loadThemeFixture } = require('../helpers/themeHarness.cjs');
 const scripts = ['js/theme/dom.js', 'js/theme/adapters.js', 'js/theme/list.js'];
 function fixture() { return loadThemeFixture('list-card', { scripts }); }
 test('classifies scores in both list layouts and restores their original markup', () => {

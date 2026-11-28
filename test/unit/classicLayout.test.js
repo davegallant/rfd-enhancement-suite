@@ -1,6 +1,6 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const { loadThemeFixture } = require('./test/helpers/themeHarness.cjs');
+const { loadThemeFixture } = require('../helpers/themeHarness.cjs');
 const scripts = ['js/classic/classic.js'];
 const REDESIGN = 'https://forums.redflagdeals.com/example-1/viewtopic_v2_replies.css?v=1';
 function page(initial) { return loadThemeFixture('thread', { url: 'https://forums.redflagdeals.com/example-1/', initial, scripts }); }

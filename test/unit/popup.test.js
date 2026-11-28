@@ -2,7 +2,7 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const { readFileSync } = require('node:fs');
 const vm = require('node:vm');
-const cleaner = require('./js/stripRedirect.js');
+const cleaner = require('../../js/stripRedirect.js');
 
 function element() {
   return { textContent: '', value: '', children: [], listeners: {},

@@ -1,7 +1,7 @@
 const { describe, it } = require("node:test");
 const { strict: assert } = require("node:assert");
 const { readFileSync } = require("node:fs");
-const { stripRedirect } = require("./js/stripRedirect.js");
+const { stripRedirect } = require("../../js/stripRedirect.js");
 it('structured rules match the real host and preserve destination values', () => {
   const rules = [{ name: 'Shop redirect', host: 'go.example.com', destinationParam: 'url' }];
   const destination = 'https://shop.example/item?color=red%26blue#reviews';
