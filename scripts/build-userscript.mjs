@@ -8,11 +8,9 @@ import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const read = name => readFileSync(join(root, name), 'utf8');
-// UTC date, matching the @version convention the template previously used
-// with Go's time formatting.
-const today = new Date().toISOString().slice(0, 10);
+const manifest = JSON.parse(read('manifest.json'));
 const replacements = {
-  '{{ (time.Now).Format "2006-01-02" }}': today,
+  '{{ manifest.version }}': manifest.version,
   '{{ file.Read "redirects.json" }}': read('redirects.json'),
   '{{ file.Read "js/stripRedirect.js" }}': read('js/stripRedirect.js'),
 };
@@ -25,4 +23,4 @@ for (const [placeholder, value] of Object.entries(replacements)) {
 }
 if (/{{.*?}}/.test(output)) throw new Error('Unrendered template placeholder remains in output');
 writeFileSync(join(root, 'script.js'), output);
-console.log(`Wrote script.js (@version ${today})`);
+console.log(`Wrote script.js (@version ${manifest.version})`);

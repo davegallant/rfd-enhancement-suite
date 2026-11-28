@@ -7,21 +7,34 @@
 // @match        *://forums.redflagdeals.com/*
 // @namespace    http://tampermonkey.net/
 // @updateURL    https://raw.githubusercontent.com/davegallant/rfd-enhancement-suite/main/script.js
-// @version      {{ (time.Now).Format "2006-01-02" }}
+// @version      {{ manifest.version }}
 // ==/UserScript==
 
 (function() {
     'use strict';
 
-    var Links = document.querySelectorAll('a.postlink, a.autolinker_link');
+    // Same link selector as the browser extension (js/content.js).
+    const SELECTOR = '.post_content a[href], a.postlink, a.autolinker_link, a.get-deal-button, a[title="RedFlagDeals.com Affiliate Link"]';
 
     const REDIRECT_REGEX = {{ file.Read "redirects.json" }};
 
     {{ file.Read "js/stripRedirect.js" }}
 
-    Links.forEach(function(Link) {
-        var ReferralURL = Link.href;
-        Link.href = stripRedirect(ReferralURL, REDIRECT_REGEX);
-    });
+    function clean(link) {
+        if (!link.matches(SELECTOR)) return;
+        const cleaned = stripRedirect(link.href, REDIRECT_REGEX);
+        if (cleaned !== link.href) link.href = cleaned;
+    }
 
+    function cleanTree(root) {
+        if (root.nodeType !== 1) return;
+        clean(root);
+        root.querySelectorAll(SELECTOR).forEach(clean);
+    }
+
+    cleanTree(document.documentElement);
+    // Watch for links added after load (infinite scroll, posts loaded later).
+    new MutationObserver(records => {
+        for (const record of records) record.addedNodes.forEach(cleanTree);
+    }).observe(document.documentElement, { childList: true, subtree: true });
 })();

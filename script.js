@@ -7,13 +7,14 @@
 // @match        *://forums.redflagdeals.com/*
 // @namespace    http://tampermonkey.net/
 // @updateURL    https://raw.githubusercontent.com/davegallant/rfd-enhancement-suite/main/script.js
-// @version      2026-11-25
+// @version      1.5.0
 // ==/UserScript==
 
 (function() {
     'use strict';
 
-    var Links = document.querySelectorAll('a.postlink, a.autolinker_link');
+    // Same link selector as the browser extension (js/content.js).
+    const SELECTOR = '.post_content a[href], a.postlink, a.autolinker_link, a.get-deal-button, a[title="RedFlagDeals.com Affiliate Link"]';
 
     const REDIRECT_REGEX = [
   { "name": "Amazon redirect", "hostSuffixes": ["amazon.ca", "amazon.com"], "pathPattern": "^/gp/redirect\\.html$", "destinationParam": "location" },
@@ -38,9 +39,9 @@
   } catch { return false; }
 }
 
-function stripRedirect(URL, redirectRegex) {
-  if (!isHttpUrl(URL)) return URL;
-  return inspectRedirect(URL, redirectRegex).url;
+function stripRedirect(url, redirectRegex) {
+  if (!isHttpUrl(url)) return url;
+  return inspectRedirect(url, redirectRegex).url;
 }
 
 function applyRedirectRule(input, rule, groups) {
@@ -88,41 +89,41 @@ function compileRules(redirectRegex) {
   return rules;
 }
 
-function inspectRedirect(URL, redirectRegex) {
-  if (!isHttpUrl(URL)) throw new Error('Enter a valid HTTP or HTTPS URL');
+function inspectRedirect(url, redirectRegex) {
+  if (!isHttpUrl(url)) throw new Error('Enter a valid HTTP or HTTPS URL');
   const steps = [];
-  const seen = new Set([URL]);
+  const seen = new Set([url]);
   const rules = compileRules(redirectRegex);
   for (let step = 0; step < 20; step++) {
-    const previousURL = URL;
-    const parsed = new globalThis.URL(URL);
+    const previousURL = url;
+    const parsed = new URL(url);
     for (const { regex, hostRegex, pathRegex, name, rule } of rules) {
       const hostMatch = rule.host === parsed.hostname || rule.hosts?.includes(parsed.hostname) ||
         rule.hostSuffixes?.some(host => parsed.hostname === host || parsed.hostname.endsWith('.' + host)) || hostRegex?.test(parsed.hostname);
       const structured = hostMatch && (!pathRegex || pathRegex.test(parsed.pathname));
-      const result = regex?.exec(URL);
+      const result = regex?.exec(url);
       if (structured || result?.groups?.baseUrl) {
         let newURL;
         try {
-          newURL = applyRedirectRule(URL, rule, result?.groups || {});
+          newURL = applyRedirectRule(url, rule, result?.groups || {});
         } catch {
           continue;
         }
         // Never rewrite a link to a non-http(s) scheme (e.g. javascript:),
         // even if a redirect rule's capture group extracted one.
-        if (isHttpUrl(newURL) && newURL !== URL) {
-          if (seen.has(newURL)) return { url: URL, steps, limited: true };
-          steps.push({ rule: name, original: URL, cleaned: newURL });
-          URL = newURL;
-          seen.add(URL);
+        if (isHttpUrl(newURL) && newURL !== url) {
+          if (seen.has(newURL)) return { url: url, steps, limited: true };
+          steps.push({ rule: name, original: url, cleaned: newURL });
+          url = newURL;
+          seen.add(url);
           break;
         }
       }
     }
-    if (URL === previousURL) return { url: URL, steps, limited: false };
+    if (url === previousURL) return { url: url, steps, limited: false };
   }
 
-  return { url: URL, steps, limited: true };
+  return { url: url, steps, limited: true };
 }
 
 if (typeof module !== "undefined" && module.exports) {
@@ -134,9 +135,21 @@ if (typeof module !== "undefined" && module.exports) {
 globalThis.RFDStripRedirect = { stripRedirect, inspectRedirect, isHttpUrl };
 
 
-    Links.forEach(function(Link) {
-        var ReferralURL = Link.href;
-        Link.href = stripRedirect(ReferralURL, REDIRECT_REGEX);
-    });
+    function clean(link) {
+        if (!link.matches(SELECTOR)) return;
+        const cleaned = stripRedirect(link.href, REDIRECT_REGEX);
+        if (cleaned !== link.href) link.href = cleaned;
+    }
 
+    function cleanTree(root) {
+        if (root.nodeType !== 1) return;
+        clean(root);
+        root.querySelectorAll(SELECTOR).forEach(clean);
+    }
+
+    cleanTree(document.documentElement);
+    // Watch for links added after load (infinite scroll, posts loaded later).
+    new MutationObserver(records => {
+        for (const record of records) record.addedNodes.forEach(cleanTree);
+    }).observe(document.documentElement, { childList: true, subtree: true });
 })();

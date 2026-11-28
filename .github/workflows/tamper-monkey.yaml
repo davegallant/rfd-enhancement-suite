@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  gomplate:
+  userscript:
     runs-on: ubuntu-latest
 
     permissions:
@@ -16,13 +16,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
-      - name: Install gomplate
-        run: |
-          wget -O gomplate https://github.com/hairyhenderson/gomplate/releases/download/v3.10.0/gomplate_linux-amd64
-          chmod +x gomplate
-          sudo mv gomplate /usr/local/bin/
+      - name: Build script.js
+        run: npm run build:userscript
 
-      - name: Run gomplate
-        run: gomplate < script.js.tmpl > script.js
+      - name: Fail if script.js is stale
+        if: github.event_name == 'pull_request'
+        run: git diff --exit-code script.js
 
-      - uses: stefanzweifel/git-auto-commit-action@v7
+      - name: Commit regenerated script.js
+        if: github.event_name == 'push'
+        uses: stefanzweifel/git-auto-commit-action@v7
+        with:
+          file_pattern: script.js
+          commit_message: "chore: regenerate userscript"
