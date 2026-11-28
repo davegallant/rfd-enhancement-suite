@@ -1,69 +1,14 @@
-// Extension settings with a one-time migration from the pre-1.1 IndexedDB store.
-// The legacy database name is kept verbatim: renaming it would strand the
-// migration for anyone upgrading directly from a pre-1.1 install.
-const LEGACY_DB_NAME = 'rfdAffiliateStripperDB';
-const STORE_NAME = 'config';
-const DB_VERSION = 1;
 export const DEFAULT_CONFIG_URL = 'https://raw.githubusercontent.com/davegallant/rfd-enhancement-suite/main/redirects.json';
-
-function openDB() {
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.open(LEGACY_DB_NAME, DB_VERSION);
-
-    request.onupgradeneeded = (event) => {
-      const db = event.target.result;
-      if (!db.objectStoreNames.contains(STORE_NAME)) {
-        db.createObjectStore(STORE_NAME, { keyPath: 'key' });
-      }
-    };
-
-    request.onsuccess = (event) => resolve(event.target.result);
-    request.onerror = (event) => reject(event.target.error);
-  });
-}
-
-async function legacyGet(key) {
-  const db = await openDB();
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction(STORE_NAME, 'readonly');
-    const store = transaction.objectStore(STORE_NAME);
-    const request = store.get(key);
-
-    request.onsuccess = (event) => resolve(event.target.result?.value);
-    transaction.oncomplete = () => db.close();
-    request.onerror = (event) => reject(event.target.error);
-  });
-}
 
 export async function dbSet(key, value) {
   return dbSetMany({ [key]: value });
 }
 
-let migration;
-function migrate() {
-  migration ||= (async () => {
-    const current = await chrome.storage.local.get(null);
-    if (current.rulesStorageVersion === 1) return;
-    const values = { rulesStorageVersion: 1 };
-    for (const key of ['config', 'redirects', 'updateStatus']) {
-      if (Object.hasOwn(current, key)) continue;
-      try {
-        const old = await legacyGet(key);
-        if (old !== undefined) values[key] = old;
-      } catch { /* New installs and unavailable legacy storage need no migration. */ }
-    }
-    await chrome.storage.local.set(values);
-  })().catch(error => { migration = null; throw error; });
-  return migration;
-}
-
 export async function dbGet(key) {
-  await migrate();
   return (await chrome.storage.local.get(key))[key];
 }
 
 async function dbSetMany(values) {
-  await migrate();
   await chrome.storage.local.set(values);
   return true;
 }
@@ -155,10 +100,7 @@ export async function getRedirects() {
 
 export async function setDefaultConfig(reset = true) {
   const existing = reset ? null : await dbGet('config');
-  // Pre-rename default: installs still pointed at the old repository get moved
-  // to the new one; anything else custom is left alone.
-  const oldDefault = 'https://raw.githubusercontent.com/davegallant/rfd-affiliate-stripper/main/redirects.json';
-  if (existing && existing !== oldDefault) return;
+  if (existing) return;
   await dbSet(
     "config",
     DEFAULT_CONFIG_URL
