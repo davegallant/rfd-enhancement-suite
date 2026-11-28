@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Tampermonkey userscript now also cleans links added after the page loads and uses the same link selector as the extension.
+- Tampermonkey userscript version now follows the extension version instead of the build date.
+- Remove the one-time import of rules from the pre-1.1 database and the automatic move from the old rules repository URL. Installs that still use the old URL keep it; reset the rules URL in the popup if needed.
+
 ## 1.5.0 - 2026-11-24
 
 - Add a default-on **Match system theme** option that sets RFD's light or dark mode to match the operating system and follows changes while the page is open.
