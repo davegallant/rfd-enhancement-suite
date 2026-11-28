@@ -42,7 +42,7 @@
         counted.add(link);
         activity.count++;
       }
-      activity.links.push({ original, cleaned });
+      activity.links.push({ original, cleaned: written });
       if (activity.links.length > 50) activity.links.shift();
     }
   }
